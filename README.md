@@ -4,8 +4,8 @@ TaniKu adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia m
 
 ## Fitur Utama:
 
-1. **Manajemen Stok**:
-   Petani dapat dengan mudah melacak dan mengelola stok produk pertanian mereka.
+1. **Lahan Tani**:
+   Petani dapat dengan mudah membuat dan mengelola lahan pertanian mereka.
 
 2. **Pemesanan Digital**:
    Memungkinkan petani untuk menerima dan mengelola pesanan secara online.
@@ -13,11 +13,8 @@ TaniKu adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia m
 3. **Informasi Pasar**:
    Menyediakan data real-time tentang harga dan permintaan produk pertanian.
 
-4. **Pelacakan Keuangan**:
-   Membantu petani memantau pendapatan dan pengeluaran mereka.
-
-5. **Konektivitas Offline**:
-   Aplikasi dapat berfungsi bahkan dalam kondisi koneksi internet terbatas.
+4. **Estimasi Produksi**:
+   Menggunakan metode perhitungan berbasis data untuk membantu petani memprediksi produksi pertanian mereka.
 
 ## Teknologi yang Digunakan:
 
@@ -36,9 +33,6 @@ TaniKu adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia m
 
 3. **Keamanan Data**:
    Menerapkan praktik keamanan terbaik untuk melindungi informasi pengguna.
-
-4. **Dukungan Multibahasa**:
-   Tersedia dalam Bahasa Indonesia dan potensial untuk bahasa daerah.
 
 TaniKu bukan hanya sebuah aplikasi, tetapi juga mitra digital bagi petani Indonesia dalam menghadapi tantangan pertanian modern. Dengan TaniKu, kami berharap dapat memberdayakan petani lokal dan mendorong pertumbuhan sektor pertanian nasional.
 
