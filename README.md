@@ -5,16 +5,22 @@ Plantix adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia 
 ## Fitur Utama:
 
 1. **Lahan Tani**:
-   Petani dapat dengan mudah membuat dan mengelola lahan pertanian mereka.
+   Petani dapat dengan mudah membuat, mengelola, dan memantau lahan pertanian mereka. Fitur ini memungkinkan pengguna untuk mencatat detail lahan seperti nama, luas, lokasi, dan jenis tanaman yang ditanam.
 
-2. **Pemesanan Digital**:
-   Memungkinkan petani untuk menerima dan mengelola pesanan secara online.
+2. **Kalkulasi Tanam**:
+   Aplikasi menyediakan alat kalkulasi yang membantu petani merencanakan penanaman dengan lebih baik. Fitur ini menghitung kebutuhan benih, pupuk, air, dan pestisida berdasarkan luas lahan dan jenis tanaman. Selain itu, juga memberikan estimasi biaya dan hasil panen.
 
-3. **Informasi Pasar**:
-   Menyediakan data real-time tentang harga dan permintaan produk pertanian.
+3. **Analisa Usaha Tani**:
+   Memungkinkan petani untuk melacak dan menganalisis pengeluaran serta pendapatan dari setiap lahan. Fitur ini membantu dalam manajemen keuangan dan evaluasi keuntungan usaha tani.
 
-4. **Estimasi Produksi**:
-   Menggunakan metode perhitungan berbasis data untuk membantu petani memprediksi produksi pertanian mereka.
+4. **Jadwal Tanam**:
+   Menyediakan kalender tanam yang membantu petani mengatur dan mengingat kegiatan pertanian penting seperti waktu tanam, pemupukan, dan panen.
+
+5. **Informasi Produk Pertanian**:
+   Menyajikan katalog produk pertanian seperti bibit, pupuk, dan pestisida, memudahkan petani dalam memilih input pertanian yang sesuai.
+
+6. **Profil Pengguna**:
+   Memungkinkan petani untuk mengelola informasi pribadi dan preferensi dalam aplikasi.
 
 ## Teknologi yang Digunakan:
 
