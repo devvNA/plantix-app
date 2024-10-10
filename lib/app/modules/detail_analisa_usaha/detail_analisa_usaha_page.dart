@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
+import 'package:plantix_app/app/core/extensions/int_ext.dart';
 import 'package:plantix_app/app/core/extensions/string_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
@@ -17,7 +18,9 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Input Pengeluaran",
         backgroundColor: AppColors.primary,
-        onPressed: () => controller.showAddSpendBottomSheet(),
+        onPressed: () {
+          controller.showAddSpendBottomSheet();
+        },
         child: Icon(Icons.add),
       ),
       body: Stack(
@@ -42,8 +45,8 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                         child: Column(
                           children: [
                             cardField(
-                              title: controller.analisaUsana!.namaLahan,
-                              type: controller.analisaUsana!.jenisTanaman,
+                              title: controller.analisaUsana.namaLahan,
+                              type: controller.analisaUsana.jenisTanaman,
                             ),
                           ],
                         ),
@@ -84,21 +87,22 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                             children: [
                               const SizedBox(height: 12),
                               analyzeProperty(
-                                  title: "Total Biaya",
-                                  value: controller
-                                      .hitungTotalBiaya()
-                                      .toString()
-                                      .currencyFormatRp),
+                                title: "Total Biaya",
+                                value: controller
+                                    .hitungTotalBiaya()
+                                    .toString()
+                                    .currencyFormatRp,
+                              ),
                               analyzeProperty(
                                 title: "Hasil Panen",
-                                value: controller.jumlahPanen != 0
-                                    ? "${controller.jumlahPanen} Kg"
+                                value: controller.jmlPanen.value != 0
+                                    ? "${controller.jmlPanen.value} Kg"
                                     : "0 Kg",
                               ),
                               analyzeProperty(
                                   title: "Harga Panen",
-                                  value: controller.hargaPanen != 0
-                                      ? "${controller.hargaPanen.value.toString().currencyFormatRp}"
+                                  value: controller.hargaPanen.value != 0
+                                      ? "${controller.hargaPanen.value.currencyFormatRp}"
                                       : "0".currencyFormatRp),
                               analyzeProperty(
                                 title: "Pendapatan Kotor",
@@ -184,56 +188,54 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
     required String title,
     required String type,
   }) {
-    return Obx(() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title + " ($type)",
-            style: TStyle.head5,
-          ),
-          const SizedBox(height: 12),
-          fieldProperty(
-              title: 'Tgl. Tanam :',
-              value: DateTime.now().toFormattedDatetime(),
-              icon: Icons.calendar_month_sharp),
-          const SizedBox(height: 4),
-          fieldProperty(
-              title: 'Tgl. Panen :',
-              value: controller.analisaUsana!.tanggalPanen,
-              icon: Icons.calendar_month_sharp),
-          const SizedBox(height: 4),
-          fieldProperty(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title + " ($type)",
+          style: TStyle.head5,
+        ),
+        const SizedBox(height: 12),
+        fieldProperty(
+            title: 'Tgl. Tanam :',
+            value: DateTime.now().toFormattedDatetime(),
+            icon: Icons.calendar_month_sharp),
+        const SizedBox(height: 4),
+        fieldProperty(
+            title: 'Tgl. Panen :',
+            value: controller.analisaUsana.tanggalPanen,
+            icon: Icons.calendar_month_sharp),
+        const SizedBox(height: 4),
+        Obx(() {
+          return fieldProperty(
             title: 'Jml. Panen :',
-            value: controller.jumlahPanen != 0
-                ? "${controller.jumlahPanen} Kg"
-                : "0 Kg",
+            value: controller.jmlPanen.value.toString(),
             icon: Icons.space_dashboard_sharp,
             isPanen: true,
-          ),
-          const SizedBox(
-            height: 6.0,
-          ),
-          // Text(
-          //   "*Masukkan jumlah panen untuk menghitung pendapatan",
-          //   style: TStyle.bodyText4,
-          // ),
-          // const SizedBox(
-          //   height: 6.0,
-          // ),
-          // fieldProperty(
-          //     title: 'Pendapatan :', value: "Rp. 0", icon: Icons.money_sharp),
-          // const SizedBox(
-          //   height: 6.0,
-          // ),
-          // fieldProperty(
-          //     title: 'Pengeluaran :', value: "Rp. 0", icon: Icons.money_sharp),
-          // const SizedBox(
-          //   height: 6.0,
-          // ),
-        ],
-      );
-    });
+          );
+        }),
+        const SizedBox(
+          height: 6.0,
+        ),
+        // Text(
+        //   "*Masukkan jumlah panen untuk menghitung pendapatan",
+        //   style: TStyle.bodyText4,
+        // ),
+        // const SizedBox(
+        //   height: 6.0,
+        // ),
+        // fieldProperty(
+        //     title: 'Pendapatan :', value: "Rp. 0", icon: Icons.money_sharp),
+        // const SizedBox(
+        //   height: 6.0,
+        // ),
+        // fieldProperty(
+        //     title: 'Pengeluaran :', value: "Rp. 0", icon: Icons.money_sharp),
+        // const SizedBox(
+        //   height: 6.0,
+        // ),
+      ],
+    );
   }
 
   Row fieldProperty({

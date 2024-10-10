@@ -6,40 +6,39 @@ import 'package:plantix_app/app/modules/detail_analisa_usaha/widgets/bottom_shee
 import 'package:plantix_app/app/modules/detail_analisa_usaha/widgets/dialog_harvest_widget.dart';
 
 class DetailAnalisaUsahaController extends GetxController {
-  AnalisaUsahaTani? analisaUsana = Get.arguments;
+  AnalisaUsahaTani analisaUsana = Get.arguments;
   TextEditingController spendController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController hargaPanenController = TextEditingController();
-  final pengeluaranList = <Pengeluaran>[].obs;
-  final jumlahPanen = "".obs;
-  final hargaPanen = 0.0.obs;
+  // TextEditingController jmlPanenController = TextEditingController();
+  // TextEditingController hargaPanenController = TextEditingController();
 
-  bool get isEditMode => analisaUsana != null;
+  /// List untuk menyimpan data pengeluaran
+  final pengeluaranList = <Pengeluaran>[].obs;
+  final jmlPanen = 0.0.obs;
+  final hargaPanen = 0.0.obs;
 
   @override
   void onInit() {
     super.onInit();
     // Inisialisasi data dummy
     initDummyData();
-    if (isEditMode) {
-      jumlahPanen.value = analisaUsana!.jumlahPanen.toString();
-    }
   }
 
   // Fungsi untuk menginisialisasi data dummy
   void initDummyData() {
     pengeluaranList.addAll([
-      Pengeluaran("Benih", 90000),
-      Pengeluaran("Pupuk", 120000),
-      Pengeluaran("Pestisida", 250000),
-      Pengeluaran("Lain-lain", 40000),
+      Pengeluaran("Benih", 250000),
+      Pengeluaran("Pupuk", 500000),
+      Pengeluaran("Pestisida", 300000),
+      Pengeluaran("Lain-lain", 150000),
     ]);
   }
 
   // Fungsi untuk menambah pengeluaran
-  tambahPengeluaran(String kategori, double jumlah) {
+  void tambahPengeluaran(String kategori, double jumlah) {
     pengeluaranList.add(Pengeluaran(kategori, jumlah));
     Get.back();
+    update();
     spendController.clear();
     descriptionController.clear();
   }
@@ -50,15 +49,23 @@ class DetailAnalisaUsahaController extends GetxController {
   }
 
   // Fungsi untuk mengatur hasil panen
-  setPanen(double harga, double jumlah) {
-    jumlahPanen.value = jumlah.toString();
+  void setPanen(double jumlah, double harga) {
+    jmlPanen.value = 0.0;
+    hargaPanen.value = 0.0;
+    jmlPanen.value = jumlah;
     hargaPanen.value = harga;
     Get.back();
   }
 
+  // Fungsi untuk mengatur harga panen
+  void setHargaPanen(double harga) {
+    hargaPanen.value = harga;
+    update();
+  }
+
   // Fungsi untuk menghitung pendapatan kotor
   double hitungPendapatanKotor() {
-    return double.parse(jumlahPanen.value) * hargaPanen.value;
+    return jmlPanen.value * hargaPanen.value;
   }
 
   // Fungsi untuk menghitung pendapatan bersih
@@ -76,11 +83,7 @@ class DetailAnalisaUsahaController extends GetxController {
 
   showDialogHarvest() {
     Get.dialog(DialogHarvestWidget());
-    if (Get.isDialogOpen!) {}
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+  // ... kode lainnya tetap sama
 }
