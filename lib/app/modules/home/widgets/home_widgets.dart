@@ -5,6 +5,7 @@ import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/modules/home/home_controller.dart';
+import 'package:plantix_app/app/modules/home/widgets/card_article_widget.dart';
 import 'package:plantix_app/app/routes/analisa_usaha_tani_routes.dart';
 import 'package:plantix_app/app/routes/calendar_routes.dart';
 import 'package:plantix_app/app/routes/kalkulasi_tanam_routes.dart';
@@ -29,9 +30,23 @@ Widget buildHomePage(BuildContext context, HomeController controller) {
               ),
               buildMenuGrid(context),
               const SizedBox(height: 12.0),
-              const Text(
-                "Yang Sudah Di Tanam",
-                style: TStyle.head4,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Artikel Pertanian",
+                    style: TStyle.head4,
+                  ),
+                  const SizedBox(width: 4),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Lihat Semua",
+                      style:
+                          TStyle.bodyText2.copyWith(color: AppColors.primary),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 12.0,
@@ -43,13 +58,12 @@ Widget buildHomePage(BuildContext context, HomeController controller) {
                     5, // Jumlah item yang ingin ditampilkan
                     (index) => const Padding(
                       padding: EdgeInsets.only(right: 12.0),
-                      child: BibitTanamCard(
-                        namaBibit: 'Padi IR64',
-                        tanggalTanam: '15 Maret 2024',
-                        estimasiPanen: '15 Juni 2024',
-                        progress: 0.6, // 60% progress
+                      child: ArtikelPertanianCard(
+                        judulArtikel: 'Lorem ipsum dolor sit amet',
+                        penulis: 'Penulis Artikel',
+                        tanggalPublikasi: '15 Maret 2024',
                         gambarUrl:
-                            "https://res.cloudinary.com/dotz74j1p/image/upload/v1715660683/no-image.jpg",
+                            "https://i0.wp.com/walhisulteng.org/wp-content/uploads/2024/09/WhatsApp-Image-2024-09-24-at-01.44.41.jpeg?w=1283&ssl=1",
                       ),
                     ),
                   ),
@@ -305,83 +319,4 @@ Widget buildMenuGrid(BuildContext context) {
       );
     },
   );
-}
-
-class BibitTanamCard extends StatelessWidget {
-  final String namaBibit;
-  final String tanggalTanam;
-  final String estimasiPanen;
-  final double progress;
-  final String gambarUrl;
-
-  const BibitTanamCard({
-    super.key,
-    required this.namaBibit,
-    required this.tanggalTanam,
-    required this.estimasiPanen,
-    required this.progress,
-    required this.gambarUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.network(
-              "https://balitribune.co.id/sites/default/files/styles/xtra_large/public/field/image/WEB%20-%20Benih%20Padi%20Terserang%20Blast%2C%20Petani%20Kelimpungan.jpg?itok=oAI_JU85",
-              height: 120,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 120,
-                color: Colors.grey[300],
-                child: const Icon(Icons.error, color: Colors.red),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(namaBibit, style: TStyle.head4),
-                const SizedBox(height: 4),
-                Text('Ditanam: $tanggalTanam', style: TStyle.bodyText2),
-                Text('Estimasi Panen: $estimasiPanen', style: TStyle.bodyText2),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: Colors.grey[200],
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${(progress * 100).toInt()}% Pertumbuhan',
-                  style: TStyle.bodyText2.copyWith(color: AppColors.primary),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

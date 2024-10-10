@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plantix_app/app/core/extensions/int_ext.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 
 class SeedProductsCard extends StatelessWidget {
@@ -24,27 +25,27 @@ class SeedProductsCard extends StatelessWidget {
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(12)),
                   child: Image.network(
-                    "https://res.cloudinary.com/dotz74j1p/image/upload/v1715660683/no-image.jpg",
+                    "https://images.tokopedia.net/img/cache/500-square/product-1/2018/7/4/27298008/27298008_dd20875d-361b-4613-aeed-36c1235a425f_1024_1366.jpg.webp?ect=4g",
                     height: 120,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Nama Bibit',
-                      style: TStyle.head4,
+                      style: TStyle.head5,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Rp.100.000',
+                      26000.currencyFormatRp,
                       style: TStyle.bodyText2,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
