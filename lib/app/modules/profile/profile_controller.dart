@@ -1,7 +1,9 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:get/get.dart';
 
-class WeatherController extends GetxController {
-  //TODO: Implement WeatherController.
+class ProfileController extends GetxController {
+  //TODO: Implement ProfileController.
 
   @override
   void onInit() {

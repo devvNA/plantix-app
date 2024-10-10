@@ -1,4 +1,4 @@
-package com.example.taniku_app
+package com.example.Plantix_app
 
 import io.flutter.embedding.android.FlutterActivity
 

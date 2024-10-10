@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 extension StringExt on String {
   String get currencyFormatRp => NumberFormat.currency(
         locale: 'id',
-        symbol: 'Rp. ',
+        symbol: 'Rp ',
         decimalDigits: 0,
-      ).format(int.parse(this));
+      ).format(num.parse(this));
 }

@@ -1,6 +1,6 @@
-# TaniKu: Aplikasi Pertanian Modern
+# Plantix: Aplikasi Pertanian Modern
 
-TaniKu adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia memasuki era pertanian digital. Aplikasi ini menggabungkan teknologi modern dengan kearifan lokal untuk meningkatkan produktivitas dan efisiensi dalam sektor pertanian.
+Plantix adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia memasuki era pertanian digital. Aplikasi ini menggabungkan teknologi modern dengan kearifan lokal untuk meningkatkan produktivitas dan efisiensi dalam sektor pertanian.
 
 ## Fitur Utama:
 
@@ -34,7 +34,7 @@ TaniKu adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia m
 3. **Keamanan Data**:
    Menerapkan praktik keamanan terbaik untuk melindungi informasi pengguna.
 
-TaniKu bukan hanya sebuah aplikasi, tetapi juga mitra digital bagi petani Indonesia dalam menghadapi tantangan pertanian modern. Dengan TaniKu, kami berharap dapat memberdayakan petani lokal dan mendorong pertumbuhan sektor pertanian nasional.
+Plantix bukan hanya sebuah aplikasi, tetapi juga mitra digital bagi petani Indonesia dalam menghadapi tantangan pertanian modern. Dengan Plantix, kami berharap dapat memberdayakan petani lokal dan mendorong pertumbuhan sektor pertanian nasional.
 
 ## Memulai
 

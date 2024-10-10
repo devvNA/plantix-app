@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:taniku_app/app/core/theme/app_color.dart';
+import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 
 import 'splash_screen_controller.dart';
 
@@ -10,32 +12,39 @@ class SplashScreenPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<SplashScreenController>(builder: (controller) {
+      body: GetBuilder<SplashScreenController>(builder: (value) {
         return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
+            fit: StackFit.expand,
             children: [
-              Image.asset(
-                'assets/images/logo.png',
-                width: 150,
-                height: 150,
+              Positioned(
+                top: MediaQuery.of(context).size.width * 0.7,
+                child: Image.asset(
+                  width: 160,
+                  'assets/images/p-logo.png',
+                ).animate().fade().slideY(
+                      duration: const Duration(milliseconds: 400),
+                      begin: 2,
+                      curve: Curves.easeInSine,
+                    ),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'TaniKu',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 25),
-              const SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator(
-                  color: AppColors.primary,
-                ),
-              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Text(
+                    'Plantix',
+                    style: TStyle.head2,
+                  ).animate().fade().slideY(
+                      duration: const Duration(milliseconds: 400),
+                      begin: 5,
+                      curve: Curves.easeInSine),
+                  const SizedBox(
+                    height: 50.0,
+                  ),
+                  const LoadingWidget(size: 36),
+                ],
+              ).paddingOnly(bottom: 170),
             ],
           ),
         );

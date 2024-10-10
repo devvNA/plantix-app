@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 
 class CustomSnackBar {
   //SNACKBAR SUCCESS
-  static showCustomSuccessSnackBar(
-      {required String title,
-      required String message,
-      Duration? duration,
-      bool? isDismissible,
-      Color? color}) {
+  static showCustomSuccessSnackBar({
+    required String title,
+    required String message,
+    Duration? duration,
+    bool? isDismissible,
+    Color? color,
+  }) {
     Get.closeAllSnackbars(); // Menutup semua snackbar yang aktif
     Get.snackbar(
       title,
@@ -28,12 +29,13 @@ class CustomSnackBar {
   }
 
   //SNACKBAR ERROR
-  static showCustomErrorSnackBar(
-      {required String title,
-      required String message,
-      bool? isDismissible,
-      Color? color,
-      Duration? duration}) {
+  static showCustomErrorSnackBar({
+    required String title,
+    required String message,
+    bool? isDismissible,
+    Color? color,
+    Duration? duration,
+  }) {
     Get.closeAllSnackbars(); // Menutup semua snackbar yang aktif
     Get.snackbar(title, message,
         duration: duration ?? const Duration(milliseconds: 1500),
@@ -50,12 +52,14 @@ class CustomSnackBar {
   }
 
   //SNACKBAR TOAST Success
-  static showCustomToastSuccess(
-      {String? title,
-      required String message,
-      Color? color,
-      bool? isDismissible,
-      Duration? duration}) {
+  static showCustomToastSuccess({
+    String? title,
+    required String message,
+    Color? color,
+    bool? isDismissible,
+    Duration? duration,
+  }) {
+    Get.closeAllSnackbars();
     Get.rawSnackbar(
         title: title,
         duration: duration ?? const Duration(seconds: 2),
@@ -77,6 +81,7 @@ class CustomSnackBar {
     Color? color,
     Duration? duration,
   }) {
+    Get.closeAllSnackbars();
     Get.rawSnackbar(
         // title: title ?? "Error",
         duration: duration ?? const Duration(milliseconds: 1500),

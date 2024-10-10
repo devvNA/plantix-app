@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'package:get/get.dart';
-import 'package:taniku_app/app/routes/auth_routes.dart';
+import 'package:plantix_app/app/routes/auth_routes.dart';
 
 class SplashScreenController extends GetxController {
   //TODO: Implement SplashScreenController.
@@ -9,12 +9,14 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _navigateToHome();
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      Get.offAllNamed(AuthRoutes.login);
+    });
   }
 
-  void _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 3));
-    Get.offNamed(AuthRoutes.login); // Ganti dengan rute halaman utama Anda
+  @override
+  void onReady() {
+    super.onReady();
   }
 
   @override

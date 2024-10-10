@@ -29,7 +29,7 @@ class Validator {
   }
 
   static String? email(String? value) {
-    if (value!.isEmpty) return "form ini wajib diisi";
+    if (value!.isEmpty) return "masukkan email";
 
     final bool isValidEmail =
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$')

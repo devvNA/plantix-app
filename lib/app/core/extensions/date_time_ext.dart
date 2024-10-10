@@ -61,8 +61,8 @@ extension DateTimeExt on DateTime {
   String toFormattedDatetime() {
     final String bulan = _getNamaBulan(month);
     final int tahun = year;
-    final String waktu = toFormattedTime();
-    return '$bulan $day, $tahun $waktu';
+    return '$day $bulan $tahun';
+    // return '$bulan $day, $tahun $waktu';
   }
 
   String toFormattedTime() {
