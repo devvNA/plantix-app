@@ -5,7 +5,6 @@ import 'package:plantix_app/app/core/extensions/string_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_page_header.dart';
-import 'package:plantix_app/app/modules/detail_analisa_usaha/widgets/dialog_harvest_widget.dart';
 
 import 'detail_analisa_usaha_controller.dart';
 
@@ -43,8 +42,8 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                         child: Column(
                           children: [
                             cardField(
-                              title: 'Jagung',
-                              type: "Manis",
+                              title: controller.analisaUsana!.namaLahan,
+                              type: controller.analisaUsana!.jenisTanaman,
                             ),
                           ],
                         ),
@@ -63,10 +62,13 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                               style: TStyle.head5,
                             ),
                             const SizedBox(height: 12),
-                            spendProperty(title: "Benih :", value: "25000"),
-                            spendProperty(title: "Pupuk :", value: "25000"),
-                            spendProperty(title: "Pestisida :", value: "25000"),
-                            spendProperty(title: "Lain-lain :", value: "25000"),
+                            Obx(() => Column(
+                                  children: controller.pengeluaranList
+                                      .map((pengeluaran) => spendProperty(
+                                          title: "${pengeluaran.kategori} :",
+                                          value: pengeluaran.jumlah.toString()))
+                                      .toList(),
+                                )),
                           ],
                         ),
                       ),
@@ -76,24 +78,48 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                       elevation: 3,
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 12),
-                            analyzeProperty(
-                                title: "Total Biaya", value: "25000"),
-                            analyzeProperty(
+                        child: Obx(() {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 12),
+                              analyzeProperty(
+                                  title: "Total Biaya",
+                                  value: controller
+                                      .hitungTotalBiaya()
+                                      .toString()
+                                      .currencyFormatRp),
+                              analyzeProperty(
                                 title: "Hasil Panen",
-                                value: "10 Kg",
-                                isPlant: true),
-                            analyzeProperty(
-                                title: "Pendapatan Bersih", value: "25000"),
-                            analyzeProperty(
-                                title: "Pendapatan Bersih", value: "25000"),
-                            analyzeProperty(
-                                title: "Pendapatan Bersih", value: "25000"),
-                          ],
-                        ),
+                                value: controller.jumlahPanen != 0
+                                    ? "${controller.jumlahPanen} Kg"
+                                    : "0 Kg",
+                              ),
+                              analyzeProperty(
+                                  title: "Harga Panen",
+                                  value: controller.hargaPanen != 0
+                                      ? "${controller.hargaPanen.value.toString().currencyFormatRp}"
+                                      : "0".currencyFormatRp),
+                              analyzeProperty(
+                                title: "Pendapatan Kotor",
+                                value: controller
+                                    .hitungPendapatanKotor()
+                                    .toString()
+                                    .currencyFormatRp,
+                              ),
+                              analyzeProperty(
+                                title: "Pendapatan Bersih",
+                                value: controller
+                                    .hitungPendapatanBersih()
+                                    .toString()
+                                    .currencyFormatRp,
+                                color: controller.hitungPendapatanBersih() < 0
+                                    ? Colors.red
+                                    : AppColors.primary,
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     ),
                   ],
@@ -117,7 +143,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
           ),
           const SizedBox(width: 8),
           Text(
-            title + " ${value.currencyFormatRp}",
+            '${title.capitalize} ${value.currencyFormatRp}',
             style: TStyle.bodyText2,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -130,7 +156,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
   Widget analyzeProperty({
     required String title,
     required String value,
-    bool? isPlant = false,
+    Color? color,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
@@ -144,8 +170,10 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
             ),
           ),
           Text(
-            isPlant == true ? value : value.currencyFormatRp,
-            style: TStyle.bodyText2.copyWith(color: AppColors.primary),
+            value,
+            style: TStyle.bodyText2.copyWith(
+              color: color ?? AppColors.primary,
+            ),
           ),
         ],
       ),
@@ -156,52 +184,56 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
     required String title,
     required String type,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title + " ($type)",
-          style: TStyle.head5,
-        ),
-        const SizedBox(height: 12),
-        fieldProperty(
-            title: 'Tgl. Tanam :',
-            value: DateTime.now().toFormattedDatetime(),
-            icon: Icons.calendar_month_sharp),
-        const SizedBox(height: 4),
-        fieldProperty(
-            title: 'Tgl. Panen :',
-            value: "-",
-            icon: Icons.calendar_month_sharp),
-        const SizedBox(height: 4),
-        fieldProperty(
-          title: 'Jml. Panen :',
-          value: "0 Kg",
-          icon: Icons.space_dashboard_sharp,
-          isPanen: true,
-        ),
-        const SizedBox(
-          height: 6.0,
-        ),
-        Text(
-          "*Masukkan jumlah panen untuk menghitung pendapatan",
-          style: TStyle.bodyText4,
-        ),
-        const SizedBox(
-          height: 6.0,
-        ),
-        fieldProperty(
-            title: 'Pendapatan :', value: "Rp. 0", icon: Icons.money_sharp),
-        const SizedBox(
-          height: 6.0,
-        ),
-        fieldProperty(
-            title: 'Pengeluaran :', value: "Rp. 0", icon: Icons.money_sharp),
-        const SizedBox(
-          height: 6.0,
-        ),
-      ],
-    );
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title + " ($type)",
+            style: TStyle.head5,
+          ),
+          const SizedBox(height: 12),
+          fieldProperty(
+              title: 'Tgl. Tanam :',
+              value: DateTime.now().toFormattedDatetime(),
+              icon: Icons.calendar_month_sharp),
+          const SizedBox(height: 4),
+          fieldProperty(
+              title: 'Tgl. Panen :',
+              value: controller.analisaUsana!.tanggalPanen,
+              icon: Icons.calendar_month_sharp),
+          const SizedBox(height: 4),
+          fieldProperty(
+            title: 'Jml. Panen :',
+            value: controller.jumlahPanen != 0
+                ? "${controller.jumlahPanen} Kg"
+                : "0 Kg",
+            icon: Icons.space_dashboard_sharp,
+            isPanen: true,
+          ),
+          const SizedBox(
+            height: 6.0,
+          ),
+          // Text(
+          //   "*Masukkan jumlah panen untuk menghitung pendapatan",
+          //   style: TStyle.bodyText4,
+          // ),
+          // const SizedBox(
+          //   height: 6.0,
+          // ),
+          // fieldProperty(
+          //     title: 'Pendapatan :', value: "Rp. 0", icon: Icons.money_sharp),
+          // const SizedBox(
+          //   height: 6.0,
+          // ),
+          // fieldProperty(
+          //     title: 'Pengeluaran :', value: "Rp. 0", icon: Icons.money_sharp),
+          // const SizedBox(
+          //   height: 6.0,
+          // ),
+        ],
+      );
+    });
   }
 
   Row fieldProperty({
@@ -237,9 +269,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              onPressed: () async {
-                Get.dialog(DialogHarvestWidget());
-              },
+              onPressed: () => controller.showDialogHarvest(),
               child: Text(
                 "input",
                 style: TStyle.bodyText3.copyWith(color: Colors.white),

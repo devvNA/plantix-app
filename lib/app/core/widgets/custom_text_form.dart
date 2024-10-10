@@ -3,7 +3,7 @@ import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 
 class CustomTextForm extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String hintText;
   final bool obscureText;
   final Widget? prefixIcon;
@@ -14,12 +14,15 @@ class CustomTextForm extends StatelessWidget {
   final Function()? onEditingComplete;
   final Function()? onTapOutside;
   final String? Function(String?)? validator;
+  final String? prefixText;
   final String? suffixText;
   final int? maxLines;
+  final TextInputType? keyboardType;
+  final String? initialValue;
 
   const CustomTextForm({
     super.key,
-    required this.controller,
+    this.controller,
     required this.hintText,
     required this.obscureText,
     this.prefixIcon,
@@ -31,12 +34,17 @@ class CustomTextForm extends StatelessWidget {
     this.onTapOutside,
     this.validator,
     this.suffixText,
+    this.prefixText,
     this.maxLines,
+    this.keyboardType,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
+      keyboardType: keyboardType ?? TextInputType.text,
       style: TStyle.bodyText1,
       obscureText: obscureText,
       controller: controller,
@@ -47,6 +55,7 @@ class CustomTextForm extends StatelessWidget {
               MediaQuery.of(context).size.height),
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        prefixText: prefixText,
         hintText: hintText,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -69,6 +78,7 @@ class CustomTextForm extends StatelessWidget {
         suffixIcon: suffixIcon,
         suffixText: suffixText,
       ),
+      onChanged: onChanged,
       validator: validator,
     );
   }

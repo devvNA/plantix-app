@@ -144,10 +144,10 @@ class LahanTanamController extends GetxController {
         fieldName: 'Lahan Contoh',
         fieldArea: '150',
         fieldAddress:
-            'JL. Jl. DI Panjaitan No.128, Karangreja, Purwokerto Kidul, Kec. Purwokerto Sel., Kabupaten Banyumas, Jawa Tengah 53147',
+            'JL DI Panjaitan No.128, Karangreja, Purwokerto Kidul, Kec. Purwokerto Sel., Kabupaten Banyumas, Jawa Tengah 53147',
         plants: Plant(
-          plantName: 'Padi IR64',
-          plantType: 'Padi',
+          plantName: 'Jagung',
+          plantType: 'Manis',
         ),
       ),
     ];
