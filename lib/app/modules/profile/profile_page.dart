@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/routes/my_store_routes.dart';
 import 'package:plantix_app/app/routes/splash_screen_routes.dart';
 
 import 'profile_controller.dart';
@@ -44,9 +45,27 @@ class ProfilePage extends GetView<ProfileController> {
             onTap: () {
               Get.dialog(
                 Dialog(
-                  child: Image.network(
-                    image,
-                    fit: BoxFit.contain,
+                  insetPadding: EdgeInsets.zero,
+                  child: Stack(
+                    children: [
+                      InteractiveViewer(
+                        child: Image.network(
+                          image,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.black54,
+                          child: IconButton(
+                            icon: Icon(Icons.close, color: Colors.white),
+                            onPressed: () => Get.back(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -58,11 +77,11 @@ class ProfilePage extends GetView<ProfileController> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Pak Tani',
+            controller.user?.name ?? 'Nama Pengguna',
             style: TStyle.head3.copyWith(color: Colors.white),
           ),
           Text(
-            'petani@example.com',
+            controller.user?.email ?? 'email@example.com',
             style: TStyle.bodyText2.copyWith(color: Colors.white70),
           ),
         ],
@@ -81,10 +100,10 @@ class ProfilePage extends GetView<ProfileController> {
           },
         ),
         _buildMenuItem(
-          icon: Icons.notifications,
-          title: 'Notifikasi',
+          icon: Icons.store_mall_directory_sharp,
+          title: 'Buka Toko',
           onTap: () {
-            // Navigasi ke halaman notifikasi
+            Get.toNamed(MyStoreRoutes.myStore);
           },
         ),
         _buildMenuItem(
@@ -105,6 +124,7 @@ class ProfilePage extends GetView<ProfileController> {
           icon: Icons.logout,
           title: 'Keluar',
           onTap: () {
+            controller.storage.removeData("LoggedInUser");
             Get.offAllNamed(SplashScreenRoutes.splashScreen);
           },
         ),

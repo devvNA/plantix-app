@@ -44,7 +44,10 @@ class DetailLahanPage extends GetView<DetailLahanController> {
                                 ),
                                 Spacer(),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    controller.editLahan(
+                                        controller.lahan.id, controller.lahan);
+                                  },
                                   customBorder: CircleBorder(),
                                   child: Ink(
                                     decoration: ShapeDecoration(

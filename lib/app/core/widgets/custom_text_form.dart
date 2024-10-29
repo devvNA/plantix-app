@@ -50,17 +50,17 @@ class CustomTextForm extends StatelessWidget {
       controller: controller,
       maxLines: maxLines,
       cursorColor: AppColors.primary,
-      scrollPadding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom +
-              MediaQuery.of(context).size.height),
+      // scrollPadding: EdgeInsets.only(
+      //     bottom: MediaQuery.of(context).viewInsets.bottom +
+      //         MediaQuery.of(context).size.height),
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         prefixText: prefixText,
         hintText: hintText,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        hintStyle: TStyle.bodyText1.copyWith(color: Colors.grey[500]),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         prefixIconColor: AppColors.primary,
-        suffixIconColor: Colors.grey[400],
+        suffixIconColor: Colors.grey[200],
         fillColor: Colors.grey[200],
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),

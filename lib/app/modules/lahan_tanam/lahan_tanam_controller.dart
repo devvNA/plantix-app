@@ -97,15 +97,6 @@ class LahanTanamController extends GetxController {
     _clearInputFields();
   }
 
-  // Fungsi untuk mengedit lahan yang sudah ada
-  void editLahan(int id, Lahan updatedLahan) {
-    lahanList.removeWhere((element) => element.id == id);
-    lahanList.add(updatedLahan);
-    lahanList.refresh();
-    CustomSnackBar.showCustomSuccessSnackBar(
-        title: 'Sukses', message: 'Lahan berhasil diperbarui');
-  }
-
   // Fungsi untuk menghapus lahan
   void deleteLahan(int id) {
     // lahanList.removeAt(index);
@@ -118,7 +109,6 @@ class LahanTanamController extends GetxController {
 
   // Membersihkan field input setelah penambahan lahan
   void _clearInputFields() {
-    ///
     selectedProvinceId = null; // Reset provinsi yang dipilih
     provinceList.clear(); // Kosongkan daftar provinsi
     selectedCityId = null; // Reset kota yang dipilih
@@ -131,10 +121,23 @@ class LahanTanamController extends GetxController {
     namaController.clear();
     luasLahanController.clear();
     lokasiController.clear();
+    plantNameController.clear();
+    plantTypeController.clear();
   }
 
   void showAddLandBottomSheet() {
     Get.bottomSheet(AddLandBottomSheet());
+    if (Get.isBottomSheetOpen!) {
+      selectedProvinceId = null; // Reset provinsi yang dipilih
+      selectedCityId = null; // Reset kota yang dipilih
+      selectedDistrictId = null; // Reset kecamatan yang dipilih
+      selectedVillageId = null; // Reset desa yang dipilih
+      namaController.clear();
+      luasLahanController.clear();
+      lokasiController.clear();
+      plantNameController.clear();
+      plantTypeController.clear();
+    }
   }
 
   List<Lahan> getDummyLahanList() {

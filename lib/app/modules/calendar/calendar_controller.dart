@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/data/models/event_model.dart';
 import 'package:plantix_app/app/modules/notification/notification_controller.dart';
-import 'package:plantix_app/app/modules/seed_products/seed_products_controller.dart';
 
 class CalendarController extends GetxController {
   final RxInt selectedIndex = 0.obs;
@@ -26,9 +25,7 @@ class CalendarController extends GetxController {
   void onInit() {
     super.onInit();
     fetchInfo();
-    Get.lazyPut<SeedProductsController>(() => SeedProductsController());
     Get.lazyPut<NotificationController>(() => NotificationController());
-
     // Inisialisasi selectedDate dengan tanggal saat ini
     selectedDate.value = DateTime.now();
     getEventsForDay(DateTime.now());

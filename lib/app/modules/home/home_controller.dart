@@ -3,7 +3,8 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/modules/notification/notification_controller.dart';
-import 'package:plantix_app/app/modules/seed_products/seed_products_controller.dart';
+import 'package:plantix_app/app/modules/profile/profile_controller.dart';
+import 'package:plantix_app/app/modules/sales/sales_controller.dart';
 
 class HomeController extends GetxController {
   final RxInt selectedIndex = 0.obs;
@@ -16,9 +17,10 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Get.lazyPut<SeedProductsController>(() => SeedProductsController());
     fetchWeatherInfo();
     getNotificationLength();
+    Get.put<SalesController>(SalesController());
+    Get.put<ProfileController>(ProfileController());
   }
 
   void changeIndex(int index) {

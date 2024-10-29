@@ -55,10 +55,15 @@ class RegistrationPage extends GetView<RegistrationController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              "Selamat datang di Plantix,",
-                              style: TStyle.head3,
-                            ).paddingOnly(top: 14),
+                            GestureDetector(
+                              onTap: () {
+                                controller.showUserList();
+                              },
+                              child: const Text(
+                                "Selamat datang di Plantix,",
+                                style: TStyle.head3,
+                              ).paddingOnly(top: 14),
+                            ),
                             const SizedBox(height: 4),
                             const Text(
                               "Silakan melakukan pendaftaran.",
@@ -77,6 +82,8 @@ class RegistrationPage extends GetView<RegistrationController> {
                             _passwordForm(context),
                             const SizedBox(height: 16),
                             CustomTextForm2(
+                              controller: controller.confirmPasswordController,
+                              obscureText: true,
                               hintText: "Konfirmasi Password",
                               prefixIcon: Icons.lock_person,
                               validator: (value) {
@@ -239,8 +246,7 @@ class RegistrationPage extends GetView<RegistrationController> {
       ),
       onPressed: () {
         if (controller.formField.currentState!.validate()) {
-          printInfo(info: "success");
-          controller.doLogin();
+          controller.onRegister();
         }
       },
       child: controller.isTap.value

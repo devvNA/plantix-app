@@ -21,8 +21,8 @@ class LoginPage extends GetView<LoginController> {
           // Background image
           Image.asset(
             "assets/images/splash_screen.jpg",
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.9,
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height * 0.9,
             fit: BoxFit.cover,
           ),
           SafeArea(
@@ -33,7 +33,7 @@ class LoginPage extends GetView<LoginController> {
                   // Widget bawah dengan radius circular
                   Container(
                     padding: const EdgeInsets.all(2.0),
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.sizeOf(context).height * 0.5,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -71,7 +71,7 @@ class LoginPage extends GetView<LoginController> {
                             _passwordForm(context),
                             const SizedBox(height: 16),
                             _loginButton(),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 22),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -212,8 +212,6 @@ class LoginPage extends GetView<LoginController> {
       ),
       onPressed: () {
         if (controller.formField.currentState!.validate()) {
-          printInfo(info: "success");
-          // controller.onSignIn();
           controller.doLogin();
         }
       },

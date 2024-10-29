@@ -15,61 +15,69 @@ Widget buildHomePage(BuildContext context, HomeController controller) {
   return Column(
     children: [
       buildUserProfileHeader(context, controller),
-      const SizedBox(height: 2.0),
       Expanded(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildBanner(controller),
-              const SizedBox(height: 12.0),
-              const Text(
-                "Ayo Mulai!",
-                style: TStyle.head4,
-              ),
-              buildMenuGrid(context),
-              const SizedBox(height: 12.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Artikel Pertanian",
-                    style: TStyle.head4,
-                  ),
-                  const SizedBox(width: 4),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Lihat Semua",
-                      style:
-                          TStyle.bodyText2.copyWith(color: AppColors.primary),
+        child: RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: () async {},
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildBanner(controller),
+                const SizedBox(height: 12.0),
+                const Text(
+                  "Ayo Mulai!",
+                  style: TStyle.head4,
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                buildMenuGrid(context),
+                const SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Artikel Pertanian",
+                      style: TStyle.head4,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    5, // Jumlah item yang ingin ditampilkan
-                    (index) => const Padding(
-                      padding: EdgeInsets.only(right: 12.0),
-                      child: ArtikelPertanianCard(
-                        judulArtikel: 'Lorem ipsum dolor sit amet',
-                        penulis: 'Penulis Artikel',
-                        tanggalPublikasi: '15 Maret 2024',
-                        gambarUrl:
-                            "https://i0.wp.com/walhisulteng.org/wp-content/uploads/2024/09/WhatsApp-Image-2024-09-24-at-01.44.41.jpeg?w=1283&ssl=1",
+                    InkWell(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          "Lihat Semua",
+                          style: TStyle.bodyText2
+                              .copyWith(color: AppColors.primary),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                      5, // Jumlah item yang ingin ditampilkan
+                      (index) => const Padding(
+                        padding: EdgeInsets.only(right: 12.0),
+                        child: ArtikelPertanianCard(
+                          judulArtikel: 'Lorem ipsum dolor sit amet',
+                          penulis: 'Penulis Artikel',
+                          tanggalPublikasi: '15 Maret 2024',
+                          gambarUrl:
+                              "https://i0.wp.com/walhisulteng.org/wp-content/uploads/2024/09/WhatsApp-Image-2024-09-24-at-01.44.41.jpeg?w=1283&ssl=1",
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -216,15 +224,16 @@ Widget buildUserProfileHeader(BuildContext context, HomeController controller) {
               children: [
                 Text(
                   'Hai, Pak Tani 👋',
-                  style: TStyle.head3.copyWith(
+                  style: TStyle.head4.copyWith(
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(
+                  height: 4.0,
+                ),
                 Text(
-                  'Lahan: 2 hektar | Tanaman: Padi',
-                  style: TStyle.bodyText2.copyWith(
-                    color: Colors.white,
-                  ),
+                  'Selamat datang di Plantix',
+                  style: TStyle.bodyText2.copyWith(color: Colors.white),
                 ),
               ],
             ),
@@ -302,14 +311,21 @@ Widget buildMenuGrid(BuildContext context) {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(menuItems[index]['icon'],
-                    size: 35, color: AppColors.primary),
+                Icon(
+                  menuItems[index]['icon'],
+                  size: 35,
+                  color: AppColors.primary,
+                ),
                 const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Text(
                     menuItems[index]['title'],
                     textAlign: TextAlign.center,
+                    style: TStyle.bodyText2.copyWith(
+                      color: Colors.black.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

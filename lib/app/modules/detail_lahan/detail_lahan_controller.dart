@@ -14,7 +14,9 @@ class DetailLahanController extends GetxController {
   }
 
   // Fungsi untuk mengedit lahan yang sudah ada
-  editLahan(int index) {
+  void editLahan(int id, Lahan updatedLahan) {
+    Get.find<LahanTanamController>().lahanList.add(updatedLahan);
+    Get.find<LahanTanamController>().lahanList.refresh();
     CustomSnackBar.showCustomSuccessSnackBar(
         title: 'Sukses', message: 'Lahan berhasil diperbarui');
   }

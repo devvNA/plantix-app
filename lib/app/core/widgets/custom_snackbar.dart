@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:plantix_app/app/core/theme/app_color.dart';
 
 class CustomSnackBar {
   //SNACKBAR SUCCESS
@@ -14,15 +15,18 @@ class CustomSnackBar {
     Get.snackbar(
       title,
       message,
+      borderColor: AppColors.success,
+      borderWidth: 1,
+      borderRadius: 0,
+      backgroundColor: Color(0xFFEEEEEC),
+      leftBarIndicatorColor: color ?? AppColors.success,
       duration: duration ?? const Duration(seconds: 2),
       padding: const EdgeInsets.all(12.0),
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-      backgroundColor:
-          color ?? const Color(0xFF4CAF50), // Hijau yang lebih cerah
-      colorText: Colors.white,
-      icon: const Icon(
+      colorText: Colors.black,
+      icon: Icon(
         Icons.check_circle,
-        color: Colors.white,
+        color: color ?? AppColors.success,
       ),
       isDismissible: isDismissible ?? true,
     );
@@ -37,18 +41,24 @@ class CustomSnackBar {
     Duration? duration,
   }) {
     Get.closeAllSnackbars(); // Menutup semua snackbar yang aktif
-    Get.snackbar(title, message,
-        duration: duration ?? const Duration(milliseconds: 1500),
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-        colorText: Colors.white,
-        backgroundColor: color ??
-            const Color.fromARGB(255, 229, 73, 73), // Merah yang lebih lembut
-        icon: const Icon(
-          Icons.error,
-          color: Colors.white,
-        ),
-        isDismissible: isDismissible ?? true);
+    Get.snackbar(
+      title,
+      message,
+      borderColor: AppColors.error,
+      borderWidth: 1,
+      borderRadius: 0,
+      backgroundColor: AppColors.background,
+      leftBarIndicatorColor: color ?? AppColors.error,
+      duration: duration ?? const Duration(seconds: 2),
+      padding: const EdgeInsets.all(12.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+      colorText: Colors.black,
+      icon: Icon(
+        Icons.check_circle,
+        color: color ?? AppColors.error,
+      ),
+      isDismissible: isDismissible ?? true,
+    );
   }
 
   //SNACKBAR TOAST Success
@@ -114,5 +124,48 @@ class CustomSnackBar {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}
+
+class AlertMessage extends StatelessWidget {
+  const AlertMessage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Alert Message Example'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.green),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'This is an alert message',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                Text(
+                  'You can define alert body here',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
