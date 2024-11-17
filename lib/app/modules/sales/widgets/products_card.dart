@@ -28,7 +28,7 @@ class ProductMarketCards extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Image.network(
                   filterQuality: FilterQuality.low,
-                  product.images[0],
+                  product.images?[0] ?? '',
                   width: double.infinity,
                   fit: BoxFit.cover,
                   loadingBuilder: (BuildContext context, Widget child,
@@ -70,14 +70,14 @@ class ProductMarketCards extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    product.name ?? '',
                     style: TStyle.bodyText2,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4),
                   Text(
-                    product.price.currencyFormatRp,
+                    (product.price ?? 0).currencyFormatRp,
                     style:
                         TStyle.bodyText2.copyWith(fontWeight: FontWeight.w600),
                     maxLines: 1,
@@ -88,7 +88,7 @@ class ProductMarketCards extends StatelessWidget {
                     children: [
                       Text(
                         "${product.stock} Tersisa",
-                        style: TStyle.bodyText5.copyWith(
+                        style: TStyle.bodyText4.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
                         ),
@@ -107,8 +107,8 @@ class ProductMarketCards extends StatelessWidget {
                             const SizedBox(width: 2),
                             Expanded(
                               child: Text(
-                                product.storeName,
-                                style: TStyle.bodyText5.copyWith(),
+                                product.storeName ?? '',
+                                style: TStyle.bodyText4.copyWith(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -127,71 +127,3 @@ class ProductMarketCards extends StatelessWidget {
     );
   }
 }
-
-// // Widget Card Produk
-// class ProductCard extends GetView<SalesController> {
-//   final Product product;
-
-//   const ProductCard({Key? key, required this.product}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       margin: const EdgeInsets.all(8),
-//       child: ListTile(
-//         leading: product.images.isNotEmpty
-//             ? ClipRRect(
-//                 borderRadius: BorderRadius.circular(4),
-//                 child: Image.network(
-//                   product.images[0],
-//                   width: 50,
-//                   height: 50,
-//                   fit: BoxFit.cover,
-//                 ),
-//               )
-//             : const Icon(Icons.image),
-//         title: Text(product.name),
-//         subtitle: Text(
-//           'Stok: ${product.stock} - Rp ${product.price.toStringAsFixed(0)}',
-//         ),
-//         trailing: PopupMenuButton(
-//           itemBuilder: (context) => [
-//             const PopupMenuItem(
-//               value: 'edit',
-//               child: Text('Edit'),
-//             ),
-//             const PopupMenuItem(
-//               value: 'delete',
-//               child: Text('Hapus'),
-//             ),
-//           ],
-//           onSelected: (value) {
-//             if (value == 'edit') {
-//               // Get.to(() => AddProductPage(product: product));
-//             } else if (value == 'delete') {
-//               Get.dialog(
-//                 AlertDialog(
-//                   title: const Text('Konfirmasi'),
-//                   content: const Text('Yakin ingin menghapus produk ini?'),
-//                   actions: [
-//                     TextButton(
-//                       onPressed: () => Get.back(),
-//                       child: const Text('Batal'),
-//                     ),
-//                     TextButton(
-//                       onPressed: () {
-//                         Get.back();
-//                         controller.deleteProduct(product.id);
-//                       },
-//                       child: const Text('Hapus'),
-//                     ),
-//                   ],
-//                 ),
-//               );
-//             }
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }

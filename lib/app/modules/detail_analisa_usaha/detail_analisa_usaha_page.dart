@@ -102,7 +102,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
                               analyzeProperty(
                                   title: "Harga Panen",
                                   value: controller.hargaPanen.value != 0
-                                      ? "${controller.hargaPanen.value.currencyFormatRp}"
+                                      ? controller.hargaPanen.value.currencyFormatRp
                                       : "0".currencyFormatRp),
                               analyzeProperty(
                                 title: "Pendapatan Kotor",
@@ -192,7 +192,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title + " ($type)",
+          "$title ($type)",
           style: TStyle.head5,
         ),
         const SizedBox(height: 12),

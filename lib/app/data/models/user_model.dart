@@ -1,90 +1,69 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
-  final int id;
-  final String name;
-  final String email;
-  final String address;
-  final String phoneNumber;
-  final String photoUrl;
-  final String password;
-
-  UserModel({
-    required this.id,
+  const UserModel({
+    required this.sub,
     required this.name,
     required this.email,
     required this.address,
-    required this.phoneNumber,
+    required this.hasStore,
     required this.photoUrl,
-    required this.password,
+    required this.phoneNumber,
+    required this.emailVerified,
+    required this.phoneVerified,
   });
 
-  UserModel copyWith({
-    int? id,
-    String? name,
-    String? email,
-    String? address,
-    String? phoneNumber,
-    String? photoUrl,
-    String? password,
-  }) {
+  final String sub;
+  final String name;
+  final String email;
+  final String address;
+  final bool hasStore;
+  final String photoUrl;
+  final String phoneNumber;
+  final bool emailVerified;
+  final bool phoneVerified;
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      address: address ?? this.address,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      photoUrl: photoUrl ?? this.photoUrl,
-      password: password ?? this.password,
+      sub: json["sub"] ?? "",
+      name: json["name"] ?? "",
+      email: json["email"] ?? "",
+      address: json["address"] ?? "",
+      hasStore: json["has_store"] ?? false,
+      photoUrl: json["photo_url"] ?? "",
+      phoneNumber: json["phone_number"] ?? "",
+      emailVerified: json["email_verified"] ?? false,
+      phoneVerified: json["phone_verified"] ?? false,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'address': address,
-      'phoneNumber': phoneNumber,
-      'photoUrl': photoUrl,
-      'password': password,
-    };
-  }
-
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'] ?? '',
-      name: map['name'] ?? '',
-      email: map['email'] ?? '',
-      address: map['address'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      photoUrl: map['photoUrl'] ?? '',
-      password: map['password'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        "sub": sub,
+        "name": name,
+        "email": email,
+        "address": address,
+        "has_store": hasStore,
+        "photo_url": photoUrl,
+        "phone_number": phoneNumber,
+        "email_verified": emailVerified,
+        "phone_verified": phoneVerified,
+      };
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, address: $address, phoneNumber: $phoneNumber, photoUrl: $photoUrl, password: $password)';
+    return "$sub, $name, $email, $address, $hasStore, $photoUrl, $phoneNumber, $emailVerified, $phoneVerified, ";
   }
 
   @override
-  List<Object> get props {
-    return [
-      id,
-      name,
-      email,
-      address,
-      phoneNumber,
-      photoUrl,
-      password,
-    ];
-  }
+  List<Object?> get props => [
+        sub,
+        name,
+        email,
+        address,
+        hasStore,
+        photoUrl,
+        phoneNumber,
+        emailVerified,
+        phoneVerified,
+      ];
 }

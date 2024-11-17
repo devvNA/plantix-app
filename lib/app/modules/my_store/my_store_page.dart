@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'my_store_controller.dart';
+import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/theme/app_color.dart';
+import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
+import 'package:plantix_app/app/modules/my_store/my_store_controller.dart';
+import 'package:plantix_app/app/routes/buat_toko_routes.dart';
+import 'package:plantix_app/app/routes/my_products_routes.dart';
 
 class MyStorePage extends GetView<MyStoreController> {
   const MyStorePage({super.key});
@@ -10,15 +15,209 @@ class MyStorePage extends GetView<MyStoreController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Toko Saya'),
+        title: const Text("Toko Saya"),
         centerTitle: true,
+        backgroundColor: AppColors.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Get.toNamed(BuatTokoRoutes.buatToko);
+            },
+          ),
+        ],
       ),
-      body: const Center(
-        child: Text(
-          'MyStorePage is working',
-          style: TextStyle(fontSize: 20),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: LoadingWidget());
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildStoreDetails(),
+              const SizedBox(height: 20),
+              _buildSaldoSection(),
+              const SizedBox(height: 20),
+              _buildSalesStatus(),
+              const SizedBox(height: 20),
+              _buildProductListSection(),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildStoreDetails() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 45,
+              backgroundImage: controller.storeImage.value.isNotEmpty
+                  ? NetworkImage(controller.storeImage.value)
+                  : const AssetImage('assets/images/store_placeholder.png')
+                      as ImageProvider,
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    controller.storeName.value,
+                    style: TStyle.head3.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    controller.storeAddress.value,
+                    style: TStyle.bodyText1.copyWith(color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSaldoSection() {
+    return Card(
+      color: Color(0xFF2F7C57),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          children: [
+            const Icon(Icons.account_balance_wallet,
+                color: Colors.white, size: 30),
+            const SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Saldo Produk Terjual",
+                  style: TStyle.bodyText1.copyWith(color: Colors.white70),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  controller.saldo.value.currencyFormatRp,
+                  style: TStyle.head4.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSalesStatus() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Status Penjualan", style: TStyle.head4),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatusCard(
+                    "Proses",
+                    controller.processingSales.value.toString(),
+                    Colors.orange,
+                    Icons.work),
+                _buildStatusCard(
+                    "Selesai",
+                    controller.completedSales.value.toString(),
+                    Colors.green,
+                    Icons.check_circle),
+                _buildStatusCard(
+                    "Dibatalkan",
+                    controller.canceledSales.value.toString(),
+                    Colors.red,
+                    Icons.cancel),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusCard(
+      String status, String count, Color color, IconData icon) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 22,
+          backgroundColor: color.withOpacity(0.1),
+          child: Icon(
+            icon,
+            color: color,
+            size: 24,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          count,
+          style: TStyle.head5.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          status,
+          style: TStyle.bodyText3.copyWith(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductListSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Daftar Produk (${controller.productCount.value})",
+          style: TStyle.head4.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Get.toNamed(MyProductsRoutes.myProducts);
+                },
+                icon: const Icon(Icons.list),
+                label: const Text("Lihat Semua Produk"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

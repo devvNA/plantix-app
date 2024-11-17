@@ -1,7 +1,6 @@
-const baseUrl = 'http://scm8.satriatech.com/api';
+const baseUrl = 'https://ziuujbwicwlbfyagxpna.supabase.co/rest/v1';
 // =========================================================
-const listProduk = "/products";
-const loginUrl = "/login-sales";
+const registrationUrl = "/users";
 const logoutUrl = "/logout-sales";
 const refreshTokenUrl = "/refresh-token";
 const profileUrl = "/sales/profile";

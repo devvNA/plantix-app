@@ -2,59 +2,60 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 
 class Product extends Equatable {
   final int id;
-  final String name;
-  final String description;
-  final double price;
-  final int stock;
-  final List<String> images;
-  final String category;
-  final DateTime harvestDate;
-  final bool isAvailable;
-  final String storeName;
-  final String storeAddress;
+  final String? name;
+  final String? description;
+  final double? price;
+  final int? stock;
+  final List<String>? images;
+  final String? category;
+  final DateTime? harvestDate;
+  final bool? isAvailable;
+  final String? storeName;
+  final String? storeAddress;
 
-  Product({
+  const Product({
     required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.stock,
-    required this.images,
-    required this.category,
-    required this.harvestDate,
-    required this.isAvailable,
-    required this.storeName,
-    required this.storeAddress,
+    this.name,
+    this.description,
+    this.price,
+    this.stock,
+    this.images,
+    this.category,
+    this.harvestDate,
+    this.isAvailable,
+    this.storeName,
+    this.storeAddress,
   });
 
   Product copyWith({
     int? id,
-    String? name,
-    String? description,
-    double? price,
-    int? stock,
-    List<String>? images,
-    String? category,
-    DateTime? harvestDate,
-    bool? isAvailable,
-    String? storeName,
-    String? storeAddress,
+    ValueGetter<String?>? name,
+    ValueGetter<String?>? description,
+    ValueGetter<double?>? price,
+    ValueGetter<int?>? stock,
+    ValueGetter<List<String>?>? images,
+    ValueGetter<String?>? category,
+    ValueGetter<DateTime?>? harvestDate,
+    ValueGetter<bool?>? isAvailable,
+    ValueGetter<String?>? storeName,
+    ValueGetter<String?>? storeAddress,
   }) {
     return Product(
       id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      price: price ?? this.price,
-      stock: stock ?? this.stock,
-      images: images ?? this.images,
-      category: category ?? this.category,
-      harvestDate: harvestDate ?? this.harvestDate,
-      isAvailable: isAvailable ?? this.isAvailable,
-      storeName: storeName ?? this.storeName,
-      storeAddress: storeAddress ?? this.storeAddress,
+      name: name != null ? name() : this.name,
+      description: description != null ? description() : this.description,
+      price: price != null ? price() : this.price,
+      stock: stock != null ? stock() : this.stock,
+      images: images != null ? images() : this.images,
+      category: category != null ? category() : this.category,
+      harvestDate: harvestDate != null ? harvestDate() : this.harvestDate,
+      isAvailable: isAvailable != null ? isAvailable() : this.isAvailable,
+      storeName: storeName != null ? storeName() : this.storeName,
+      storeAddress: storeAddress != null ? storeAddress() : this.storeAddress,
     );
   }
 
@@ -67,7 +68,7 @@ class Product extends Equatable {
       'stock': stock,
       'images': images,
       'category': category,
-      'harvestDate': harvestDate.millisecondsSinceEpoch,
+      'harvestDate': harvestDate?.millisecondsSinceEpoch,
       'isAvailable': isAvailable,
       'storeName': storeName,
       'storeAddress': storeAddress,
@@ -77,16 +78,18 @@ class Product extends Equatable {
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
       id: map['id']?.toInt() ?? 0,
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      price: map['price']?.toDouble() ?? 0.0,
-      stock: map['stock']?.toInt() ?? 0,
+      name: map['name'],
+      description: map['description'],
+      price: map['price']?.toDouble(),
+      stock: map['stock']?.toInt(),
       images: List<String>.from(map['images']),
-      category: map['category'] ?? '',
-      harvestDate: DateTime.fromMillisecondsSinceEpoch(map['harvestDate']),
-      isAvailable: map['isAvailable'] ?? false,
-      storeName: map['storeName'] ?? '',
-      storeAddress: map['storeAddress'] ?? '',
+      category: map['category'],
+      harvestDate: map['harvestDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['harvestDate'])
+          : null,
+      isAvailable: map['isAvailable'],
+      storeName: map['storeName'],
+      storeAddress: map['storeAddress'],
     );
   }
 
@@ -101,7 +104,7 @@ class Product extends Equatable {
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       name,

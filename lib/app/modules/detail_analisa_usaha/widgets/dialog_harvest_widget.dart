@@ -8,7 +8,7 @@ import 'package:plantix_app/app/modules/detail_analisa_usaha/detail_analisa_usah
 import '../../../core/theme/app_color.dart';
 
 class DialogHarvestWidget extends GetView<DetailAnalisaUsahaController> {
-  DialogHarvestWidget();
+  DialogHarvestWidget({super.key});
   final _formKey = GlobalKey<FormState>();
 
   @override

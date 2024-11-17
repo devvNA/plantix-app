@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/routes/buat_toko_routes.dart';
+import 'package:plantix_app/app/routes/list_transaction_routes.dart';
 import 'package:plantix_app/app/routes/my_store_routes.dart';
 import 'package:plantix_app/app/routes/splash_screen_routes.dart';
+import 'package:plantix_app/main.dart';
 
 import 'profile_controller.dart';
 
@@ -24,7 +29,7 @@ class ProfilePage extends GetView<ProfileController> {
           children: [
             _buildProfileHeader(context),
             const SizedBox(height: 20),
-            _buildProfileMenu(),
+            _buildProfileMenu(context),
           ],
         ),
       ),
@@ -32,64 +37,72 @@ class ProfilePage extends GetView<ProfileController> {
   }
 
   Widget _buildProfileHeader(BuildContext context) {
-    final image =
-        "https://res.cloudinary.com/dotz74j1p/raw/upload/v1716044999/t3jxwmbgwelsvgsmby4c.png";
+    // final image =
+    //     "https://res.cloudinary.com/dotz74j1p/raw/upload/v1716044999/t3jxwmbgwelsvgsmby4c.png";
 
     return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(20),
-      color: AppColors.primary,
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Get.dialog(
-                Dialog(
-                  insetPadding: EdgeInsets.zero,
-                  child: Stack(
-                    children: [
-                      InteractiveViewer(
-                        child: Image.network(
-                          image,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black54,
-                          child: IconButton(
-                            icon: Icon(Icons.close, color: Colors.white),
-                            onPressed: () => Get.back(),
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(20),
+        color: AppColors.primary,
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Get.dialog(
+                  Scaffold(
+                    backgroundColor: Colors.black,
+                    body: Dialog(
+                      insetPadding: EdgeInsets.zero,
+                      child: Stack(
+                        children: [
+                          InteractiveViewer(
+                            child: Image.network(
+                              user.currentUser?.photoUrl ?? "",
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black54,
+                              child: IconButton(
+                                icon: Icon(Icons.close, color: Colors.white),
+                                onPressed: () => Get.back(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            },
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(image),
+                );
+              },
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(user.currentUser?.photoUrl ?? ""),
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            controller.user?.name ?? 'Nama Pengguna',
-            style: TStyle.head3.copyWith(color: Colors.white),
-          ),
-          Text(
-            controller.user?.email ?? 'email@example.com',
-            style: TStyle.bodyText2.copyWith(color: Colors.white70),
-          ),
-        ],
-      ),
-    );
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () {
+                controller.hasStore.toggle();
+                log("hasStore: ${controller.hasStore.value}");
+              },
+              child: Text(
+                user.currentUser?.name ?? '',
+                style: TStyle.head3.copyWith(color: Colors.white),
+              ),
+            ),
+            Text(
+              user.currentUser?.email ?? '',
+              style: TStyle.bodyText2.copyWith(color: Colors.white70),
+            ),
+          ],
+        ));
   }
 
-  Widget _buildProfileMenu() {
+  Widget _buildProfileMenu(BuildContext context) {
     return Column(
       children: [
         _buildMenuItem(
@@ -99,18 +112,22 @@ class ProfilePage extends GetView<ProfileController> {
             // Implementasi untuk mengedit profil
           },
         ),
+        Obx(() {
+          return _buildMenuItem(
+            icon: Icons.store_mall_directory_sharp,
+            title: controller.hasStore.value ? 'Toko Saya' : 'Buka Toko',
+            onTap: () {
+              controller.hasStore.value
+                  ? Get.toNamed(MyStoreRoutes.myStore)
+                  : Get.toNamed(BuatTokoRoutes.buatToko);
+            },
+          );
+        }),
         _buildMenuItem(
-          icon: Icons.store_mall_directory_sharp,
-          title: 'Buka Toko',
+          icon: Icons.list_alt,
+          title: 'Daftar Transaksi',
           onTap: () {
-            Get.toNamed(MyStoreRoutes.myStore);
-          },
-        ),
-        _buildMenuItem(
-          icon: Icons.security,
-          title: 'Keamanan',
-          onTap: () {
-            // Implementasi untuk pengaturan keamanan
+            Get.toNamed(HistoryTransactionRoutes.historyTransaction);
           },
         ),
         _buildMenuItem(
@@ -123,9 +140,55 @@ class ProfilePage extends GetView<ProfileController> {
         _buildMenuItem(
           icon: Icons.logout,
           title: 'Keluar',
-          onTap: () {
-            controller.storage.removeData("LoggedInUser");
-            Get.offAllNamed(SplashScreenRoutes.splashScreen);
+          onTap: () async {
+            await showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  elevation: 3,
+                  clipBehavior: Clip.antiAlias,
+                  title: const Text('Konfirmasi'),
+                  content: const SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Apakah anda yakin ingin keluar?'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      onPressed: () => Get.back(),
+                      child: const Text("Tidak"),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () async => await supabase.auth.signOut().then(
+                        (_) {
+                          Get.back();
+                          user.clearUser();
+                          Get.offAllNamed(SplashScreenRoutes.splashScreen);
+                        },
+                      ),
+                      child: const Text("Ya"),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ],

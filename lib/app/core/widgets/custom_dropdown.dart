@@ -13,14 +13,14 @@ class CustomDropdown extends StatelessWidget {
   final int? maxLines;
 
   CustomDropdown({
-    Key? key,
+    super.key,
     required this.hintText,
     this.value,
     this.onChanged,
     required this.items,
     this.validator,
     this.maxLines,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

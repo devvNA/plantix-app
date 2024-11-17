@@ -5,6 +5,7 @@ import 'package:plantix_app/app/core/extensions/int_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/modules/cart/widgets/cart_item_widget.dart';
+import 'package:plantix_app/app/routes/checkout_routes.dart';
 
 import 'cart_controller.dart';
 
@@ -17,7 +18,6 @@ class CartPage extends GetView<CartController> {
         appBar: AppBar(
           title: const Text('Keranjang Belanja'),
           centerTitle: true,
-          elevation: 0,
           actions: [
             IconButton(
               onPressed: () {
@@ -57,7 +57,7 @@ class CartPage extends GetView<CartController> {
                 ),
                 Text(
                   'Keranjang Belanja Kosong',
-                  style: TStyle.head3,
+                  style: TStyle.bodyText1,
                 ),
               ],
             ),
@@ -71,7 +71,10 @@ class CartPage extends GetView<CartController> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => Get.back(),
-            child: const Text('Mulai Belanja'),
+            child: Text(
+              'Mulai Belanja',
+              style: TStyle.head5.copyWith(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -124,7 +127,7 @@ class CartPage extends GetView<CartController> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        '${controller.selectedItemCount} item dipilih',
+                        '${controller.selectedProductCount} item dipilih',
                         style: TStyle.bodyText2.copyWith(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -142,8 +145,13 @@ class CartPage extends GetView<CartController> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: controller.selectedItemCount > 0
-                      ? controller.checkoutSelectedItems
+                  onPressed: controller.selectedProductCount > 0
+                      ? () {
+                          final selectedItems =
+                              controller.checkoutSelectedItems();
+                          Get.toNamed(CheckoutRoutes.checkout,
+                              arguments: selectedItems);
+                        }
                       : null,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),

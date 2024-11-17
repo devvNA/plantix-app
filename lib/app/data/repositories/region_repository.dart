@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:plantix_app/app/core/services/network_request.dart';
 import 'package:plantix_app/app/data/models/region/city_model.dart';
 import 'package:plantix_app/app/data/models/region/district_model.dart';
 import 'package:plantix_app/app/data/models/region/province_model.dart';
 import 'package:plantix_app/app/data/models/region/village_model.dart';
-import 'package:plantix_app/app/data/services/network_request.dart';
 
 class RegionRepository {
   final ApiRequest _request = ApiRequest();
@@ -38,7 +38,7 @@ class RegionRepository {
       List<CityModel> data = [];
 
       final response = await _request.get(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json");
+          "https://www.emsifa.com/api-wilayah-indonesia/api/regencies/$provinceId.json");
 
       if (response.statusCode == 200) {
         for (var value in response.data) {
@@ -60,7 +60,7 @@ class RegionRepository {
       List<DistrictModel> data = [];
 
       final response = await _request.get(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/districts/${cityId}.json");
+          "https://www.emsifa.com/api-wilayah-indonesia/api/districts/$cityId.json");
 
       if (response.statusCode == 200) {
         for (var value in response.data) {
@@ -82,7 +82,7 @@ class RegionRepository {
       List<VillageModel> data = [];
 
       final response = await _request.get(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json");
+          "https://www.emsifa.com/api-wilayah-indonesia/api/villages/$districtId.json");
 
       if (response.statusCode == 200) {
         for (var value in response.data) {

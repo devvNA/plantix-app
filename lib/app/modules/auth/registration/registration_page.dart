@@ -70,7 +70,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                               style: TStyle.bodyText1,
                             ),
                             const SizedBox(height: 12),
-                            CustomTextForm2(
+                            CustomTextFormWithIcon(
                               controller: controller.nameController,
                               hintText: "Nama Lengkap",
                               prefixIcon: Icons.person,
@@ -81,7 +81,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                             const SizedBox(height: 12),
                             _passwordForm(context),
                             const SizedBox(height: 16),
-                            CustomTextForm2(
+                            CustomTextFormWithIcon(
                               controller: controller.confirmPasswordController,
                               obscureText: true,
                               hintText: "Konfirmasi Password",
@@ -95,7 +95,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                               },
                             ),
                             const SizedBox(height: 16),
-                            CustomTextForm2(
+                            CustomTextFormWithIcon(
                               controller: controller.addressControllerc,
                               hintText: "Alamat",
                               prefixIcon: Icons.location_on,
@@ -246,13 +246,13 @@ class RegistrationPage extends GetView<RegistrationController> {
       ),
       onPressed: () {
         if (controller.formField.currentState!.validate()) {
-          controller.onRegister();
+          controller.doRegistration();
         }
       },
-      child: controller.isTap.value
+      child: controller.isLoading.value
           ? const SizedBox(
-              height: 25,
-              width: 25,
+              height: 22,
+              width: 22,
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
                 backgroundColor: Colors.white,

@@ -22,7 +22,7 @@ class DetailProductPage extends GetView<DetailProductController> {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: PageView.builder(
-                  itemCount: controller.product.images.length,
+                  itemCount: controller.product.images?.length ?? 0,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
@@ -33,7 +33,7 @@ class DetailProductPage extends GetView<DetailProductController> {
                               children: [
                                 InteractiveViewer(
                                   child: Image.network(
-                                    controller.product.images[index],
+                                    controller.product.images![index],
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -55,7 +55,7 @@ class DetailProductPage extends GetView<DetailProductController> {
                         );
                       },
                       child: Image.network(
-                        controller.product.images[index],
+                        controller.product.images![index],
                         filterQuality: FilterQuality.low,
                         width: double.infinity,
                         fit: BoxFit.cover,
@@ -128,12 +128,12 @@ class DetailProductPage extends GetView<DetailProductController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          controller.product.name,
+                          controller.product.name ?? '',
                           style: TStyle.head4,
                         ),
                         SizedBox(height: 8),
                         Text(
-                          controller.product.price.currencyFormatRp,
+                          (controller.product.price ?? 0).currencyFormatRp,
                           style:
                               TStyle.head3.copyWith(color: AppColors.primary),
                         ),
@@ -168,11 +168,11 @@ class DetailProductPage extends GetView<DetailProductController> {
                       ),
                     ),
                     title: Text(
-                      controller.product.storeName,
+                      controller.product.storeName ?? '',
                       style: TStyle.head5,
                     ),
                     subtitle: Text(
-                      controller.product.storeAddress,
+                      controller.product.storeAddress ?? '',
                       style: TStyle.bodyText3,
                     ),
                   ),
@@ -208,7 +208,7 @@ class DetailProductPage extends GetView<DetailProductController> {
                           const SizedBox(
                             height: 4.0,
                           ),
-                          Text(controller.product.category,
+                          Text(controller.product.category ?? '',
                               style: TStyle.bodyText3.copyWith(
                                 fontWeight: FontWeight.bold,
                               )),
@@ -231,7 +231,7 @@ class DetailProductPage extends GetView<DetailProductController> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          controller.product.description +
+                          controller.product.description ??
                               " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                           style: TStyle.bodyText2,
                         ),
@@ -261,14 +261,21 @@ class DetailProductPage extends GetView<DetailProductController> {
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
             onPressed: () {
-              Get.bottomSheet(Obx(() {
-                return BottomSheetCart(
-                  quantity: controller.quantity.value,
-                  onPressed: () => controller.addProductToCart(),
-                  onIncrease: () => controller.quantity.value++,
-                  onDecrease: () => controller.quantity.value--,
-                );
-              }));
+              Get.bottomSheet(
+                Obx(() {
+                  return BottomSheetCart(
+                    quantity: controller.quantity.value,
+                    onPressed: () => controller.addProductToCart(),
+                    onIncrease: () => controller.quantity.value++,
+                    onDecrease: () => controller.quantity.value--,
+                  );
+                }),
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                backgroundColor: Colors.white,
+              );
               if (Get.isBottomSheetOpen!) {
                 controller.quantity.value = 1;
               } else {}

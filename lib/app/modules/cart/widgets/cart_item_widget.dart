@@ -13,11 +13,11 @@ class StoreCartCard extends StatelessWidget {
   final CartController controller;
 
   const StoreCartCard({
-    Key? key,
+    super.key,
     required this.storeName,
     required this.storeItems,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +89,10 @@ class ProductCartItem extends StatelessWidget {
   final CartController controller;
 
   const ProductCartItem({
-    Key? key,
+    super.key,
     required this.item,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +130,7 @@ class ProductCartItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        item.product![0].images[0],
+        item.product![0].images?[0] ?? '',
         width: 80,
         height: 80,
         fit: BoxFit.cover,
@@ -149,7 +149,7 @@ class ProductCartItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item.product![0].name,
+          item.product![0].name ?? '',
           style: TStyle.bodyText2.copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -158,7 +158,7 @@ class ProductCartItem extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          item.product![0].price.currencyFormatRp,
+          (item.product![0].price ?? 0).currencyFormatRp,
           style: TStyle.bodyText2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w600,

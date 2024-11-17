@@ -4,51 +4,58 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart' as getx;
 import 'package:get_storage/get_storage.dart';
+import 'package:plantix_app/app/core/services/api_endpoint.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
-import 'package:plantix_app/app/data/services/api_endpoint.dart';
+import 'package:plantix_app/app/routes/auth_routes.dart';
+import 'package:plantix_app/app/routes/splash_screen_routes.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiRequest {
   Dio _dio = Dio();
   final box = GetStorage();
+  final apiKey = dotenv.env['API_KEY'];
 
   ApiRequest() {
     _dio = Dio(
       BaseOptions(
-        headers: {HttpHeaders.contentTypeHeader: "application/json"},
-        // baseUrl: baseUrl,
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          'apikey': apiKey,
+        },
+        baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
         sendTimeout: const Duration(seconds: 20),
         contentType: "application/json",
       ),
     );
-    // _dio.interceptors.add(InterceptorsWrapper(
-    //   onRequest: (options, handler) {
-    //     String? token = box.read("TOKEN");
-    //     options.headers['Authorization'] = 'Bearer $token';
-    //     return handler.next(options);
-    //   },
-    //   onError: (error, handler) async {
-    //     if (error.response?.statusCode == 401) {
-    //       final newToken = await refreshToken();
-    //       if (newToken != null) {
-    //         error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-    //         box.write("TOKEN", newToken);
-    //         return handler.resolve(await _dio.fetch(error.requestOptions));
-    //       }
-    //       await box.remove("TOKEN");
-    //       CustomSnackBar.showCustomErrorSnackBar(
-    //         title: "Perhatian",
-    //         message: "Sesi telah berakhir, silahkan login kembali",
-    //       );
-    //       // getx.Get.offAllNamed(AuthRoutes.login);
-    //     }
-    //     return handler.next(error);
-    //   },
-    // ));
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        // String? token = box.read("TOKEN");
+        options.headers['Authorization'] = 'Bearer $apiKey';
+        return handler.next(options);
+      },
+      // onError: (error, handler) async {
+      //   if (error.response?.statusCode == 401) {
+      //     final newToken = await refreshToken();
+      //     if (newToken != null) {
+      //       error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+      //       box.write("TOKEN", newToken);
+      //       return handler.resolve(await _dio.fetch(error.requestOptions));
+      //     }
+      //     await box.remove("TOKEN");
+      //     snackbarError(
+      //       message: "Perhatian",
+      //       body: "Sesi telah berakhir, silahkan login kembali",
+      //     );
+      //     getx.Get.offAllNamed(SplashScreenRoutes.splashScreen);
+      //   }
+      //   return handler.next(error);
+      // },
+    ));
     _dio.interceptors.add(PrettyDioLogger(
       requestHeader: true,
       requestBody: true,
@@ -105,9 +112,9 @@ class ApiRequest {
         return newAccessToken;
       } else {
         await box.remove("TOKEN");
-        CustomSnackBar.showCustomErrorSnackBar(
-          title: "Perhatian",
-          message: "Sesi telah berakhir, silahkan login kembali",
+        snackbarError(
+          message: "Perhatian",
+          body: "Sesi telah berakhir, silahkan login kembali",
         );
         // getx.Get.offAllNamed(
         //   AuthRoutes.login,

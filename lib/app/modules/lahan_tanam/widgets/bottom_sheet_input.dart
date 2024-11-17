@@ -9,7 +9,7 @@ import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
 import 'package:plantix_app/app/modules/lahan_tanam/lahan_tanam_controller.dart';
 
 class AddLandBottomSheet extends GetView<LahanTanamController> {
-  AddLandBottomSheet();
+  AddLandBottomSheet({super.key});
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -227,13 +227,13 @@ class AddLandBottomSheet extends GetView<LahanTanamController> {
                   const SizedBox(height: 22),
                   ElevatedButton(
                     onPressed: _submitData,
-                    child: Text('Simpan'),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
+                    child: Text('Simpan'),
                   ),
                 ],
               ),

@@ -85,32 +85,36 @@ class AnalisaUsahaTaniPage extends GetView<AnalisaUsahaTaniController> {
                   ).paddingZero
                 ],
               ),
-              SizedBox(height: 4),
               buildInfoRow(
                   Icon(Icons.calendar_month,
                       size: 20, color: Colors.green[600]),
                   "Tgl. Tanam : ",
                   data.tanggalTanam),
+              SizedBox(height: 2),
               buildInfoRow(
                   Icon(Icons.calendar_month,
                       size: 20, color: Colors.green[600]),
                   "Tgl. Panen : ",
                   data.tanggalPanen),
+              SizedBox(height: 2),
               buildInfoRow(
                   Icon(Icons.shopping_basket_rounded,
                       size: 20, color: Colors.green[600]),
                   "Jumlah Panen : ",
                   data.jumlahPanen.toString()),
+              SizedBox(height: 2),
               buildInfoRow(
-                  Text(
-                    "Rp",
-                    style: TStyle.bodyText2.copyWith(
-                      color: Colors.green[600],
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  "Rp",
+                  style: TStyle.bodyText2.copyWith(
+                    color: Colors.green[600],
+                    fontWeight: FontWeight.bold,
                   ),
-                  "Pendapatan Bersih : ",
-                  (data.pendapatanBersih).currencyFormatRp),
+                ),
+                "Pendapatan Bersih : ",
+                (data.pendapatanBersih).currencyFormatRp,
+              ),
+              SizedBox(height: 2),
               buildInfoRow(
                   Text(
                     "Rp",

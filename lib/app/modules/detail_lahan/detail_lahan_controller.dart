@@ -17,8 +17,10 @@ class DetailLahanController extends GetxController {
   void editLahan(int id, Lahan updatedLahan) {
     Get.find<LahanTanamController>().lahanList.add(updatedLahan);
     Get.find<LahanTanamController>().lahanList.refresh();
-    CustomSnackBar.showCustomSuccessSnackBar(
-        title: 'Sukses', message: 'Lahan berhasil diperbarui');
+    snackbarSuccess(
+      message: "Sukses",
+      body: "Lahan berhasil diperbarui",
+    );
   }
 
   // Fungsi untuk menghapus lahan

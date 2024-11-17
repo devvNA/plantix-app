@@ -6,7 +6,7 @@ import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
 import 'package:plantix_app/app/modules/detail_analisa_usaha/detail_analisa_usaha_controller.dart';
 
 class AddSpendBottomSheet extends GetView<DetailAnalisaUsahaController> {
-  AddSpendBottomSheet();
+  AddSpendBottomSheet({super.key});
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -65,13 +65,13 @@ class AddSpendBottomSheet extends GetView<DetailAnalisaUsahaController> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _submitData,
-              child: Text('Simpan'),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
+              child: Text('Simpan'),
             ),
           ],
         ),

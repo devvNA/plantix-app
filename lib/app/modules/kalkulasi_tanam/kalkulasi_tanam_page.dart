@@ -14,7 +14,7 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           PageHeader(
@@ -112,7 +112,9 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
         decoration: InputDecoration(
           fillColor: Colors.grey[100],
           labelText: 'Jenis Tanaman',
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           prefixIcon: Icon(Icons.eco),
         ),
         items: controller.jenisTanamanList

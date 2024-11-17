@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class DistrictModel extends Equatable {
-  DistrictModel({
+  const DistrictModel({
     required this.id,
     required this.regencyId,
     required this.name,

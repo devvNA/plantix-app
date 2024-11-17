@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class CityModel extends Equatable {
-    CityModel({
+    const CityModel({
         required this.id,
         required this.provinceId,
         required this.name,

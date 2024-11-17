@@ -3,35 +3,37 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/helpers/db_services.dart';
+import 'package:plantix_app/app/core/services/db_services.dart';
 import 'package:plantix_app/app/routes/auth_routes.dart';
 import 'package:plantix_app/app/routes/home_routes.dart';
+import 'package:plantix_app/main.dart';
 
 class SplashScreenController extends GetxController {
   final storage = LocalStorageService();
-  int? savedUser;
+  String? savedUser;
 
   @override
-  void onInit() {
-    super.onInit();
-    storage.clearAll();
-
+  void onInit() async {
+    await Future.delayed(const Duration(seconds: 1));
     getValidationData().whenComplete(() async {
       if (savedUser != null) {
-        await UserManager().getUser();
+        await user.loadUserData();
         Get.offNamed(HomeRoutes.home);
       } else {
-        Future.delayed(const Duration(milliseconds: 1500), () {
-          Get.offAllNamed(AuthRoutes.login);
-        });
+        Get.offNamed(AuthRoutes.login);
       }
     });
+    storage.clearAll();
+    super.onInit();
   }
 
   Future<void> getValidationData() async {
-    var obtainedUser = await storage.getData("LoggedInUser");
-    savedUser = obtainedUser;
-    log("User: $savedUser");
+    final session = supabase.auth.currentSession;
+    savedUser = session?.accessToken;
+    log("Token: ${session?.accessToken}");
+    // var obtainedUser = await storage.getData("LoggedInUser");
+    // savedUser = obtainedUser;
+    // log("User: $savedUser");
   }
 
   @override

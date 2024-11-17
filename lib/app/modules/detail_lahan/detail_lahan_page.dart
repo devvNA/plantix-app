@@ -199,7 +199,7 @@ class DetailLahanPage extends GetView<DetailLahanController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              title + " ($type)",
+              "$title ($type)",
               style: TStyle.head5,
             ),
             const SizedBox(height: 8),

@@ -73,15 +73,7 @@ class LahanTanamController extends GetxController {
     lahanList.add(Lahan(
       id: lahanList.length + 1,
       fieldName: namaController.text,
-      fieldAddress: lokasiController.text +
-          ", Kel. " +
-          selectedVillage.value +
-          ", Kec. " +
-          selectedDistrict.value +
-          ", " +
-          selectedCity.value +
-          ", " +
-          selectedProvince.value,
+      fieldAddress: "${lokasiController.text}, Kel. ${selectedVillage.value}, Kec. ${selectedDistrict.value}, ${selectedCity.value}, ${selectedProvince.value}",
       fieldArea: luasLahanController.text,
       plants: Plant(
         plantName: plantNameController.text,
@@ -91,8 +83,10 @@ class LahanTanamController extends GetxController {
     lahanList.refresh();
 
     Get.back();
-    CustomSnackBar.showCustomSuccessSnackBar(
-        title: 'Sukses', message: 'Lahan berhasil ditambahkan');
+    snackbarSuccess(
+      message: "Sukses",
+      body: "Lahan berhasil ditambahkan",
+    );
 
     _clearInputFields();
   }
@@ -103,8 +97,10 @@ class LahanTanamController extends GetxController {
     lahanList.removeWhere((element) => element.id == id);
     lahanList.refresh();
     Get.back();
-    CustomSnackBar.showCustomSuccessSnackBar(
-        title: 'Sukses', message: 'Lahan berhasil dihapus');
+    snackbarSuccess(
+      message: "Sukses",
+      body: "Lahan berhasil dihapus",
+    );
   }
 
   // Membersihkan field input setelah penambahan lahan
@@ -126,7 +122,10 @@ class LahanTanamController extends GetxController {
   }
 
   void showAddLandBottomSheet() {
-    Get.bottomSheet(AddLandBottomSheet());
+    Get.bottomSheet(
+      AddLandBottomSheet(),
+      elevation: 3,
+    );
     if (Get.isBottomSheetOpen!) {
       selectedProvinceId = null; // Reset provinsi yang dipilih
       selectedCityId = null; // Reset kota yang dipilih

@@ -33,7 +33,7 @@ class LoginPage extends GetView<LoginController> {
                   // Widget bawah dengan radius circular
                   Container(
                     padding: const EdgeInsets.all(2.0),
-                    height: MediaQuery.sizeOf(context).height * 0.5,
+                    height: MediaQuery.sizeOf(context).height * 0.45,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -71,7 +71,7 @@ class LoginPage extends GetView<LoginController> {
                             _passwordForm(context),
                             const SizedBox(height: 16),
                             _loginButton(),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 16),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -215,10 +215,10 @@ class LoginPage extends GetView<LoginController> {
           controller.doLogin();
         }
       },
-      child: controller.isTap.value
+      child: controller.isLoading.value
           ? const SizedBox(
-              height: 25,
-              width: 25,
+              height: 22,
+              width: 22,
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
                 backgroundColor: Colors.white,

@@ -48,10 +48,6 @@ class KalkulasiTanamController extends GetxController {
   // Riwayat Kalkulasi
   final riwayatKalkulasi = <Kalkulasi>[].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   // Fungsi untuk melakukan kalkulasi
   void submitKalkulasi() {
@@ -102,8 +98,10 @@ class KalkulasiTanamController extends GetxController {
       ));
 
       // Menampilkan snackbar sukses
-      CustomSnackBar.showCustomSuccessSnackBar(
-          title: 'Sukses', message: 'Kalkulasi berhasil dilakukan');
+      snackbarSuccess(
+        message: "Sukses",
+        body: "Kalkulasi berhasil dilakukan",
+      );
       // Get.snackbar('Sukses', 'Kalkulasi berhasil dilakukan',
       //     snackPosition: SnackPosition.BOTTOM);
     }

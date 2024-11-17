@@ -8,10 +8,6 @@ class DetailProductController extends GetxController {
   final isFavorite = false.obs;
   final quantity = 1.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void toggleFavorite() {
     isFavorite.toggle();
@@ -21,20 +17,12 @@ class DetailProductController extends GetxController {
     Get.lazyPut(() => CartController());
     Get.find<CartController>().addToCart(product, quantity.value);
     Get.back();
-    CustomSnackBar.showCustomSuccessSnackBar(
-      duration: Duration(seconds: 1),
-      title: "Berhasil",
-      message: "Produk berhasil ditambahkan ke keranjang",
+    snackbarSuccess(
+      message: "Sukses",
+      body: "Produk berhasil ditambahkan ke keranjang",
+      duration: 800,
     );
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

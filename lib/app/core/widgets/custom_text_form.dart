@@ -5,7 +5,7 @@ import 'package:plantix_app/app/core/theme/typography.dart';
 class CustomTextForm extends StatelessWidget {
   final TextEditingController? controller;
   final String hintText;
-  final bool obscureText;
+  final bool? obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final Function(String)? onChanged;
@@ -19,12 +19,13 @@ class CustomTextForm extends StatelessWidget {
   final int? maxLines;
   final TextInputType? keyboardType;
   final String? initialValue;
+  final String? helperText;
 
   const CustomTextForm({
     super.key,
     this.controller,
     required this.hintText,
-    required this.obscureText,
+    this.obscureText,
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
@@ -38,15 +39,17 @@ class CustomTextForm extends StatelessWidget {
     this.maxLines,
     this.keyboardType,
     this.initialValue,
+    this.helperText,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       initialValue: initialValue,
       keyboardType: keyboardType ?? TextInputType.text,
       style: TStyle.bodyText1,
-      obscureText: obscureText,
+      obscureText: obscureText ?? false,
       controller: controller,
       maxLines: maxLines,
       cursorColor: AppColors.primary,
@@ -55,6 +58,7 @@ class CustomTextForm extends StatelessWidget {
       //         MediaQuery.of(context).size.height),
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        helperText: helperText,
         prefixText: prefixText,
         hintText: hintText,
         hintStyle: TStyle.bodyText1.copyWith(color: Colors.grey[500]),
@@ -84,44 +88,7 @@ class CustomTextForm extends StatelessWidget {
   }
 }
 
-class CustomTextFormWithSuffix extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final bool obscureText;
-  final String suffix;
-
-  const CustomTextFormWithSuffix({
-    super.key,
-    required this.controller,
-    required this.hintText,
-    required this.suffix,
-    this.obscureText = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        hintText: hintText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        suffixText: suffix,
-        suffixStyle: TextStyle(
-          color: Colors.grey[600],
-          fontWeight: FontWeight.bold,
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      ),
-      keyboardType: TextInputType.number,
-    );
-  }
-}
-
-class CustomTextForm2 extends StatelessWidget {
+class CustomTextFormWithIcon extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? Function(String?)? validator;
@@ -131,8 +98,8 @@ class CustomTextForm2 extends StatelessWidget {
   final int? maxLines;
   final EdgeInsetsGeometry? contentPadding;
 
-  CustomTextForm2({
-    Key? key,
+  const CustomTextFormWithIcon({
+    super.key,
     this.controller,
     this.hintText,
     this.validator,
@@ -141,11 +108,12 @@ class CustomTextForm2 extends StatelessWidget {
     this.obscureText,
     this.maxLines,
     this.contentPadding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       maxLines: maxLines ?? 1,
       obscureText: obscureText ?? false,
