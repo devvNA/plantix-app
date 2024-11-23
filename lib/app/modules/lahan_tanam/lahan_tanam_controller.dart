@@ -1,7 +1,9 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/models/field_model.dart';
 import 'package:plantix_app/app/data/models/plant_model.dart';
@@ -73,7 +75,8 @@ class LahanTanamController extends GetxController {
     lahanList.add(Lahan(
       id: lahanList.length + 1,
       fieldName: namaController.text,
-      fieldAddress: "${lokasiController.text}, Kel. ${selectedVillage.value}, Kec. ${selectedDistrict.value}, ${selectedCity.value}, ${selectedProvince.value}",
+      fieldAddress:
+          "${lokasiController.text}, Kel. ${selectedVillage.value}, Kec. ${selectedDistrict.value}, ${selectedCity.value}, ${selectedProvince.value}",
       fieldArea: luasLahanController.text,
       plants: Plant(
         plantName: plantNameController.text,
@@ -153,5 +156,14 @@ class LahanTanamController extends GetxController {
         ),
       ),
     ];
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: AppColors.primary,
+      statusBarIconBrightness: Brightness.light,
+    ));
   }
 }

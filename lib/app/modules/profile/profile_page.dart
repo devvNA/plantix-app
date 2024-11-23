@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_bottom_sheet.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/routes/buat_toko_routes.dart';
+import 'package:plantix_app/app/routes/edit_profile_routes.dart';
+import 'package:plantix_app/app/routes/help_desk_routes.dart';
 import 'package:plantix_app/app/routes/list_transaction_routes.dart';
 import 'package:plantix_app/app/routes/my_store_routes.dart';
 import 'package:plantix_app/app/routes/splash_screen_routes.dart';
@@ -24,15 +28,21 @@ class ProfilePage extends GetView<ProfileController> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: GetBuilder<ProfileController>(builder: (_) {
+        return Stack(
           children: [
-            _buildProfileHeader(context),
-            const SizedBox(height: 20),
-            _buildProfileMenu(context),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildProfileHeader(context),
+                const SizedBox(height: 20),
+                _buildProfileMenu(context),
+              ],
+            ),
+            if (controller.isLoading) LoadingWidgetBG(),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -48,55 +58,64 @@ class ProfilePage extends GetView<ProfileController> {
           children: [
             GestureDetector(
               onTap: () {
-                Get.dialog(
-                  Scaffold(
-                    backgroundColor: Colors.black,
-                    body: Dialog(
-                      insetPadding: EdgeInsets.zero,
-                      child: Stack(
-                        children: [
-                          InteractiveViewer(
-                            child: Image.network(
-                              user.currentUser?.photoUrl ?? "",
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.black54,
-                              child: IconButton(
-                                icon: Icon(Icons.close, color: Colors.white),
-                                onPressed: () => Get.back(),
+                if (user.currentUser!.avatarUrl.isNotEmpty) {
+                  Get.dialog(
+                    Scaffold(
+                      backgroundColor: Colors.black87,
+                      body: Dialog(
+                        insetPadding: EdgeInsets.zero,
+                        child: Stack(
+                          children: [
+                            InteractiveViewer(
+                              child: Image.network(
+                                user.currentUser!.avatarUrl.isEmpty
+                                    ? ""
+                                    : user.currentUser?.avatarUrl ?? "",
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black54,
+                                child: IconButton(
+                                  icon: Icon(Icons.close, color: Colors.white),
+                                  onPressed: () => Get.back(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(user.currentUser?.photoUrl ?? ""),
-              ),
+              child: AvatarWidget(controller: controller),
             ),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () {
-                controller.hasStore.toggle();
-                log("hasStore: ${controller.hasStore.value}");
-              },
+              onTap: () {},
               child: Text(
                 user.currentUser?.name ?? '',
                 style: TStyle.head3.copyWith(color: Colors.white),
               ),
             ),
-            Text(
-              user.currentUser?.email ?? '',
-              style: TStyle.bodyText2.copyWith(color: Colors.white70),
+            GestureDetector(
+              onTap: () {
+                final userId = supabase.auth.currentSession!.user.id;
+                log(supabase
+                    .from('profiles')
+                    .select()
+                    .eq('id', userId)
+                    .single()
+                    .toString());
+              },
+              child: Text(
+                user.currentUser?.email ?? '',
+                style: TStyle.bodyText2.copyWith(color: Colors.white70),
+              ),
             ),
           ],
         ));
@@ -109,20 +128,29 @@ class ProfilePage extends GetView<ProfileController> {
           icon: Icons.person,
           title: 'Edit Profil',
           onTap: () {
-            // Implementasi untuk mengedit profil
+            Get.toNamed(EditProfileRoutes.editProfile);
           },
         ),
-        Obx(() {
-          return _buildMenuItem(
-            icon: Icons.store_mall_directory_sharp,
-            title: controller.hasStore.value ? 'Toko Saya' : 'Buka Toko',
-            onTap: () {
-              controller.hasStore.value
-                  ? Get.toNamed(MyStoreRoutes.myStore)
-                  : Get.toNamed(BuatTokoRoutes.buatToko);
-            },
-          );
-        }),
+        // Obx(() {
+        //   // return _buildMenuItem(
+        //   //   icon: Icons.store_mall_directory_sharp,
+        //   //   title: controller.hasStore.value ? 'Toko Saya' : 'Buka Toko',
+        //   //   onTap: () {
+        //   //     controller.hasStore.value
+        //   //         ? Get.toNamed(MyStoreRoutes.myStore)
+        //   //         : Get.toNamed(BuatTokoRoutes.buatToko);
+        //   //   },
+        //   // );
+        // }),
+        _buildMenuItem(
+          icon: Icons.store_mall_directory_sharp,
+          title: user.currentUser!.hasStore ? 'Toko Saya' : 'Buka Toko',
+          onTap: () {
+            user.currentUser!.hasStore
+                ? Get.toNamed(MyStoreRoutes.myStore)
+                : Get.toNamed(BuatTokoRoutes.buatToko);
+          },
+        ),
         _buildMenuItem(
           icon: Icons.list_alt,
           title: 'Daftar Transaksi',
@@ -134,7 +162,7 @@ class ProfilePage extends GetView<ProfileController> {
           icon: Icons.help,
           title: 'Bantuan',
           onTap: () {
-            // Implementasi untuk halaman bantuan
+            Get.toNamed(HelpDeskRoutes.helpDesk);
           },
         ),
         _buildMenuItem(
@@ -168,8 +196,8 @@ class ProfilePage extends GetView<ProfileController> {
                           color: AppColors.primary,
                         ),
                       ),
-                      onPressed: () => Get.back(),
                       child: const Text("Tidak"),
+                      onPressed: () => Get.back(),
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
@@ -205,6 +233,65 @@ class ProfilePage extends GetView<ProfileController> {
       title: Text(title, style: TStyle.bodyText1),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
+    );
+  }
+}
+
+class AvatarWidget extends StatelessWidget {
+  const AvatarWidget({
+    super.key,
+    required this.controller,
+  });
+
+  final ProfileController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Badge(
+      backgroundColor: Colors.white70,
+      offset: const Offset(-10, 10),
+      label: GestureDetector(
+        onTap: () {
+          showCustomBottomSheet(
+            context,
+            content: TextButton.icon(
+              onPressed: () {
+                controller.updateProfilePicture();
+              },
+              icon: const Icon(Icons.wallet, color: AppColors.primary),
+              label: Text(
+                "Upload Foto dari album",
+                style: TStyle.bodyText2.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          );
+        },
+        child: Icon(
+          color: Colors.grey[800],
+          Icons.edit,
+          size: 18.0,
+        ),
+      ),
+      child: CircleAvatar(
+        onBackgroundImageError: (exception, stackTrace) {
+          debugPrint('Error loading image: $exception');
+        },
+        backgroundColor: Colors.grey[200],
+        radius: 50,
+        backgroundImage: NetworkImage(user.currentUser!.avatarUrl.isEmpty
+            ? ""
+            : user.currentUser?.avatarUrl ?? ""),
+        child: user.currentUser!.avatarUrl.isEmpty
+            ? Icon(
+                size: 50,
+                Icons.person,
+                color: Colors.grey[700],
+              )
+            : null,
+      ),
     );
   }
 }

@@ -216,13 +216,13 @@ class BuildHomePage extends GetView<HomeController> {
   Widget buildUserProfileHeader(
       BuildContext context, HomeController controller) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: [
-            AppColors.secondary,
             AppColors.primary,
+            AppColors.secondary.withOpacity(0.8),
           ],
         ),
       ),
@@ -259,7 +259,7 @@ class BuildHomePage extends GetView<HomeController> {
                   // log(supabase.auth.currentSession?.user.userMetadata
                   //         .toString() ??
                   //     '');
-                  log(user.currentUser?.toJson().toString() ?? '');
+                  log(user.currentUser?.name ?? '');
                 },
                 child: Badge(
                   label: Obx(() {

@@ -1,54 +1,67 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/services/db_services.dart';
+import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/models/store_model.dart';
-import 'package:plantix_app/app/modules/my_products/my_products_controller.dart';
+import 'package:plantix_app/app/data/repositories/my_store_repository.dart';
 
 class MyStoreController extends GetxController {
-  final isLoading = true.obs;
-  final storeName = 'Toko John'.obs;
-  final storeAddress = 'Jl. Raya No. 123'.obs;
-  final storeImage =
-      "https://res.cloudinary.com/dotz74j1p/image/upload/v1715660683/no-image.jpg"
-          .obs;
+  final isLoading = false.obs;
   final saldo = 75000.0.obs;
-  final processingSales = 10.obs;
-  final completedSales = 20.obs;
-  final canceledSales = 30.obs;
-  final productCount = 0.obs;
+  final processingSales = 10;
+  final completedSales = 20;
+  final canceledSales = 30;
+  final productCount = 0;
+  final store = Rx<MyStoreModel?>(null);
 
   @override
   void onInit() {
     super.onInit();
-    Get.put<MyProductsController>(MyProductsController());
+    getStore();
+    // Get.put<MyProductsController>(MyProductsController());
     // Get.find<MyProductsController>().loadInitialProducts();
-    productCount.value = Get.find<MyProductsController>().listMyProducts.length;
-    fetchStoreDetails();
+    // productCount.value = Get.find<MyProductsController>().listMyProducts.length;
+    // fetchStoreDetails();
   }
 
-  Future<void> fetchStoreDetails() async {
-    try {
-      isLoading.value = true;
-      // Misalnya, mengambil data toko dari local storage atau API
-      StoreModel? store = await DBServices.getStore();
+  // Future<void> fetchStoreDetails() async {
+  //   try {
+  //     isLoading.value = true;
+  //     // Misalnya, mengambil data toko dari local storage atau API
+  //     StoreModel? store = await DBServices.getStore();
 
-      if (store != null) {
-        storeName.value = store.name;
-        storeAddress.value = store.address;
-        storeImage.value = store.imageUrl;
-        saldo.value = store.balance;
-        processingSales.value = store.salesStatus['proses'] ?? 0;
-        completedSales.value = store.salesStatus['selesai'] ?? 0;
-        canceledSales.value = store.salesStatus['dibatalkan'] ?? 0;
-        productCount.value = store.products.length;
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Gagal memuat data toko: $e',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } finally {
-      isLoading.value = false;
-    }
+  //     if (store != null) {
+  //       storeName.value = store.name;
+  //       storeAddress.value = store.address;
+  //       storeImage.value = store.imageUrl;
+  //       saldo.value = store.balance;
+  //       processingSales = store.salesStatus['proses'] ?? 0;
+  //       completedSales = store.salesStatus['selesai'] ?? 0;
+  //       canceledSales = store.salesStatus['dibatalkan'] ?? 0;
+  //       productCount = store.products.length;
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar(
+  //       'Error',
+  //       'Gagal memuat data toko: $e',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //     );
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+
+  Future<void> getStore() async {
+    isLoading.value = true;
+    final result = await MyStoreRepository().getStore();
+    result.fold((failure) => snackbarError(message: failure.message), (store) {
+      this.store.value = store;
+    });
+    isLoading.value = false;
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
   }
 }

@@ -18,13 +18,13 @@ class PageHeader extends StatelessWidget {
     return Container(
       clipBehavior: Clip.none,
       height: height ?? 120,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: [
-            AppColors.secondary,
             AppColors.primary,
+            AppColors.secondary.withOpacity(0.8),
           ],
         ),
         borderRadius: BorderRadius.only(

@@ -1,69 +1,69 @@
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
-  const UserModel({
-    required this.sub,
-    required this.name,
-    required this.email,
-    required this.address,
-    required this.hasStore,
-    required this.photoUrl,
-    required this.phoneNumber,
-    required this.emailVerified,
-    required this.phoneVerified,
-  });
-
-  final String sub;
-  final String name;
+  final String id;
   final String email;
+  final String name;
   final String address;
-  final bool hasStore;
-  final String photoUrl;
   final String phoneNumber;
-  final bool emailVerified;
-  final bool phoneVerified;
+  final String avatarUrl;
+  final bool hasStore;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const UserModel({
+    required this.id,
+    required this.email,
+    required this.name,
+    required this.address,
+    required this.phoneNumber,
+    required this.avatarUrl,
+    required this.hasStore,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      sub: json["sub"] ?? "",
-      name: json["name"] ?? "",
+      id: json["id"] ?? "",
       email: json["email"] ?? "",
+      name: json["name"] ?? "",
       address: json["address"] ?? "",
-      hasStore: json["has_store"] ?? false,
-      photoUrl: json["photo_url"] ?? "",
       phoneNumber: json["phone_number"] ?? "",
-      emailVerified: json["email_verified"] ?? false,
-      phoneVerified: json["phone_verified"] ?? false,
+      avatarUrl: json["avatar_url"] ?? "",
+      hasStore: json["has_store"] ?? false,
+      createdAt: json["created_at"] ?? DateTime.now(),
+      updatedAt: json["updated_at"] ?? DateTime.now(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "sub": sub,
-        "name": name,
+        "id": id,
         "email": email,
+        "name": name,
         "address": address,
-        "has_store": hasStore,
-        "photo_url": photoUrl,
         "phone_number": phoneNumber,
-        "email_verified": emailVerified,
-        "phone_verified": phoneVerified,
+        "avatar_url": avatarUrl,
+        "has_store": hasStore,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
       };
 
   @override
   String toString() {
-    return "$sub, $name, $email, $address, $hasStore, $photoUrl, $phoneNumber, $emailVerified, $phoneVerified, ";
+    return "$id, $email, $name, $address, $phoneNumber, $avatarUrl, $hasStore, $createdAt, $updatedAt, ";
   }
 
   @override
   List<Object?> get props => [
-        sub,
-        name,
+        id,
         email,
+        name,
         address,
-        hasStore,
-        photoUrl,
         phoneNumber,
-        emailVerified,
-        phoneVerified,
+        avatarUrl,
+        hasStore,
+        createdAt,
+        updatedAt,
       ];
 }

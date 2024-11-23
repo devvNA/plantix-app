@@ -132,7 +132,7 @@ class QAlert extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(
         horizontal: 12.0,
-        vertical: 8.0,
+        vertical: 10.0,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -164,7 +164,7 @@ class QAlert extends StatelessWidget {
           Text(
             message,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            // maxLines: 2,
             style: TStyle.bodyText1.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -176,8 +176,8 @@ class QAlert extends StatelessWidget {
             Text(
               body!,
               overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: TStyle.bodyText2,
+              // maxLines: 2,
+              style: TStyle.bodyText1,
             )
           ],
         ],

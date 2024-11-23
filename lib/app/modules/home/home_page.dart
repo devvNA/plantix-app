@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
@@ -16,6 +17,11 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: AppColors.primary,
+      statusBarIconBrightness: Brightness.light,
+    ));
+
     return WillPopScope(
       onWillPop: () async {
         return controller.onBack();
@@ -25,10 +31,7 @@ class HomePage extends GetView<HomeController> {
         body: Obx(() {
           if (controller.isLoading.value) {
             return const Center(
-              child: LoadingWidget(
-                rightDotColor: Color(0xFF1A1A3F),
-                leftDotColor: AppColors.primary,
-              ),
+              child: LoadingWidget(),
             );
           }
           return SafeArea(

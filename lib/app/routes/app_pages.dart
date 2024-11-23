@@ -19,6 +19,8 @@ import 'profile_routes.dart';
 import 'sales_routes.dart';
 import 'splash_screen_routes.dart';
 import 'my_products_routes.dart';
+import 'edit_profile_routes.dart';
+import 'help_desk_routes.dart';
 
 class AppPages {
   AppPages._();
@@ -47,5 +49,7 @@ class AppPages {
     ...HistoryTransactionRoutes.routes,
     ...BuatTokoRoutes.routes,
 		...MyProductsRoutes.routes,
+		...EditProfileRoutes.routes,
+		...HelpDeskRoutes.routes,
   ];
 }

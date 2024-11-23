@@ -22,30 +22,32 @@ class MyStorePage extends GetView<MyStoreController> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Get.toNamed(BuatTokoRoutes.buatToko);
+              Get.toNamed(BuatTokoRoutes.buatToko,
+                  arguments: controller.store.value);
             },
           ),
         ],
       ),
       body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: LoadingWidget());
-        }
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildStoreDetails(),
-              const SizedBox(height: 20),
-              _buildSaldoSection(),
-              const SizedBox(height: 20),
-              _buildSalesStatus(),
-              const SizedBox(height: 20),
-              _buildProductListSection(),
-            ],
-          ),
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildStoreDetails(),
+                  const SizedBox(height: 20),
+                  _buildSaldoSection(),
+                  const SizedBox(height: 20),
+                  _buildSalesStatus(),
+                  const SizedBox(height: 20),
+                  _buildProductListSection(),
+                ],
+              ),
+            ),
+            if (controller.isLoading.value) const LoadingWidgetBG(),
+          ],
         );
       }),
     );
@@ -61,10 +63,11 @@ class MyStorePage extends GetView<MyStoreController> {
           children: [
             CircleAvatar(
               radius: 45,
-              backgroundImage: controller.storeImage.value.isNotEmpty
-                  ? NetworkImage(controller.storeImage.value)
-                  : const AssetImage('assets/images/store_placeholder.png')
-                      as ImageProvider,
+              backgroundImage: controller
+                          .store.value?.storeImageUrl.isNotEmpty ??
+                      false
+                  ? NetworkImage(controller.store.value?.storeImageUrl ?? "")
+                  : null,
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -72,13 +75,13 @@ class MyStorePage extends GetView<MyStoreController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    controller.storeName.value,
-                    style: TStyle.head3.copyWith(fontWeight: FontWeight.bold),
+                    controller.store.value?.storeName ?? "",
+                    style: TStyle.head4.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 4),
                   Text(
-                    controller.storeAddress.value,
-                    style: TStyle.bodyText1.copyWith(color: Colors.grey[600]),
+                    controller.store.value?.address ?? "",
+                    style: TStyle.bodyText2.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -138,17 +141,17 @@ class MyStorePage extends GetView<MyStoreController> {
               children: [
                 _buildStatusCard(
                     "Proses",
-                    controller.processingSales.value.toString(),
+                    controller.processingSales.toString(),
                     Colors.orange,
                     Icons.work),
                 _buildStatusCard(
                     "Selesai",
-                    controller.completedSales.value.toString(),
+                    controller.completedSales.toString(),
                     Colors.green,
                     Icons.check_circle),
                 _buildStatusCard(
                     "Dibatalkan",
-                    controller.canceledSales.value.toString(),
+                    controller.canceledSales.toString(),
                     Colors.red,
                     Icons.cancel),
               ],
@@ -194,7 +197,7 @@ class MyStorePage extends GetView<MyStoreController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Daftar Produk (${controller.productCount.value})",
+          "Daftar Produk (${controller.productCount})",
           style: TStyle.head4.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),

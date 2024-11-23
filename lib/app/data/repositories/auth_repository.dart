@@ -30,21 +30,16 @@ class AuthRepository {
     required String email,
     required String password,
     required String name,
-    required String address,
-    required String phoneNumber,
-    required String photoUrl,
+    String? avatarUrl,
   }) async {
     try {
       final response = await supabase.auth.signUp(
-        data: {
-          "name": name,
-          "address": address,
-          "phone_number": phoneNumber,
-          "photo_url": photoUrl,
-          "has_store": false,
-        },
         email: email,
         password: password,
+        data: {
+          "name": name,
+          "avatar_url": avatarUrl,
+        },
       );
       return right(response);
     } on AuthException catch (error) {
@@ -58,12 +53,64 @@ class AuthRepository {
 
   Future<Either<Failure, UserModel>> getUser() async {
     try {
-      final data = supabase.auth.currentSession?.user.userMetadata;
-      UserModel user = UserModel.fromJson(data ?? {});
+      final userId = supabase.auth.currentSession!.user.id;
+      final data =
+          await supabase.from('users').select().eq('id', userId).single();
+      UserModel user = UserModel.fromJson(data);
       log(user.toJson().toString());
       return right(user);
 
       // return const Left(ParsingFailure("Kesalahan Parsing"));
+    } catch (e) {
+      log(e.toString());
+      return left(Exception(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, UserModel>> updateUserData({
+    String? name,
+    String? email,
+    String? address,
+    String? phoneNumber,
+    String? storeName,
+  }) async {
+    try {
+      final userId = supabase.auth.currentSession!.user.id;
+      final updates = {
+        if (name != null) 'name': name,
+        if (email != null) 'email': email,
+        if (address != null) 'address': address,
+        if (phoneNumber != null) 'phone_number': phoneNumber,
+        if (storeName != null) 'store_name': storeName,
+      };
+
+      final data = await supabase
+          .from('users')
+          .update(updates)
+          .eq('id', userId)
+          .select()
+          .single();
+
+      UserModel updatedUser = UserModel.fromJson(data);
+      return right(updatedUser);
+    } catch (e) {
+      log(e.toString());
+      return left(Exception(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, User?>> updateUserEmail(String newEmail) async {
+    try {
+      final response =
+          await supabase.auth.updateUser(UserAttributes(email: newEmail));
+      if (response.user != null) {
+        updateUserData(email: newEmail);
+        return right(response.user);
+      }
+      return left(Exception('Gagal memperbarui email'));
+    } on AuthException catch (e) {
+      log(e.message);
+      return left(Exception(e.message));
     } catch (e) {
       log(e.toString());
       return left(Exception(e.toString()));
@@ -103,7 +150,7 @@ class AuthRepository {
 class UserManager {
   // Singleton instance
   static final UserManager instance = UserManager._internal();
-  
+
   // Private constructor
   UserManager._internal();
 
@@ -121,11 +168,6 @@ class UserManager {
       },
       (user) => _currentUser = user,
     );
-  }
-
-  // Mengecek apakah user memiliki toko
-  bool hasStore() {
-    return _currentUser?.hasStore ?? false;
   }
 
   // Reset data user

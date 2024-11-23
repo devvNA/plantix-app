@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/helpers/validator.dart';
@@ -15,6 +16,11 @@ class LoginPage extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+    ));
+
     return Scaffold(
       body: Stack(
         children: [
@@ -32,8 +38,7 @@ class LoginPage extends GetView<LoginController> {
                   const Spacer(),
                   // Widget bawah dengan radius circular
                   Container(
-                    padding: const EdgeInsets.all(2.0),
-                    height: MediaQuery.sizeOf(context).height * 0.45,
+                    // height: MediaQuery.sizeOf(context).height * 0.45,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -49,7 +54,7 @@ class LoginPage extends GetView<LoginController> {
                       ],
                     ),
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(18),
                       child: Form(
                         key: controller.formField,
                         child: Column(
@@ -210,11 +215,13 @@ class LoginPage extends GetView<LoginController> {
         maximumSize: const Size(double.infinity, 42),
         minimumSize: const Size(double.infinity, 42),
       ),
-      onPressed: () {
-        if (controller.formField.currentState!.validate()) {
-          controller.doLogin();
-        }
-      },
+      onPressed: controller.isLoading.value
+          ? null
+          : () {
+              if (controller.formField.currentState!.validate()) {
+                controller.doLogin();
+              }
+            },
       child: controller.isLoading.value
           ? const SizedBox(
               height: 22,

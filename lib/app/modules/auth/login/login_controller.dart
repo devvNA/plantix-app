@@ -24,6 +24,7 @@ class LoginController extends GetxController {
   }
 
   Future doLogin() async {
+    FocusScope.of(Get.context!).unfocus();
     isLoading(true);
 
     if (formField.currentState!.validate()) {
@@ -34,10 +35,8 @@ class LoginController extends GetxController {
       response.fold((error) => Get.context!.showSnackBar(error, isError: true),
           (data) async {
         await user.loadUserData();
-        log("${data.session?.user.lastSignInAt}");
+        log("${data.user}");
         Get.offAllNamed(HomeRoutes.home);
-        emailController.clear();
-        passwordController.clear();
         return snackbarSuccess(
           message: "Sukses",
           body: "Login berhasil. Selamat datang!",

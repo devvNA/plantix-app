@@ -6,68 +6,46 @@ import 'package:plantix_app/app/core/extensions/snackbar_ext.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/repositories/auth_repository.dart';
 import 'package:plantix_app/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegistrationController extends GetxController {
   // final storage = LocalStorageService();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
-  final addressControllerc = TextEditingController();
-  final phoneNumberController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final formField = GlobalKey<FormState>();
   final notVisible = true.obs;
+  final notVisibleConfirm = true.obs;
   final isLoading = false.obs;
-  final id = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
   }
 
-  doRegistration() async {
+  Future<void> doRegistration() async {
+    FocusScope.of(Get.context!).unfocus();
     isLoading(true);
 
     if (formField.currentState!.validate()) {
       final response = await AuthRepository().registerWithEmailPassword(
-        name: nameController.text,
-        address: addressControllerc.text,
-        phoneNumber: phoneNumberController.text,
-        photoUrl:
-            "https://www.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-600nw-2281862025.jpg",
         email: emailController.text,
         password: passwordController.text,
-        // phone: phoneNumberController.text,
+        name: nameController.text,
+        avatarUrl: "",
       );
 
       response.fold((error) => Get.context!.showSnackBar(error, isError: true),
           (data) async {
-        Get.back();
-        await supabase.auth.signOut(scope: SignOutScope.global).then(
-          (_) {
-            snackbarSuccess(
+        await user.loadUserData().then(
+          (value) {
+            return snackbarSuccess(
               message: "Sukses",
-              body: "Registrasi berhasil. Silahkan login!",
+              body: "Registrasi berhasil. Selamat datang!",
             );
           },
         );
-
-        emailController.clear();
-        passwordController.clear();
       });
-      //     .then((value) {
-      //   if (value != null) {
-      //     Get.offAllNamed(HomeRoutes.home);
-      //     snackbarSuccess(
-      //       message: "Sukses",
-      //       body: "Login berhasil. Selamat datang!",
-      //     );
-      //     emailController.clear();
-      //     passwordController.clear();
-      //   }
-      //   snackbarError(message: value.toString());
-      // });
     }
     isLoading(false);
   }
@@ -135,5 +113,9 @@ class RegistrationController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    confirmPasswordController.dispose();
   }
 }

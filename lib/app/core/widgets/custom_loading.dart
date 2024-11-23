@@ -23,3 +23,23 @@ class LoadingWidget extends StatelessWidget {
     );
   }
 }
+
+class LoadingWidgetBG extends StatelessWidget {
+  const LoadingWidgetBG({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        color: Colors.black26,
+        alignment: Alignment.center,
+        child: LoadingWidget(
+          size: 32,
+        ),
+      ),
+    );
+  }
+}

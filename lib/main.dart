@@ -39,15 +39,23 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return GetMaterialApp(
-      popGesture: true,
-      // showPerformanceOverlay: true,
-      // showSemanticsDebugger: true,
-      defaultTransition: Transition.cupertino,
-      debugShowCheckedModeBanner: false,
-      theme: myTheme,
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentNode = FocusScope.of(Get.context!);
+        if (currentNode.focusedChild != null && !currentNode.hasPrimaryFocus) {
+          FocusManager.instance.primaryFocus!.unfocus();
+        }
+      },
+      child: GetMaterialApp(
+        popGesture: true,
+        // showPerformanceOverlay: true,
+        // showSemanticsDebugger: true,
+        defaultTransition: Transition.cupertino,
+        debugShowCheckedModeBanner: false,
+        theme: myTheme,
+        initialRoute: AppPages.INITIAL,
+        getPages: AppPages.routes,
+      ),
     );
   }
 }

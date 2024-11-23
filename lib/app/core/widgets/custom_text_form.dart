@@ -20,6 +20,7 @@ class CustomTextForm extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? initialValue;
   final String? helperText;
+  final bool? enabled;
 
   const CustomTextForm({
     super.key,
@@ -40,11 +41,13 @@ class CustomTextForm extends StatelessWidget {
     this.keyboardType,
     this.initialValue,
     this.helperText,
+    this.enabled,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled ?? true,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       initialValue: initialValue,
       keyboardType: keyboardType ?? TextInputType.text,
@@ -97,6 +100,8 @@ class CustomTextFormWithIcon extends StatelessWidget {
   final bool? obscureText;
   final int? maxLines;
   final EdgeInsetsGeometry? contentPadding;
+  final Widget? suffixIcon;
+  final bool? enabled;
 
   const CustomTextFormWithIcon({
     super.key,
@@ -108,11 +113,14 @@ class CustomTextFormWithIcon extends StatelessWidget {
     this.obscureText,
     this.maxLines,
     this.contentPadding,
+    this.suffixIcon,
+    this.enabled,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled ?? true,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       maxLines: maxLines ?? 1,
@@ -123,6 +131,7 @@ class CustomTextFormWithIcon extends StatelessWidget {
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        suffixIcon: suffixIcon,
         contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 0),
         prefixIconColor: AppColors.primary,
         suffixIconColor: Colors.grey[400],

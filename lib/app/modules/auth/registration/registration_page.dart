@@ -16,23 +16,24 @@ class RegistrationPage extends GetView<RegistrationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background image
-          Image.asset(
-            "assets/images/splash_screen.jpg",
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.9,
-            fit: BoxFit.cover,
-          ),
-          SafeArea(
-            child: Obx(() {
-              return Column(
-                children: [
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.all(2.0),
-                    height: MediaQuery.of(context).size.height * 0.52,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            // Background image
+            Image.asset(
+              "assets/images/splash_screen.jpg",
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              fit: BoxFit.cover,
+            ),
+
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Obx(() {
+                  return Container(
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -47,23 +48,18 @@ class RegistrationPage extends GetView<RegistrationController> {
                         ),
                       ],
                     ),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(24),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                       child: Form(
                         key: controller.formField,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                controller.showUserList();
-                              },
-                              child: const Text(
-                                "Selamat datang di Plantix,",
-                                style: TStyle.head3,
-                              ).paddingOnly(top: 14),
-                            ),
+                            const Text(
+                              "Selamat datang di Plantix,",
+                              style: TStyle.head3,
+                            ).paddingOnly(top: 14),
                             const SizedBox(height: 4),
                             const Text(
                               "Silakan melakukan pendaftaran.",
@@ -82,8 +78,20 @@ class RegistrationPage extends GetView<RegistrationController> {
                             _passwordForm(context),
                             const SizedBox(height: 16),
                             CustomTextFormWithIcon(
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  controller.notVisibleConfirm.toggle();
+                                  log(controller.notVisible.toString());
+                                },
+                                icon: Icon(
+                                  controller.notVisibleConfirm.value
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
+                                  size: 20.0,
+                                ),
+                              ),
                               controller: controller.confirmPasswordController,
-                              obscureText: true,
+                              obscureText: controller.notVisibleConfirm.value,
                               hintText: "Konfirmasi Password",
                               prefixIcon: Icons.lock_person,
                               validator: (value) {
@@ -95,15 +103,6 @@ class RegistrationPage extends GetView<RegistrationController> {
                               },
                             ),
                             const SizedBox(height: 16),
-                            CustomTextFormWithIcon(
-                              controller: controller.addressControllerc,
-                              hintText: "Alamat",
-                              prefixIcon: Icons.location_on,
-                              validator: Validator.required,
-                              maxLines: 4,
-                              contentPadding: EdgeInsets.all(12),
-                            ),
-                            const SizedBox(height: 12),
                             _loginButton(),
                             const SizedBox(height: 12),
                             Row(
@@ -127,6 +126,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                                 )
                               ],
                             ),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       ),
@@ -135,18 +135,19 @@ class RegistrationPage extends GetView<RegistrationController> {
                         begin: 100,
                         duration: const Duration(milliseconds: 400),
                         curve: Curves.easeInOut,
-                      ),
-                ],
-              );
-            }),
-          ),
-        ],
+                      );
+                }),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   TextFormField _emailForm(context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller.emailController,
       scrollPadding:
           EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
@@ -185,12 +186,13 @@ class RegistrationPage extends GetView<RegistrationController> {
 
   TextFormField _passwordForm(context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       obscureText: controller.notVisible.value,
       controller: controller.passwordController,
       scrollPadding:
           EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
       cursorColor: AppColors.primary,
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 0),
@@ -245,9 +247,7 @@ class RegistrationPage extends GetView<RegistrationController> {
         minimumSize: const Size(double.infinity, 42),
       ),
       onPressed: () {
-        if (controller.formField.currentState!.validate()) {
-          controller.doRegistration();
-        }
+        controller.doRegistration();
       },
       child: controller.isLoading.value
           ? const SizedBox(
