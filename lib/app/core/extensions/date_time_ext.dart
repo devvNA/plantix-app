@@ -58,6 +58,13 @@ extension DateTimeExt on DateTime {
     return '$hari, $day $bulan $tahun';
   }
 
+  String toFormattedDatetimeIndonesia() {
+    final String bulan = _getNamaBulan(month);
+    final int tahun = year;
+    return '$day $bulan $tahun';
+    // return '$bulan $day, $tahun $waktu';
+  }
+
   String toFormattedDatetime() {
     final String bulan = _getNamaBulan(month);
     final int tahun = year;

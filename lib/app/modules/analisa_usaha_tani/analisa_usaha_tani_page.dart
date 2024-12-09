@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_page_header.dart';

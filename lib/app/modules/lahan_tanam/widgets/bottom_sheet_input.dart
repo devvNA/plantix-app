@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/helpers/validator.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_dropdown.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
 import 'package:plantix_app/app/modules/lahan_tanam/lahan_tanam_controller.dart';
 
@@ -36,24 +38,23 @@ class AddLandBottomSheet extends GetView<LahanTanamController> {
               key: _formKey,
               child: Column(
                 children: [
-                  CustomTextForm(
+                  CustomTextFormSimple(
+                    label: 'Nama Lahan',
                     controller: controller.namaController,
-                    hintText: 'Nama Lahan',
-                    obscureText: false,
                     validator: Validator.required,
                   ),
                   const SizedBox(height: 12),
-                  CustomTextForm(
+                  CustomTextFormSimple(
+                    label: 'Luas Lahan',
                     controller: controller.luasLahanController,
-                    hintText: 'Luas Lahan',
-                    obscureText: false,
                     suffixText: 'm²',
                     validator: Validator.required,
                   ),
                   const SizedBox(height: 12),
 
                   /// === PROVINCE === ///
-                  Obx(() => CustomDropdown(
+                  Obx(() => CustomDropDownSimple(
+                        label: 'Provinsi',
                         validator: Validator.required,
                         onChanged: (value) {
                           controller.selectedProvinceId = value!;
@@ -74,17 +75,20 @@ class AddLandBottomSheet extends GetView<LahanTanamController> {
 
                           controller.getCity(int.parse(value));
                         },
-                        hintText: 'Pilih Provinsi',
+                        // hintText: 'Pilih Provinsi',
                         items: controller.provinceList.map((province) {
                           return DropdownMenuItem<String>(
                             onTap: () {
                               controller.selectedProvince.value = province.name;
                             },
                             value: province.id,
-                            child: Text(province.name
-                                .split(', ')
-                                .map((word) => word.capitalize)
-                                .join(', ')),
+                            child: Text(
+                              province.name
+                                  .split(', ')
+                                  .map((word) => word.capitalize)
+                                  .join(', '),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           );
                         }).toList(),
                       )),
@@ -93,155 +97,168 @@ class AddLandBottomSheet extends GetView<LahanTanamController> {
                   ),
 
                   /// === CITY === ///
-                  Obx(() => Visibility(
-                        visible: controller.cityList.isNotEmpty,
-                        child: CustomDropdown(
-                          validator: Validator.required,
-                          value: controller.selectedCityId,
-                          onChanged: (value) {
-                            controller.selectedCityId = value;
-                            if (value != null) {
-                              controller.getDistrict(int.parse(value));
-                            }
-                            controller.selectedDistrictId =
-                                null; // Reset kecamatan yang dipilih
-                            controller.districtList
-                                .clear(); // Kosongkan daftar kecamatan
+                  Obx(() {
+                    if (controller.isLoadingCity.value) {
+                      return const LoadingWidget();
+                    }
+                    return CustomDropDownSimple(
+                      label: 'Kota',
+                      validator: Validator.required,
+                      value: controller.selectedCityId,
+                      onChanged: (value) {
+                        controller.selectedCityId = value;
+                        if (value != null) {
+                          controller.getDistrict(int.parse(value));
+                        }
+                        controller.selectedDistrictId =
+                            null; // Reset kecamatan yang dipilih
+                        controller.districtList
+                            .clear(); // Kosongkan daftar kecamatan
+                      },
+                      items: controller.cityList.map((city) {
+                        return DropdownMenuItem<String>(
+                          onTap: () {
+                            controller.selectedCity.value = city.name;
                           },
-                          hintText: 'Pilih Kota',
-                          items: controller.cityList.map((city) {
-                            return DropdownMenuItem<String>(
-                              onTap: () {
-                                controller.selectedCity.value = city.name;
-                              },
-                              value: city.id,
-                              child: Text(city.name
-                                  .split(', ')
-                                  .map((word) => word.capitalize)
-                                  .join(', ')),
-                            );
-                          }).toList(),
-                        ),
-                      )),
+                          value: city.id,
+                          child: Text(
+                            city.name
+                                .split(', ')
+                                .map((word) => word.capitalize)
+                                .join(', '),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
                   const SizedBox(
                     height: 12.0,
                   ),
 
                   /// === DISTRICT === ///
-                  Obx(() => Visibility(
-                        visible: controller.districtList.isNotEmpty,
-                        child: CustomDropdown(
-                          validator: Validator.required,
-                          value: controller.selectedDistrictId,
-                          onChanged: (value) {
-                            controller.selectedDistrictId = value;
-                            if (value != null) {
-                              controller.getVillage(int.parse(value));
-
-                              controller.selectedVillageId =
-                                  null; // Reset desa yang dipilih
-                              controller.villageList
-                                  .clear(); // Kosongkan daftar desa
-                            }
+                  Obx(() {
+                    if (controller.isLoadingDistrict.value) {
+                      return const LoadingWidget();
+                    }
+                    return CustomDropDownSimple(
+                      label: 'Kecamatan',
+                      validator: Validator.required,
+                      value: controller.selectedDistrictId,
+                      onChanged: (value) {
+                        controller.selectedDistrictId = value;
+                        if (value != null) {
+                          // controller.getVillage(int.parse(value));
+                          controller.selectedVillageId =
+                              null; // Reset desa yang dipilih
+                          controller.villageList
+                              .clear(); // Kosongkan daftar desa
+                        }
+                      },
+                      items: controller.districtList.map((district) {
+                        return DropdownMenuItem<String>(
+                          onTap: () {
+                            controller.selectedDistrict.value = district.name;
                           },
-                          hintText: 'Pilih Kecamatan',
-                          items: controller.districtList.map((district) {
-                            return DropdownMenuItem<String>(
-                              onTap: () {
-                                controller.selectedDistrict.value =
-                                    district.name;
-                              },
-                              value: district.id,
-                              child: Text(district.name
-                                  .split(', ')
-                                  .map((word) => word.capitalize)
-                                  .join(', ')),
-                            );
-                          }).toList(),
-                        ),
-                      )),
+                          value: district.id,
+                          child: Text(
+                            district.name
+                                .split(', ')
+                                .map((word) => word.capitalize)
+                                .join(', '),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
                   const SizedBox(
                     height: 12.0,
                   ),
 
-                  /// === VILLAGE === ///
-                  Obx(() => Visibility(
-                        visible: controller.villageList.isNotEmpty,
-                        child: CustomDropdown(
-                          validator: Validator.required,
-                          value: controller.selectedVillageId,
-                          onChanged: (value) {
-                            controller.selectedVillageId = value;
-                            // if (value != null) {
-                            //   controller.selectedDistrict =
-                            //       null; // Reset kecamatan yang dipilih
-                            //   controller.districtList
-                            //       .clear(); // Kosongkan daftar kecamatan
-                            // }
-                          },
-                          hintText: 'Pilih Desa',
-                          items: controller.villageList.map((village) {
-                            return DropdownMenuItem<String>(
-                              onTap: () {
-                                controller.selectedVillage.value = village.name;
-                              },
-                              value: village.id,
-                              child: Text(village.name
-                                  .split(', ')
-                                  .map((word) => word.capitalize)
-                                  .join(', ')),
-                            );
-                          }).toList(),
-                        ),
-                      )),
-                  SizedBox(height: 12),
-                  CustomTextForm(
+                  // /// === VILLAGE === ///
+                  // Obx(() => Visibility(
+                  //       visible: controller.villageList.isNotEmpty,
+                  //       child: CustomDropdown(
+                  //         validator: Validator.required,
+                  //         value: controller.selectedVillageId,
+                  //         onChanged: (value) {
+                  //           controller.selectedVillageId = value;
+                  //           // if (value != null) {
+                  //           //   controller.selectedDistrict =
+                  //           //       null; // Reset kecamatan yang dipilih
+                  //           //   controller.districtList
+                  //           //       .clear(); // Kosongkan daftar kecamatan
+                  //           // }
+                  //         },
+                  //         hintText: 'Pilih Desa',
+                  //         items: controller.villageList.map((village) {
+                  //           return DropdownMenuItem<String>(
+                  //             onTap: () {
+                  //               controller.selectedVillage.value = village.name;
+                  //             },
+                  //             value: village.id,
+                  //             child: Text(village.name
+                  //                 .split(', ')
+                  //                 .map((word) => word.capitalize)
+                  //                 .join(', ')),
+                  //           );
+                  //         }).toList(),
+                  //       ),
+                  //     )),
+                  // SizedBox(height: 12),
+                  CustomTextFormSimple(
+                    label: 'Alamat Lengkap',
                     controller: controller.lokasiController,
-                    hintText: 'Alamat Lengkap',
-                    obscureText: false,
-                    maxLines: 4,
-                    validator: Validator.required,
-                    suffixIcon: GestureDetector(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.location_on,
-                        size: 24.0,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  CustomTextForm(
-                    controller: controller.plantNameController,
-                    hintText: 'Tanaman',
-                    obscureText: false,
+                    maxLines: 3,
                     validator: Validator.required,
                   ),
-                  const SizedBox(height: 12),
-                  CustomTextForm(
-                    controller: controller.plantTypeController,
-                    hintText: 'Jenis Tanaman',
-                    obscureText: false,
-                    validator: Validator.required,
-                  ),
+                  // const SizedBox(height: 12),
+                  // CustomTextForm(
+                  //   controller: controller.plantNameController,
+                  //   hintText: 'Tanaman',
+                  //   obscureText: false,
+                  //   validator: Validator.required,
+                  // ),
+                  // const SizedBox(height: 12),
+                  // CustomTextForm(
+                  //   controller: controller.plantTypeController,
+                  //   hintText: 'Jenis Tanaman',
+                  //   obscureText: false,
+                  //   validator: Validator.required,
+                  // ),
 
                   const SizedBox(height: 22),
-                  ElevatedButton(
-                    onPressed: _submitData,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  Obx(() {
+                    return ElevatedButton(
+                      onPressed:
+                          controller.isLoading.value ? null : _submitData,
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                    child: Text('Simpan'),
-                  ),
+                      child: Text(
+                        controller.isLoading.value ? "Loading..." : "Simpan",
+                        style: TStyle.bodyText2.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
+    ).animate().moveY(
+          begin: 100,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
   }
 
   void _submitData() {

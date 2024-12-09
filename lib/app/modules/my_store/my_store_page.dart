@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/modules/my_store/my_store_controller.dart';
+import 'package:plantix_app/app/modules/my_store/new_ui.dart';
 import 'package:plantix_app/app/routes/buat_toko_routes.dart';
 import 'package:plantix_app/app/routes/my_products_routes.dart';
 
@@ -22,8 +23,7 @@ class MyStorePage extends GetView<MyStoreController> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Get.toNamed(BuatTokoRoutes.buatToko,
-                  arguments: controller.store.value);
+              Get.toNamed(BuatTokoRoutes.buatToko);
             },
           ),
         ],
@@ -43,6 +43,21 @@ class MyStorePage extends GetView<MyStoreController> {
                   _buildSalesStatus(),
                   const SizedBox(height: 20),
                   _buildProductListSection(),
+                  const SizedBox(height: 15.0),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DashboardPage()),
+                      );
+                    },
+                    child: const Text("Save"),
+                  ),
                 ],
               ),
             ),
@@ -63,11 +78,10 @@ class MyStorePage extends GetView<MyStoreController> {
           children: [
             CircleAvatar(
               radius: 45,
-              backgroundImage: controller
-                          .store.value?.storeImageUrl.isNotEmpty ??
-                      false
-                  ? NetworkImage(controller.store.value?.storeImageUrl ?? "")
-                  : null,
+              backgroundImage:
+                  controller.store?.storeImageUrl.isNotEmpty ?? false
+                      ? NetworkImage(controller.store?.storeImageUrl ?? "")
+                      : null,
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -75,12 +89,12 @@ class MyStorePage extends GetView<MyStoreController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    controller.store.value?.storeName ?? "",
+                    controller.store?.storeName ?? "",
                     style: TStyle.head4.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    controller.store.value?.address ?? "",
+                    controller.store?.address ?? "",
                     style: TStyle.bodyText2.copyWith(color: Colors.grey[600]),
                   ),
                 ],
@@ -206,7 +220,8 @@ class MyStorePage extends GetView<MyStoreController> {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Get.toNamed(MyProductsRoutes.myProducts);
+                  Get.toNamed(MyProductsRoutes.myProducts,
+                      arguments: controller.store?.id);
                 },
                 icon: const Icon(Icons.list),
                 label: const Text("Lihat Semua Produk"),

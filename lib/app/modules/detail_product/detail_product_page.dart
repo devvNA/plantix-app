@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
@@ -18,6 +18,7 @@ class DetailProductPage extends GetView<DetailProductController> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              title: Text(controller.product.name ?? ''),
               expandedHeight: MediaQuery.sizeOf(context).height * 0.45,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -123,7 +124,7 @@ class DetailProductPage extends GetView<DetailProductController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -221,7 +222,7 @@ class DetailProductPage extends GetView<DetailProductController> {
                     color: Colors.grey[100],
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

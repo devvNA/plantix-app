@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/string_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_dropdown.dart';
 import 'package:plantix_app/app/core/widgets/custom_page_header.dart';
+import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
 import 'package:plantix_app/app/data/models/calculation_model.dart';
 
 import 'kalkulasi_tanam_controller.dart';
@@ -92,14 +94,9 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
     required TextInputType keyboardType,
     required String? Function(String?) validator,
   }) {
-    return TextFormField(
+    return CustomTextFormSimple(
+      label: label,
       controller: controller,
-      decoration: InputDecoration(
-        fillColor: Colors.grey[100],
-        labelText: label,
-        border: OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
       keyboardType: keyboardType,
       validator: validator,
     );
@@ -107,16 +104,9 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
 
   Widget _buildJenisTanamanDropdown() {
     return Obx(() {
-      return DropdownButtonFormField<String>(
+      return CustomDropDownSimple(
+        label: 'Jenis Tanaman',
         value: controller.selectedJenisTanaman.value,
-        decoration: InputDecoration(
-          fillColor: Colors.grey[100],
-          labelText: 'Jenis Tanaman',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          prefixIcon: Icon(Icons.eco),
-        ),
         items: controller.jenisTanamanList
             .map((jenis) => DropdownMenuItem(value: jenis, child: Text(jenis)))
             .toList(),
@@ -128,15 +118,11 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
   }
 
   Widget _buildTanggalTanamField(BuildContext context) {
-    return TextFormField(
+    return CustomTextFormSimple(
+      label: 'Tanggal Tanam',
       controller: controller.tanggalTanamController,
-      decoration: InputDecoration(
-        labelText: 'Tanggal Tanam',
-        fillColor: Colors.grey[100],
-        border: OutlineInputBorder(),
-        suffixIcon: Icon(Icons.calendar_today),
-        prefixIcon: Icon(Icons.date_range),
-      ),
+      suffixIcon: Icon(Icons.calendar_today),
+      prefixIcon: Icon(Icons.date_range),
       readOnly: true,
       onTap: () => _selectDate(context),
       validator: (value) =>

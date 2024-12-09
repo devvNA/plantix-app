@@ -16,7 +16,7 @@ class SalesPage extends GetView<SalesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(title: 'Toko'),
       body: Obx(() {
         return controller.isLoading
             ? const Center(child: LoadingWidget())

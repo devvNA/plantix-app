@@ -7,7 +7,7 @@ ThemeData myTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     backgroundColor: AppColors.primary,
   ),
-  textTheme: GoogleFonts.montserratTextTheme(),
+  textTheme: GoogleFonts.merriweatherTextTheme(),
   primaryColor: AppColors.primary,
   scaffoldBackgroundColor: Colors.white,
   elevatedButtonTheme: ElevatedButtonThemeData(

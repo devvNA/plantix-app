@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 
-class CustomDropdown extends StatelessWidget {
+class CustomDropDown extends StatelessWidget {
   final String hintText;
   final String? value;
   void Function(String?)? onChanged;
@@ -12,7 +12,7 @@ class CustomDropdown extends StatelessWidget {
   final String? Function(String?)? validator;
   final int? maxLines;
 
-  CustomDropdown({
+  CustomDropDown({
     super.key,
     required this.hintText,
     this.value,
@@ -25,7 +25,8 @@ class CustomDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      isExpanded: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      value: value,
       decoration: InputDecoration(
         prefixIconColor: AppColors.primary,
         suffixIconColor: Colors.grey[200],
@@ -48,15 +49,59 @@ class CustomDropdown extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         isDense: true,
       ),
-      focusColor: const Color(0xFFE7E5E5),
-      style: TStyle.bodyText1,
-      elevation: 2,
-      borderRadius: BorderRadius.circular(8),
-      dropdownColor: const Color(0xFFF0F0F0),
-      value: value,
       validator: validator,
       onChanged: onChanged,
       items: items,
+    );
+  }
+}
+
+class CustomDropDownSimple extends StatelessWidget {
+  const CustomDropDownSimple({
+    super.key,
+    this.controller,
+    required this.label,
+    this.validator,
+    this.onChanged,
+    required this.items,
+    this.value,
+  });
+
+  final TextEditingController? controller;
+  final String label;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onChanged;
+  final List<DropdownMenuItem<String>> items;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      isExpanded: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.grey),
+        floatingLabelStyle: TextStyle(color: AppColors.primary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.primary),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.primary),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+      ),
+      items: items,
+      validator: validator,
+      onChanged: onChanged,
     );
   }
 }

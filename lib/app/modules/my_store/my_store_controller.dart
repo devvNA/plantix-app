@@ -1,9 +1,10 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
-import 'package:plantix_app/app/data/models/store_model.dart';
-import 'package:plantix_app/app/data/repositories/my_store_repository.dart';
+import 'package:plantix_app/app/modules/profile/profile_controller.dart';
+import 'package:plantix_app/main.dart';
 
 class MyStoreController extends GetxController {
   final isLoading = false.obs;
@@ -11,57 +12,40 @@ class MyStoreController extends GetxController {
   final processingSales = 10;
   final completedSales = 20;
   final canceledSales = 30;
-  final productCount = 0;
-  final store = Rx<MyStoreModel?>(null);
+  final store = myStore.currentStore;
+
+  final profileController = Get.find<ProfileController>();
+  final productCount = 0.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     getStore();
-    // Get.put<MyProductsController>(MyProductsController());
-    // Get.find<MyProductsController>().loadInitialProducts();
-    // productCount.value = Get.find<MyProductsController>().listMyProducts.length;
-    // fetchStoreDetails();
+    getProductCount();
   }
 
-  // Future<void> fetchStoreDetails() async {
-  //   try {
-  //     isLoading.value = true;
-  //     // Misalnya, mengambil data toko dari local storage atau API
-  //     StoreModel? store = await DBServices.getStore();
+  Future<void> getProductCount() async {
+    final result = await supabase
+        .from('products')
+        .select()
+        .eq('store_id', myStore.currentStore!.id)
+        .count();
+    log('product_count: ${result.count}');
+    productCount.value = result.count;
+  }
 
-  //     if (store != null) {
-  //       storeName.value = store.name;
-  //       storeAddress.value = store.address;
-  //       storeImage.value = store.imageUrl;
-  //       saldo.value = store.balance;
-  //       processingSales = store.salesStatus['proses'] ?? 0;
-  //       completedSales = store.salesStatus['selesai'] ?? 0;
-  //       canceledSales = store.salesStatus['dibatalkan'] ?? 0;
-  //       productCount = store.products.length;
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar(
-  //       'Error',
-  //       'Gagal memuat data toko: $e',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //     );
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
-
-  Future<void> getStore() async {
-    isLoading.value = true;
-    final result = await MyStoreRepository().getStore();
-    result.fold((failure) => snackbarError(message: failure.message), (store) {
-      this.store.value = store;
-    });
-    isLoading.value = false;
+  Future getStore() async {
+    isLoading(true);
+    await myStore.loadStoreData();
+    isLoading(false);
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     super.onClose();
+
+    profileController.isLoading = true;
+    profileController.update();
+    profileController.isLoading = false;
   }
 }

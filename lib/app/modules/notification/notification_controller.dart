@@ -36,6 +36,16 @@ class NotificationController extends GetxController {
     notifications.refresh();
   }
 
+  void clearAllNotifications() {
+    notifications.clear();
+  }
+
+  Future<void> refreshNotifications() async {
+    // Implementasikan logika refresh di sini
+    await Future.delayed(const Duration(seconds: 1)); // Simulasi loading
+    // Muat ulang notifikasi
+  }
+
   @override
   void onReady() {
     super.onReady();

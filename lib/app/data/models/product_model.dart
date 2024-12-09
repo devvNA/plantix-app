@@ -120,3 +120,78 @@ class Product extends Equatable {
     ];
   }
 }
+
+class ProductsModel extends Equatable {
+  final int id;
+  final String name;
+  final String description;
+  final num price;
+  final int stock;
+  final String category;
+  final double rating;
+  final List<String> imageUrl;
+  final String storeName;
+  final String address;
+
+  const ProductsModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.stock,
+    required this.category,
+    required this.rating,
+    required this.imageUrl,
+    required this.storeName,
+    required this.address,
+  });
+
+  factory ProductsModel.fromJson(Map<String, dynamic> json) {
+    return ProductsModel(
+      id: json["id"] ?? 0,
+      name: json["name"] ?? "",
+      description: json["description"] ?? "",
+      price: json["price"] ?? 0,
+      stock: json["stock"] ?? 0,
+      category: json["category"] ?? "",
+      rating: json["rating"] ?? 0.0,
+      imageUrl: json["image_url"] == null
+          ? []
+          : List<String>.from(json["image_url"]!.map((x) => x)),
+      storeName: json["store_name"] ?? "",
+      address: json["address"] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "price": price,
+        "stock": stock,
+        "category": category,
+        "rating": rating,
+        "image_url": imageUrl.map((x) => x).toList(),
+        "store_name": storeName,
+        "address": address,
+      };
+
+  @override
+  String toString() {
+    return "$id, $name, $description, $price, $stock, $category, $rating, $imageUrl, $storeName, $address, ";
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        description,
+        price,
+        stock,
+        category,
+        rating,
+        imageUrl,
+        storeName,
+        address,
+      ];
+}

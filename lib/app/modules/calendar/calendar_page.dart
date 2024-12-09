@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
+import 'package:intl/intl.dart';
+import 'package:plantix_app/app/core/extensions/snackbar_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
-import 'package:plantix_app/app/core/widgets/custom_page_header.dart';
+import 'package:plantix_app/app/core/widgets/custom_dropdown.dart';
 import 'package:plantix_app/app/data/models/event_model.dart';
+import 'package:plantix_app/app/modules/calendar/calendar_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import 'calendar_controller.dart';
 
 class CalendarPage extends GetView<CalendarController> {
   const CalendarPage({super.key});
@@ -15,227 +16,348 @@ class CalendarPage extends GetView<CalendarController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        clipBehavior: Clip.antiAlias,
-        children: [
-          PageHeader(
-            title: 'Kalender',
-            height: MediaQuery.of(context).size.height * 0.17,
-          ),
-          Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-              buildCalendar(controller),
-              Container(
-                height: 8,
-                width: double.infinity,
-                color: Colors.grey.shade200,
-              ),
-              Expanded(child: _buildEventList()),
-            ],
-          ),
-        ],
+      appBar: AppBar(
+        title: Text('Jadwal Tanam'),
+        elevation: 0,
       ),
-    );
-  }
-
-  Widget _buildEventList() {
-    if (controller.events.isNotEmpty) {
-      return ListView.builder(
-        itemCount: controller.events.length,
-        itemBuilder: (context, index) {
-          final event = controller.events.elementAt(index);
-          return Card(
-            elevation: 2,
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(12),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Jadwal Tanam",
-                    style: TStyle.bodyText1.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  Text(
-                    event.date.toFormattedDatetime(),
-                    style: TStyle.bodyText1.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                ],
+      body: GetBuilder<CalendarController>(builder: (_) {
+        return Column(
+          children: [
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(32),
-                    onTap: () {
-                      _showDetailDialog(
-                          context, controller.events.elementAt(index));
-                    },
-                    child: Ink(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 6.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.withOpacity(0.35),
-                        borderRadius: BorderRadius.circular(32),
-                        border: Border.all(
-                          color: Colors.grey.shade200,
+              child: Obx(() => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TableCalendar(
+                      firstDay: DateTime.utc(2010, 10, 16),
+                      lastDay: DateTime.utc(2030, 3, 14),
+                      focusedDay: controller.focusedDay.value,
+                      selectedDayPredicate: (day) =>
+                          isSameDay(controller.selectedDay.value, day),
+                      eventLoader: controller.getEventsForDay,
+                      calendarStyle: CalendarStyle(
+                        selectedDecoration: BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        todayDecoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        markerDecoration: BoxDecoration(
+                          color: Colors.indigo,
+                          shape: BoxShape.circle,
                         ),
                       ),
-                      child: Text(
-                        // event.title,
-                        // event.events.first.eventTitle,
-                        event.events.map((e) => e.eventTitle).join(', '),
-                        // 'Tanam + Pupuk Dasar + Perlakuan Benih',
-                        style: TStyle.bodyText2,
+                      headerStyle: HeaderStyle(
+                        formatButtonVisible: false,
+                        titleCentered: true,
                       ),
+                      onDaySelected: (selectedDay, focusedDay) {
+                        controller.selectedDay.value = selectedDay;
+                        controller.focusedDay.value = focusedDay;
+                      },
                     ),
-                  ),
-                ],
-              ),
+                  )),
             ),
-          );
+            SizedBox(height: 16),
+            Expanded(
+              child: Obx(() {
+                final selectedEvents =
+                    controller.getEventsForDay(controller.selectedDay.value);
+                return selectedEvents.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/icon/jadwal-tanam-empty.svg",
+                            width: 100,
+                            height: 100,
+                          ),
+                          const SizedBox(height: 24.0),
+                          Text('Tidak ada jadwal untuk hari ini',
+                              style: TextStyle(color: Colors.grey)),
+                        ],
+                      )
+                    : ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: selectedEvents.length,
+                        itemBuilder: (context, index) {
+                          return EventCard(event: selectedEvents[index]);
+                        },
+                      );
+              }),
+            ),
+          ],
+        );
+      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          controller.fieldList.clear();
+          await controller.getLahan();
+          if (context.mounted) {
+            _tambahEventTanam(context);
+          }
         },
-      );
-    }
-    return SizedBox.shrink();
+        backgroundColor: AppColors.primary,
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _tambahEventTanam(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Tambah Jadwal Tanam'),
+        content: EventFormulir(),
+      ),
+    );
   }
 }
 
-Widget buildCalendar(CalendarController controller) {
-  return Obx(() {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.all(16),
-      child: TableCalendar(
-        headerStyle: HeaderStyle(
-          titleCentered: true,
-          formatButtonVisible: false,
-          titleTextFormatter: (date, locale) => date.toFormattedDatetime(),
-        ),
-        firstDay: DateTime.utc(2000, 1, 1),
-        lastDay: DateTime.utc(2100, 12, 31),
-        focusedDay: controller.selectedDate.value ?? DateTime.now(),
-        selectedDayPredicate: (day) {
-          return isSameDay(controller.selectedDate.value, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(controller.selectedDate.value, selectedDay)) {
-            controller.updateSelectedDate(selectedDay);
-          }
-        },
-        eventLoader: (day) {
-          return controller.getEventsForDay(day).events;
-        },
-        calendarStyle: CalendarStyle(
-          todayDecoration: BoxDecoration(
-            color: Colors.blueAccent,
-            shape: BoxShape.circle,
-          ),
-          selectedDecoration: BoxDecoration(
-            color: Colors.orangeAccent,
-            shape: BoxShape.circle,
-          ),
-        ),
-        calendarBuilders: CalendarBuilders(
-          markerBuilder: (context, date, events) {
-            if (events.isEmpty) return SizedBox();
-            return Positioned(
-              bottom: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: events.map((event) {
-                  return Container(
-                    width: 7,
-                    height: 7,
-                    margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: (event as Event).color,
-                    ),
-                  );
-                }).toList(),
+class EventFormulir extends GetView<CalendarController> {
+  const EventFormulir({super.key});
+
+  Future<void> _selectDate(BuildContext context, bool isMulai) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.primary,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
               ),
-            );
-          },
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != controller.tanggalMulai && isMulai) {
+      controller.tanggalMulai = picked;
+    } else if (picked != null &&
+        picked != controller.tanggalPanen &&
+        !isMulai) {
+      controller.tanggalPanen = picked;
+    }
+    controller.update();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: controller.formKey,
+      child: GetBuilder<CalendarController>(builder: (_) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomDropDownSimple(
+              label: "Nama Lahan",
+              items: controller.fieldList.map((field) {
+                return DropdownMenuItem<String>(
+                  onTap: () {
+                    controller.namaLahanController.text = field.fieldName;
+                  },
+                  value: field.fieldName,
+                  child: Text(
+                    field.fieldName,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
+              controller: controller.namaLahanController,
+              onChanged: (value) {
+                controller.namaLahanController.text = value ?? "";
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Lahan tidak boleh kosong';
+                }
+                return null;
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Tanggal Mulai :',
+                    style: TStyle.bodyText2,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => _selectDate(context, true),
+                  child: Text(
+                    controller.tanggalMulai != null
+                        ? DateFormat('dd-MM-yyyy').format(
+                            controller.tanggalMulai!,
+                          )
+                        : "Pilih Tanggal",
+                    style: TStyle.bodyText2.copyWith(color: AppColors.primary),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Tanggal Panen :',
+                    style: TStyle.bodyText2,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => _selectDate(context, false),
+                  child: Text(
+                    controller.tanggalPanen != null
+                        ? DateFormat('dd-MM-yyyy').format(
+                            controller.tanggalPanen!,
+                          )
+                        : "Pilih Tanggal",
+                    style: TStyle.bodyText2.copyWith(color: AppColors.primary),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                if (controller.formKey.currentState!.validate()) {
+                  final newEvent = Event(
+                    judul: controller.namaLahanController.text,
+                    tanggalMulai: controller.tanggalMulai!,
+                    tanggalPanen: controller.tanggalPanen!,
+                    lokasi: controller.lokasiController.text,
+                  );
+
+                  controller.addEvent(newEvent);
+                  Get.back();
+                } else {
+                  context.showSnackBar(
+                      'Harap lengkapi semua field dan pilih tanggal.',
+                      isError: true);
+                }
+              },
+              child: const Text("Simpan"),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+}
+
+class EventCard extends GetView<CalendarController> {
+  final Event event;
+
+  const EventCard({super.key, required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  event.judul,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    Get.find<CalendarController>().removeEvent(event);
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.location_on, size: 16, color: Colors.grey),
+                SizedBox(width: 4),
+                Text(event.lokasi),
+              ],
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                _buildDateInfo(
+                  'Mulai',
+                  DateFormat('dd MMM yyyy').format(event.tanggalMulai),
+                  Colors.green,
+                ),
+                SizedBox(width: 16),
+                _buildDateInfo(
+                  'Panen',
+                  DateFormat('dd MMM yyyy').format(event.tanggalPanen),
+                  Colors.orange,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
-  });
-}
+  }
 
-void _showDetailDialog(BuildContext context, PlantingEvent event) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          'Detail Aktivitas',
-          style: TStyle.head3,
+  Widget _buildDateInfo(String label, String date, Color color) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
         ),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Jadwal Tanam',
-                style: TStyle.bodyText1.copyWith(fontWeight: FontWeight.bold),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Tanggal: ${event.date.toFormattedDatetime()}',
-                style: TStyle.bodyText2,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Aktivitas: ${event.title}',
-                style: TStyle.bodyText1.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                event.events.map((e) => e.eventTitle).join(',\n'),
-                // '1. Tanam\n2. Pupuk Dasar\n3. Perlakuan Benih',
-                style: TStyle.bodyText2,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Kebutuhan Pupuk:',
-                style: TStyle.bodyText1.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '- Urea: 50 kg/ha\n- SP-36: 75 kg/ha\n- KCl: 50 kg/ha',
-                style: TStyle.bodyText2,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              'Tutup',
-              style: TStyle.bodyText1.copyWith(color: AppColors.primary),
             ),
-          ),
-        ],
-      );
-    },
-  );
+            SizedBox(height: 4),
+            Text(date),
+          ],
+        ),
+      ),
+    );
+  }
 }

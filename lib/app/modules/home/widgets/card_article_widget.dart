@@ -61,8 +61,9 @@ class ArtikelPertanianCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 4),
-                Text('Oleh: $penulis', style: TStyle.bodyText2),
-                Text('Publikasi: $tanggalPublikasi', style: TStyle.bodyText2),
+                Text('Oleh: $penulis', style: TStyle.bodyText3),
+                const SizedBox(height: 2.0),
+                Text(tanggalPublikasi, style: TStyle.bodyText3),
                 const SizedBox(height: 8),
                 SizedBox(
                   height: 30,

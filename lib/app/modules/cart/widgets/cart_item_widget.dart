@@ -1,7 +1,7 @@
 // Widget untuk Card Toko
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/data/models/keranjang_model.dart';
@@ -120,9 +120,9 @@ class ProductCartItem extends StatelessWidget {
   Widget _buildCheckbox() {
     return Obx(() => Checkbox(
           activeColor: AppColors.primary,
-          value: controller.isItemSelected(item.product![0].id),
+          value: controller.isItemSelected(item.product!.id),
           onChanged: (value) =>
-              controller.toggleItemSelection(item.product![0].id),
+              controller.toggleItemSelection(item.product!.id),
         ));
   }
 
@@ -130,7 +130,7 @@ class ProductCartItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        item.product![0].images?[0] ?? '',
+        item.product!.images?[0] ?? '',
         width: 80,
         height: 80,
         fit: BoxFit.cover,
@@ -149,7 +149,7 @@ class ProductCartItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item.product![0].name ?? '',
+          item.product!.name ?? '',
           style: TStyle.bodyText2.copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -158,7 +158,7 @@ class ProductCartItem extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          (item.product![0].price ?? 0).currencyFormatRp,
+          (item.product!.price ?? 0).currencyFormatRp,
           style: TStyle.bodyText2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w600,
@@ -169,8 +169,7 @@ class ProductCartItem extends StatelessWidget {
           children: [
             IconButton(
               splashRadius: 16,
-              onPressed: () =>
-                  controller.decrementQuantity(item.product![0].id),
+              onPressed: () => controller.decrementQuantity(item.product!.id),
               icon: const Icon(Icons.remove_circle_outline),
               iconSize: 20,
               padding: EdgeInsets.zero,
@@ -185,8 +184,7 @@ class ProductCartItem extends StatelessWidget {
             ),
             IconButton(
               splashRadius: 16,
-              onPressed: () =>
-                  controller.incrementQuantity(item.product![0].id),
+              onPressed: () => controller.incrementQuantity(item.product!.id),
               icon: const Icon(Icons.add_circle_outline),
               iconSize: 20,
               padding: EdgeInsets.zero,

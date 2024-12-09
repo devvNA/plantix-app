@@ -3,9 +3,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:plantix_app/app/data/models/product_model.dart';
+import 'package:plantix_app/app/core/helpers/thousand_separator_formatter.dart';
+import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_dropdown.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
+import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
 
 import 'add_product_controller.dart';
 
@@ -14,138 +18,262 @@ class AddProductPage extends GetView<AddProductController> {
 
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController();
-    final descController = TextEditingController();
-    final priceController = TextEditingController();
-    final stockController = TextEditingController();
-    final categoryController = TextEditingController();
-    final images = <File>[].obs;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Produk'),
+        title: Text(controller.isEditMode ? 'Edit Produk' : 'Tambah Produk'),
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: controller.checkImageData,
+            icon: Icon(
+              Icons.check,
+              color: Colors.transparent,
+            ),
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Nama Produk',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: descController,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Deskripsi',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Harga',
-                border: OutlineInputBorder(),
-                prefixText: 'Rp ',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: stockController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Stok',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Kategori',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () async {
-                final result =
-                    await ImagePicker().pickMultiImage(imageQuality: 70);
-                if (result != null) {
-                  images.value =
-                      result.map((xFile) => File(xFile.path)).toList();
-                }
-              },
-              icon: const Icon(Icons.photo_library),
-              label: const Text('Pilih Foto'),
-            ),
-            const SizedBox(height: 8),
-            Obx(() => Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (var image in images)
-                      Stack(
+      body: Obx(() => Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildImagePicker(),
+                      const SizedBox(height: 24),
+                      CustomTextFormSimple(
+                        controller: controller.nameController,
+                        label: 'Nama Produk',
+                        validator: (v) =>
+                            v!.isEmpty ? 'Nama produk wajib diisi' : null,
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextFormSimple(
+                        controller: controller.descController,
+                        label: 'Deskripsi',
+                        maxLines: 3,
+                        validator: (v) =>
+                            v!.isEmpty ? 'Deskripsi wajib diisi' : null,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
                         children: [
-                          Image.file(
-                            image,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+                          Expanded(
+                            flex: 2,
+                            child: CustomTextFormSimple(
+                              controller: controller.priceController,
+                              label: 'Harga per kg',
+                              prefixText: 'Rp ',
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                ThousandsSeparatorInputFormatter(),
+                              ],
+                              validator: (v) =>
+                                  v!.isEmpty ? 'Harga wajib diisi' : null,
+                            ),
                           ),
-                          Positioned(
-                            right: 0,
-                            child: IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () => images.remove(image),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: CustomTextFormSimple(
+                              controller: controller.stockController,
+                              label: 'Stok',
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              validator: (v) =>
+                                  v!.isEmpty ? 'Deskripsi wajib diisi' : null,
                             ),
                           ),
                         ],
                       ),
-                  ],
-                )),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isEmpty ||
-                    priceController.text.isEmpty ||
-                    stockController.text.isEmpty) {
-                  Get.snackbar(
-                    'Error',
-                    'Mohon lengkapi semua data',
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                  return;
-                }
+                      const SizedBox(height: 16),
+                      CustomDropDownSimple(
+                        value: controller.categoryController.text.isEmpty
+                            ? null
+                            : controller.categoryController.text,
+                        items: [
+                          DropdownMenuItem(
+                            value: 'Sayuran',
+                            child: Text('Sayuran'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Buah',
+                            child: Text('Buah'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Lainnya',
+                            child: Text('Lainnya'),
+                          ),
+                        ],
+                        label: 'Kategori',
+                        validator: (v) =>
+                            v == null ? 'Kategori wajib diisi' : null,
+                        onChanged: (value) {
+                          controller.categoryController.text = value ?? '';
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : controller.onSubmit,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          controller.isLoading.value
+                              ? 'Menyimpan...'
+                              : 'Simpan Produk',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (controller.isLoading.value) const LoadingWidgetBG(),
+            ],
+          )),
+    );
+  }
 
-                final product = Product(
-                  storeName: 'Toko Makmur',
-                  id: 1,
-                  name: nameController.text,
-                  description: descController.text,
-                  price: double.parse(priceController.text),
-                  stock: int.parse(stockController.text),
-                  images: [],
-                  category: categoryController.text,
-                  harvestDate: DateTime.now(),
-                  isAvailable: true,
-                  storeAddress: 'Jl. Raya',
-                );
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Ink(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(3, 3),
+                blurRadius: 6,
+              ),
+            ],
+          ),
+          child: Obx(() =>
+              controller.images.isEmpty && controller.imageUrls.isEmpty
+                  ? _buildImagePickerButton()
+                  : _buildImagePreview()),
+        ),
+        if (controller.images.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text(
+            '${controller.images.length} foto dipilih',
+            style: TStyle.bodyText2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    );
+  }
 
-                controller.addProduct(product, images);
-              },
-              child: const Text('Simpan'),
+  Widget _buildImagePickerButton() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () async {
+        controller.chooseImage();
+      },
+      child: Ink(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add_photo_alternate_outlined,
+                size: 40, color: Colors.grey[400]),
+            const SizedBox(height: 8),
+            Text(
+              'Tambah Foto Produk',
+              style: TextStyle(color: Colors.grey[600]),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildImagePreview() {
+    return Stack(
+      children: [
+        PageView.builder(
+          clipBehavior: Clip.hardEdge,
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.isEditMode
+              ? controller.imageUrls.length
+              : controller.images.length,
+          itemBuilder: (context, index) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: controller.isEditMode
+                  ? Image.network(
+                      controller.imageUrls[index],
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: LoadingWidget(size: 22),
+                        );
+                      },
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.error, color: Colors.red),
+                              const SizedBox(height: 4),
+                              const Text(
+                                "Gagal memuat gambar",
+                                style: TStyle.bodyText5,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : Image.file(
+                      File(controller.images[index].path),
+                      fit: BoxFit.cover,
+                    ),
+            );
+          },
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: Material(
+            clipBehavior: Clip.hardEdge,
+            color: Colors.black26,
+            shape: CircleBorder(),
+            child: IconButton(
+              onPressed: () {
+                if (controller.isEditMode) {
+                  controller.imageUrls.clear();
+                } else {
+                  controller.images.clear();
+                }
+              },
+              icon: const Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

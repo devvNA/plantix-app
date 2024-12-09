@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
-
-import 'calendar_controller.dart';
+import 'package:plantix_app/app/modules/calendar/calendar_controller.dart';
 
 class CalendarBinding extends Bindings {
   @override

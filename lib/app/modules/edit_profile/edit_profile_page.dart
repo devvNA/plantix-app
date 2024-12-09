@@ -69,14 +69,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                 Divider(
                   thickness: 2,
                 ),
-                user.currentUser!.hasStore == true
-                    ? _buildProfileItem(
-                        context: context,
-                        label: "Nama Toko",
-                        value: "",
-                        onPressed: () {},
-                      )
-                    : const SizedBox(),
               ],
             ),
           );

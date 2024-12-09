@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:plantix_app/app/core/helpers/network_controller.dart';
 import 'package:plantix_app/app/core/theme/app_theme.dart';
-import 'package:plantix_app/app/data/repositories/auth_repository.dart';
+import 'package:plantix_app/app/data/repositories/my_store_repository.dart';
+import 'package:plantix_app/app/data/repositories/profile_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/routes/app_pages.dart';
@@ -28,6 +29,7 @@ Future<void> main() async {
 
 final supabase = Supabase.instance.client;
 final user = UserManager.instance;
+final myStore = StoreManager.instance;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

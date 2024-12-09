@@ -34,7 +34,7 @@ class LoadingWidgetBG extends StatelessWidget {
     return Center(
       child: Container(
         height: MediaQuery.of(context).size.height,
-        color: Colors.black26,
+        color: Colors.black12,
         alignment: Alignment.center,
         child: LoadingWidget(
           size: 32,

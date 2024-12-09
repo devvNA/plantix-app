@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
@@ -7,7 +7,8 @@ import 'package:plantix_app/app/data/models/product_model.dart';
 
 class ProductSellItems extends StatelessWidget {
   final VoidCallback onTap;
-  final Product product;
+  final ProductsModel product;
+  // final Product product;
 
   const ProductSellItems(
       {super.key, required this.onTap, required this.product});
@@ -28,7 +29,7 @@ class ProductSellItems extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Image.network(
                   filterQuality: FilterQuality.low,
-                  product.images?[0] ?? '',
+                  product.imageUrl[0],
                   width: double.infinity,
                   fit: BoxFit.contain,
                   loadingBuilder: (BuildContext context, Widget child,
@@ -70,18 +71,30 @@ class ProductSellItems extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name ?? '',
+                    product.name,
                     style: TStyle.bodyText2,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    (product.price ?? 0).currencyFormatRp,
-                    style:
-                        TStyle.bodyText2.copyWith(fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Text(
+                        product.price.currencyFormatRp,
+                        style: TStyle.bodyText2
+                            .copyWith(fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "/kg",
+                        style: TStyle.bodyText3.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8.0),
                   Row(
@@ -93,25 +106,32 @@ class ProductSellItems extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
+                      const SizedBox(width: 8.0),
                       Expanded(
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Icon(
-                              Icons.shopping_bag,
-                              size: 12.0,
-                              color: AppColors.primary,
+                            Icon(
+                              Icons.shopping_cart_checkout,
+                              size: 14,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              "65",
+                              style: TStyle.bodyText4.copyWith(
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(width: 2),
-                            Expanded(
-                              child: Text(
-                                product.storeName ?? '',
-                                style: TStyle.bodyText4.copyWith(),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                            Text(
+                              "Terjual",
+                              style: TStyle.bodyText4
+                                  .copyWith(color: Colors.grey[600]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),

@@ -3,54 +3,48 @@
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/snackbar_ext.dart';
 import 'package:plantix_app/app/core/services/upload_image_service.dart.dart';
-import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
+import 'package:plantix_app/app/data/repositories/my_store_repository.dart';
+import 'package:plantix_app/app/data/repositories/profile_repository.dart';
 import 'package:plantix_app/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileController extends GetxController {
   // final storage = LocalStorageService();
   // final hasStore = false.obs;
   bool isLoading = false;
+  final profileRepository = ProfileRepository();
+  final myStoreRepo = MyStoreRepository();
 
   @override
   void onInit() {
     super.onInit();
+    myStore.loadStoreData();
+    // getStoreId();
   }
 
   Future<void> updateProfilePicture() async {
     isLoading = true;
     Get.back();
     update();
-    final imageUrl = await uploadImage(
-      bucketName: 'avatars',
-      folderPath: 'profiles',
-    );
+    final imageUrl = await uploadImage(bucketName: 'avatars');
     if (imageUrl != null) {
-      await _onUpload(imageUrl);
+      final data = await profileRepository.onUploadAvatar(imageUrl);
+      data.fold(
+          (failure) =>
+              Get.overlayContext!.showSnackBar(failure.message, isError: true),
+          (success) => Get.overlayContext!.showSnackBar(success));
+      // update();
     }
+    update();
     isLoading = false;
   }
 
-  /// Called when image has been uploaded to Supabase storage from within Avatar widget
-  Future<void> _onUpload(String imageUrl) async {
-    try {
-      final userId = supabase.auth.currentUser!.id;
-      await supabase.from('users').upsert({
-        'id': userId,
-        'avatar_url': imageUrl,
-      });
-      await user.loadUserData();
-      update();
-
-      return Get.overlayContext!.showSnackBar(
-        'Berhasil mengubah foto profil',
-      );
-    } on PostgrestException catch (error) {
-      return snackbarError(message: error.message);
-    } catch (error) {
-      return snackbarError(message: error.toString());
-    }
-  }
+  // Future<void> getStoreId() async {
+  //   final store = await myStoreRepo.getMyStore();
+  //   store.fold((failure) => 0, (store) {
+  //     storeId.value = store.id;
+  //     log('store_id: ${storeId.value}');
+  //   });
+  // }
 
   @override
   void onReady() {

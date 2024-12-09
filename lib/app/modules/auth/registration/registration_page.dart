@@ -66,10 +66,11 @@ class RegistrationPage extends GetView<RegistrationController> {
                               style: TStyle.bodyText1,
                             ),
                             const SizedBox(height: 12),
-                            CustomTextFormWithIcon(
+                            CustomTextForm(
+                              obscureText: true,
                               controller: controller.nameController,
                               hintText: "Nama Lengkap",
-                              prefixIcon: Icons.person,
+                              prefixIcon: Icon(Icons.person),
                               validator: Validator.required,
                             ),
                             const SizedBox(height: 12),
@@ -77,7 +78,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                             const SizedBox(height: 12),
                             _passwordForm(context),
                             const SizedBox(height: 16),
-                            CustomTextFormWithIcon(
+                            CustomTextForm(
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   controller.notVisibleConfirm.toggle();
@@ -93,7 +94,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                               controller: controller.confirmPasswordController,
                               obscureText: controller.notVisibleConfirm.value,
                               hintText: "Konfirmasi Password",
-                              prefixIcon: Icons.lock_person,
+                              prefixIcon: Icon(Icons.lock_person),
                               validator: (value) {
                                 if (value !=
                                     controller.passwordController.text) {

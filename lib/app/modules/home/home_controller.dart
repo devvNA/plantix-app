@@ -3,11 +3,11 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/data/repositories/auth_repository.dart';
 import 'package:plantix_app/app/modules/auth/login/login_controller.dart';
 import 'package:plantix_app/app/modules/notification/notification_controller.dart';
 import 'package:plantix_app/app/modules/profile/profile_controller.dart';
 import 'package:plantix_app/app/modules/sales/sales_controller.dart';
+import 'package:plantix_app/main.dart';
 
 class HomeController extends GetxController {
   DateTime timeBackPressed = DateTime.now();
@@ -24,10 +24,11 @@ class HomeController extends GetxController {
     super.onInit();
 
     getNotificationLength();
+
     Get.lazyPut(() => LoginController());
-    Get.find<LoginController>().getUser();
     Get.put<SalesController>(SalesController());
     Get.put<ProfileController>(ProfileController());
+    // Get.find<LoginController>().getUser();
   }
 
   void changeIndex(int index) {
@@ -36,7 +37,8 @@ class HomeController extends GetxController {
 
   Future<void> refreshHome() async {
     isLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 100));
+    user.clearUser();
+    await user.loadUserData();
     isLoading.value = false;
   }
 

@@ -4,7 +4,7 @@ import 'package:plantix_app/app/data/models/histori_transaksi_model.dart';
 
 class HistoryTransactionController extends GetxController {
   RxInt selectedIndex = RxInt(0);
-  final loading = false.obs;
+  final isLoading = false.obs;
   final listHistoriTransaksi = <HistoriTransaksi>[].obs;
   final listHistoriProses = <HistoriTransaksi>[].obs;
   final listHistoriSelesai = <HistoriTransaksi>[].obs;
@@ -29,7 +29,28 @@ class HistoryTransactionController extends GetxController {
         tanggal: DateTime.now().subtract(Duration(days: 1)),
         tipePayment: 'COD',
         statusPembayaran: 'Belum Bayar',
-        urlBukti: 'https://example.com/bukti1.jpg',
+        status: 'Proses',
+        total: 150000.0,
+        detail: [
+          DetailTransaksi(
+            productId: 101,
+            productName: 'Tomat Segar',
+            quantity: 2,
+            harga: 50000.0,
+          ),
+          DetailTransaksi(
+            productId: 102,
+            productName: 'Wortel Organik',
+            quantity: 1,
+            harga: 50000.0,
+          ),
+        ],
+      ),
+      HistoriTransaksi(
+        id: 'TXN001X435',
+        tanggal: DateTime.now().subtract(Duration(days: 1)),
+        tipePayment: 'Transfer Bank',
+        statusPembayaran: 'Belum Bayar',
         status: 'Proses',
         total: 150000.0,
         detail: [
@@ -52,7 +73,8 @@ class HistoryTransactionController extends GetxController {
         tanggal: DateTime.now().subtract(Duration(days: 2)),
         tipePayment: 'Transfer Bank',
         statusPembayaran: 'Lunas',
-        urlBukti: 'https://example.com/bukti2.jpg',
+        urlBukti:
+            "https://down-id.img.susercontent.com/file/ec8177b2139f0c48f2c07e2470f22341@resize_w900_nl.webp",
         status: 'Selesai',
         total: 200000.0,
         detail: [
@@ -69,7 +91,6 @@ class HistoryTransactionController extends GetxController {
         tanggal: DateTime.now().subtract(Duration(days: 3)),
         tipePayment: 'COD',
         statusPembayaran: 'Lunas',
-        urlBukti: 'https://example.com/bukti3.jpg',
         status: 'Dibatalkan',
         total: 75000.0,
         detail: [
@@ -86,7 +107,8 @@ class HistoryTransactionController extends GetxController {
         tanggal: DateTime.now().subtract(Duration(days: 4)),
         tipePayment: 'Transfer Bank',
         statusPembayaran: 'Lunas',
-        urlBukti: 'https://example.com/bukti4.jpg',
+        urlBukti:
+            "https://down-id.img.susercontent.com/file/ec8177b2139f0c48f2c07e2470f22341@resize_w900_nl.webp",
         status: 'Proses',
         total: 125000.0,
         detail: [
@@ -103,7 +125,26 @@ class HistoryTransactionController extends GetxController {
         tanggal: DateTime.now().subtract(Duration(days: 5)),
         tipePayment: 'Transfer Bank',
         statusPembayaran: 'Lunas',
-        urlBukti: 'https://example.com/bukti5.jpg',
+        urlBukti:
+            "https://down-id.img.susercontent.com/file/ec8177b2139f0c48f2c07e2470f22341@resize_w900_nl.webp",
+        status: 'Selesai',
+        total: 300000.0,
+        detail: [
+          DetailTransaksi(
+            productId: 106,
+            productName: 'Bawang Merah',
+            quantity: 3,
+            harga: 100000.0,
+          ),
+        ],
+      ),
+      HistoriTransaksi(
+        id: 'TXN005',
+        tanggal: DateTime.now().subtract(Duration(days: 5)),
+        tipePayment: 'Transfer Bank',
+        statusPembayaran: 'Lunas',
+        urlBukti:
+            "https://down-id.img.susercontent.com/file/ec8177b2139f0c48f2c07e2470f22341@resize_w900_nl.webp",
         status: 'Selesai',
         total: 300000.0,
         detail: [

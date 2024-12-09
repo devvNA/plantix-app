@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plantix_app/app/core/services/upload_image_service.dart.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
-import 'package:plantix_app/app/data/models/store_model.dart';
 import 'package:plantix_app/app/data/repositories/my_store_repository.dart';
 import 'package:plantix_app/app/modules/my_store/my_store_controller.dart';
 import 'package:plantix_app/app/modules/profile/profile_controller.dart';
@@ -19,9 +18,9 @@ class BuatTokoController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final storeImageUrl = "".obs;
   final isLoading = false.obs;
+  final store = myStore.currentStore;
 
   //Ambil data jika Sudah Punya Toko
-  MyStoreModel? store = Get.arguments;
   bool get isEditMode => store != null;
 
   @override
@@ -36,7 +35,8 @@ class BuatTokoController extends GetxController {
 
   Future<void> pickImage() async {
     isLoading.value = true;
-    await uploadImage(bucketName: "stores").then((value) {
+    await uploadImage(bucketName: "stores", folderPath: "profiles")
+        .then((value) {
       storeImageUrl.value = value ?? "";
     });
     isLoading.value = false;
@@ -97,7 +97,7 @@ class BuatTokoController extends GetxController {
       final myStoreController = Get.find<MyStoreController>();
       storeNameController.dispose();
       storeAddressController.dispose();
-      myStoreController.getStore();
+      // myStoreController.getStore();
     } else {
       final profileController = Get.find<ProfileController>();
 

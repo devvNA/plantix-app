@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/services/db_services.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/models/keranjang_model.dart';
@@ -30,15 +30,15 @@ class CartController extends GetxController {
 
   Future<void> addToCart(Product product, int quantity) async {
     try {
-      final existingItemIndex = cartProductList
-          .indexWhere((item) => item.product![0].id == product.id);
+      final existingItemIndex =
+          cartProductList.indexWhere((item) => item.product!.id == product.id);
       // log(existingItemIndex.toString());
 
       if (existingItemIndex != -1) {
         cartProductList[existingItemIndex].quantity =
             (cartProductList[existingItemIndex].quantity ?? 0) + 1;
       } else {
-        cartProductList.add(CartItem(product: [product], quantity: quantity));
+        cartProductList.add(CartItem(product: product, quantity: quantity));
       }
 
       await storage.saveList('cart', cartProductList);
@@ -56,7 +56,7 @@ class CartController extends GetxController {
   Future<void> incrementQuantity(int itemId) async {
     try {
       final index =
-          cartProductList.indexWhere((item) => item.product![0].id == itemId);
+          cartProductList.indexWhere((item) => item.product!.id == itemId);
 
       if (index != -1) {
         cartProductList[index].quantity =
@@ -83,7 +83,7 @@ class CartController extends GetxController {
   Future<void> decrementQuantity(int itemId) async {
     try {
       final index =
-          cartProductList.indexWhere((item) => item.product![0].id == itemId);
+          cartProductList.indexWhere((item) => item.product!.id == itemId);
 
       if (index != -1 && (cartProductList[index].quantity ?? 0) > 1) {
         cartProductList[index].quantity =
@@ -108,7 +108,7 @@ class CartController extends GetxController {
 
   double calculateTotalPrice() {
     return cartProductList.fold(0.0, (sum, item) {
-      double itemPrice = (item.product![0].price ?? 0) * (item.quantity ?? 1);
+      double itemPrice = (item.product!.price ?? 0) * (item.quantity ?? 1);
       return sum + itemPrice;
     });
   }
@@ -116,7 +116,7 @@ class CartController extends GetxController {
   // Fungsi untuk menghapus produk dari keranjang
   Future<void> deleteProduct(CartItem data) async {
     final index = cartProductList
-        .indexWhere((item) => item.product![0].id == data.product![0].id);
+        .indexWhere((item) => item.product!.id == data.product!.id);
     cartProductList.removeAt(index);
     cartProductList.refresh();
     // await storage.removeFromList<CartItem>('cart', index);
@@ -132,7 +132,7 @@ class CartController extends GetxController {
   // Fungsi untuk menghapus item yang dipilih
   Future<void> deleteSelectedItems() async {
     cartProductList
-        .removeWhere((item) => selectedProducts.contains(item.product![0].id));
+        .removeWhere((item) => selectedProducts.contains(item.product!.id));
     cartProductList.refresh();
     await storage.saveList('cart', cartProductList);
     totalPrice.value = calculateTotalPrice();
@@ -144,8 +144,8 @@ class CartController extends GetxController {
     var cartList = storage
         .getList<CartItem>('cart')!
         .map((product) => {
-              'Nama': product.product![0].name,
-              'Harga': product.product![0].price,
+              'Nama': product.product!.name,
+              'Harga': product.product!.price,
               'Quantity': product.quantity
             })
         .toList();
@@ -157,7 +157,7 @@ class CartController extends GetxController {
     Map<String, List<CartItem>> groupedItems = {};
 
     for (var item in cartProductList) {
-      final storeName = item.product![0].storeName;
+      final storeName = item.product!.storeName;
       if (!groupedItems.containsKey(storeName)) {
         groupedItems[storeName ?? ''] = [];
       }
@@ -170,7 +170,7 @@ class CartController extends GetxController {
   // Method untuk menghitung total per toko
   double calculateStoreTotal(List<CartItem> items) {
     return items.fold(0.0, (sum, item) {
-      return sum + ((item.product![0].price ?? 0) * (item.quantity ?? 1));
+      return sum + ((item.product!.price ?? 0) * (item.quantity ?? 1));
     });
   }
 
@@ -193,8 +193,8 @@ class CartController extends GetxController {
 
       // Hapus semua item yang terkait dengan toko ini
       final storeItems = cartProductList
-          .where((item) => item.product![0].storeName == storeName)
-          .map((item) => item.product![0].id);
+          .where((item) => item.product!.storeName == storeName)
+          .map((item) => item.product!.id);
 
       selectedProducts.removeAll(storeItems);
     } else {
@@ -203,8 +203,8 @@ class CartController extends GetxController {
 
       // Pilih semua item yang terkait dengan toko ini
       final storeItems = cartProductList
-          .where((item) => item.product![0].storeName == storeName)
-          .map((item) => item.product![0].id);
+          .where((item) => item.product!.storeName == storeName)
+          .map((item) => item.product!.id);
 
       selectedProducts.addAll(storeItems.map((e) => e));
     }
@@ -216,17 +216,17 @@ class CartController extends GetxController {
   // Fungsi untuk toggle pilihan item
   void toggleItemSelection(int itemId) {
     final item = cartProductList.firstWhere(
-      (item) => item.product![0].id == itemId,
+      (item) => item.product!.id == itemId,
     );
-    final storeName = item.product![0].storeName;
+    final storeName = item.product!.storeName;
 
     if (selectedProducts.contains(itemId)) {
       selectedProducts.remove(itemId);
 
       // Jika tidak ada item yang dipilih dari toko tersebut, hapus pilihan toko
       final hasSelectedStoreItems = cartProductList
-          .where((item) => item.product![0].storeName == storeName)
-          .any((item) => selectedProducts.contains(item.product![0].id));
+          .where((item) => item.product!.storeName == storeName)
+          .any((item) => selectedProducts.contains(item.product!.id));
 
       if (!hasSelectedStoreItems) {
         selectedStores.remove(storeName);
@@ -236,8 +236,8 @@ class CartController extends GetxController {
 
       // Jika semua item dari toko dipilih, pilih toko juga
       final allStoreItemsSelected = cartProductList
-          .where((item) => item.product![0].storeName == storeName)
-          .every((item) => selectedProducts.contains(item.product![0].id));
+          .where((item) => item.product!.storeName == storeName)
+          .every((item) => selectedProducts.contains(item.product!.id));
 
       if (allStoreItemsSelected) {
         selectedStores.add(storeName ?? '');
@@ -251,9 +251,9 @@ class CartController extends GetxController {
   // Fungsi untuk menghitung total harga item yang dipilih
   double calculateSelectedItemsTotal() {
     return cartProductList
-        .where((item) => selectedProducts.contains(item.product![0].id))
+        .where((item) => selectedProducts.contains(item.product!.id))
         .fold(0.0, (sum, item) {
-      return sum + ((item.product![0].price ?? 0) * (item.quantity ?? 1));
+      return sum + ((item.product!.price ?? 0) * (item.quantity ?? 1));
     });
   }
 
@@ -270,7 +270,7 @@ class CartController extends GetxController {
     // Implementasi checkout akan ditambahkan di sini
     // Misalnya navigasi ke halaman checkout dengan membawa data item yang dipilih
     final selectedItems = cartProductList
-        .where((item) => selectedProducts.contains(item.product![0].id))
+        .where((item) => selectedProducts.contains(item.product!.id))
         .toList();
 
     // Get.toNamed('/checkout', arguments: selectedProducts);
@@ -287,6 +287,4 @@ class CartController extends GetxController {
     selectedStores.clear();
     selectedProducts.clear();
   }
-
-
 }

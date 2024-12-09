@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
@@ -74,13 +72,17 @@ class ProfilePage extends GetView<ProfileController> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Positioned(
-                              top: 8,
-                              right: 8,
+                            Material(
+                              clipBehavior: Clip.hardEdge,
+                              color: Colors.transparent,
+                              shape: CircleBorder(),
                               child: CircleAvatar(
-                                backgroundColor: Colors.black54,
+                                backgroundColor: Colors.black26,
                                 child: IconButton(
-                                  icon: Icon(Icons.close, color: Colors.white),
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                  ),
                                   onPressed: () => Get.back(),
                                 ),
                               ),
@@ -102,20 +104,9 @@ class ProfilePage extends GetView<ProfileController> {
                 style: TStyle.head3.copyWith(color: Colors.white),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                final userId = supabase.auth.currentSession!.user.id;
-                log(supabase
-                    .from('profiles')
-                    .select()
-                    .eq('id', userId)
-                    .single()
-                    .toString());
-              },
-              child: Text(
-                user.currentUser?.email ?? '',
-                style: TStyle.bodyText2.copyWith(color: Colors.white70),
-              ),
+            Text(
+              user.currentUser?.email ?? '',
+              style: TStyle.bodyText2.copyWith(color: Colors.white70),
             ),
           ],
         ));
@@ -249,7 +240,7 @@ class AvatarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Badge(
       backgroundColor: Colors.white70,
-      offset: const Offset(-10, 10),
+      offset: const Offset(-8, 70),
       label: GestureDetector(
         onTap: () {
           showCustomBottomSheet(

@@ -21,6 +21,7 @@ import 'splash_screen_routes.dart';
 import 'my_products_routes.dart';
 import 'edit_profile_routes.dart';
 import 'help_desk_routes.dart';
+import 'detail_history_routes.dart';
 
 class AppPages {
   AppPages._();
@@ -51,5 +52,6 @@ class AppPages {
 		...MyProductsRoutes.routes,
 		...EditProfileRoutes.routes,
 		...HelpDeskRoutes.routes,
+		...DetailHistoryRoutes.routes,
   ];
 }

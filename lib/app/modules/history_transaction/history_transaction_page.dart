@@ -7,6 +7,7 @@ import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/core/widgets/error_state.dart';
 import 'package:plantix_app/app/modules/history_transaction/widgets/history_item.dart';
+import 'package:plantix_app/app/routes/detail_history_routes.dart';
 
 import 'history_transaction_controller.dart';
 
@@ -17,7 +18,7 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('HistoryTransactionPage'),
+          title: const Text('Histori Transaksi'),
           centerTitle: true,
         ),
         body: Column(
@@ -54,7 +55,7 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
                               children: [
                             // TAB 1
                             Obx(() {
-                              if (controller.loading()) {
+                              if (controller.isLoading()) {
                                 return const Center(child: LoadingWidget());
                               }
                               if (controller.listHistoriProses.isEmpty) {
@@ -92,8 +93,9 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
                                     return HistoryItem(
                                       historiData: historiPemesanan,
                                       onTap: () {
-                                        // Get.toNamed(Routes.DETAIL_HISTORY,
-                                        //     arguments: historiPemesanan);
+                                        Get.toNamed(
+                                            DetailHistoryRoutes.detailHistory,
+                                            arguments: historiPemesanan);
                                       },
                                     ).animate().fade().slideY(
                                           duration:
@@ -108,7 +110,7 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
 
                             // TAB 2
                             Obx(() {
-                              if (controller.loading()) {
+                              if (controller.isLoading()) {
                                 return const Center(child: LoadingWidget());
                               }
                               if (controller.listHistoriSelesai.isEmpty) {
@@ -146,8 +148,9 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
                                     return HistoryItem(
                                       historiData: historiPemesanan,
                                       onTap: () {
-                                        // Get.toNamed(Routes.DETAIL_HISTORY,
-                                        //     arguments: historiPemesanan);
+                                        Get.toNamed(
+                                            DetailHistoryRoutes.detailHistory,
+                                            arguments: historiPemesanan);
                                       },
                                     ).animate().fade().slideY(
                                           duration:
@@ -162,7 +165,7 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
 
                             // TAB 3
                             Obx(() {
-                              if (controller.loading()) {
+                              if (controller.isLoading()) {
                                 return const Center(child: LoadingWidget());
                               }
                               if (controller.listHistoriDibatalkan.isEmpty) {
@@ -200,8 +203,9 @@ class HistoryTransactionPage extends GetView<HistoryTransactionController> {
                                     return HistoryItem(
                                       historiData: historiPemesanan,
                                       onTap: () {
-                                        // Get.toNamed(Routes.DETAIL_HISTORY,
-                                        //     arguments: historiPemesanan);
+                                        Get.toNamed(
+                                            DetailHistoryRoutes.detailHistory,
+                                            arguments: historiPemesanan);
                                       },
                                     ).animate().fade().slideY(
                                           duration:

@@ -7,7 +7,8 @@ import 'package:plantix_app/app/modules/sales/widgets/search_products.dart';
 import 'package:plantix_app/app/routes/cart_routes.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final String title;
+  const CustomAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         color: Colors.black,
       ),
       title: Text(
-        "Toko",
+        title,
         style: TStyle.head3.copyWith(color: Colors.white),
       ),
       actions: [

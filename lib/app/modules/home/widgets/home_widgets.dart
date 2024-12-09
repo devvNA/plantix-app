@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
@@ -13,6 +12,7 @@ import 'package:plantix_app/app/routes/analisa_usaha_tani_routes.dart';
 import 'package:plantix_app/app/routes/calendar_routes.dart';
 import 'package:plantix_app/app/routes/kalkulasi_tanam_routes.dart';
 import 'package:plantix_app/app/routes/lahan_tanam_routes.dart';
+import 'package:plantix_app/app/routes/notification_routes.dart';
 import 'package:plantix_app/main.dart';
 
 class BuildHomePage extends GetView<HomeController> {
@@ -73,14 +73,15 @@ class BuildHomePage extends GetView<HomeController> {
                     child: Row(
                       children: List.generate(
                         5, // Jumlah item yang ingin ditampilkan
-                        (index) => const Padding(
+                        (index) => Padding(
                           padding: EdgeInsets.only(right: 12.0),
                           child: ArtikelPertanianCard(
-                            judulArtikel: 'Lorem ipsum dolor sit amet',
-                            penulis: 'Penulis Artikel',
-                            tanggalPublikasi: '15 Maret 2024',
+                            judulArtikel: 'Hari Tani Nasional',
+                            penulis: 'admin01',
+                            tanggalPublikasi:
+                                DateTime.now().toFormattedDateWithDay(),
                             gambarUrl:
-                                "https://i0.wp.com/walhisulteng.org/wp-content/uploads/2024/09/WhatsApp-Image-2024-09-24-at-01.44.41.jpeg?w=1283&ssl=1",
+                                "https://mitrabertani.com/img/img_artikel/WEB_DESAIN_ARTIKEL_DWI.jpg",
                           ),
                         ),
                       ),
@@ -109,7 +110,8 @@ class BuildHomePage extends GetView<HomeController> {
           CarouselSlider(
             carouselController: controller.carouselSliderController,
             options: CarouselOptions(
-              height: 160.0,
+              height: 170.0,
+              // enlargeFactor: 0.3,
               autoPlay: true,
               enlargeCenterPage: true,
               onPageChanged: (index, reason) {
@@ -121,7 +123,6 @@ class BuildHomePage extends GetView<HomeController> {
                 builder: (BuildContext context) {
                   return Container(
                     clipBehavior: Clip.antiAlias,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
                     width: MediaQuery.of(context).size.width,
                     decoration: const BoxDecoration(
                       boxShadow: [
@@ -187,8 +188,8 @@ class BuildHomePage extends GetView<HomeController> {
                     .animateToPage(entry.key),
                 child: Obx(() {
                   return Container(
-                    width: 6.0,
-                    height: 6.0,
+                    width: 8.0,
+                    height: 8.0,
                     margin: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 3.5),
                     decoration: BoxDecoration(
@@ -196,7 +197,7 @@ class BuildHomePage extends GetView<HomeController> {
                       color: (Theme.of(context).brightness == Brightness.dark
                               ? AppColors.secondary
                               : AppColors.secondary.withOpacity(
-                                  0.6,
+                                  0.5,
                                 ))
                           .withOpacity(
                               controller.currentIndex.value == entry.key
@@ -255,11 +256,11 @@ class BuildHomePage extends GetView<HomeController> {
               padding: const EdgeInsets.only(right: 12),
               child: GestureDetector(
                 onTap: () {
-                  // Get.toNamed(NotificationRoutes.notification);
+                  Get.toNamed(NotificationRoutes.notification);
                   // log(supabase.auth.currentSession?.user.userMetadata
                   //         .toString() ??
                   //     '');
-                  log(user.currentUser?.name ?? '');
+                  // log(user.currentUser?.name ?? '');
                 },
                 child: Badge(
                   label: Obx(() {
@@ -338,7 +339,7 @@ class BuildHomePage extends GetView<HomeController> {
                     menuItems[index]['icon'],
                     width: 60,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Text(

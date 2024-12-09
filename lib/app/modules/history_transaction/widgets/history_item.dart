@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
-import 'package:plantix_app/app/core/extensions/int_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
+import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/data/models/histori_transaksi_model.dart';
 
 class HistoryItem extends StatelessWidget {
@@ -136,8 +137,8 @@ class ChipPaymentStatus extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
         decoration: BoxDecoration(
           color: historiData.statusPembayaran == "Lunas"
-              ? Colors.green
-              : Colors.red,
+              ? AppColors.success
+              : AppColors.error,
           borderRadius: const BorderRadius.all(
             Radius.circular(
               32.0,
@@ -168,7 +169,7 @@ class PaymentChipType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: historiData.tipePayment == "COD"
             ? const Color.fromARGB(255, 229, 174, 10)
@@ -181,10 +182,8 @@ class PaymentChipType extends StatelessWidget {
       ),
       child: Text(
         historiData.tipePayment,
-        style: const TextStyle(
-          fontSize: 9,
+        style: TStyle.bodyText5.copyWith(
           color: Colors.white,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );

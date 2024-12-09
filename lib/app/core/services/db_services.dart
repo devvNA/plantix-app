@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get_storage/get_storage.dart';
-import 'package:plantix_app/app/data/models/store_model.dart';
 
 class LocalStorageService {
   // Singleton pattern
@@ -177,57 +176,5 @@ class LocalStorageService {
     } catch (e) {
       throw Exception('Gagal mengambil map: $e');
     }
-  }
-}
-
-// class UserManager {
-//   static final UserManager _instance = UserManager._internal();
-//   final _dbServices = LocalStorageService();
-
-//   factory UserManager() {
-//     return _instance;
-//   }
-
-//   UserManager._internal();
-
-//   UserModel? _currentUser;
-
-//   UserModel? get currentUser => _currentUser;
-
-//   Future<UserModel?> getUser() async {
-//     if (_currentUser != null) {
-//       return _currentUser;
-//     }
-
-//     final userData = _dbServices.getData('LoggedInUser');
-//     if (userData != null) {
-//       _currentUser = userData;
-//       return _currentUser;
-//     }
-
-//     return null;
-//   }
-// }
-
-class DBServices {
-  // Simulasi penyimpanan data toko
-  static StoreModel? _store;
-
-  static Future<StoreModel?> getStore() async {
-    // Ganti dengan logika pengambilan data dari database atau API
-    await Future.delayed(const Duration(milliseconds: 500));
-    return _store;
-  }
-
-  static Future<void> updateStore(StoreModel store) async {
-    // Ganti dengan logika pembaruan data di database atau API
-    await Future.delayed(const Duration(milliseconds: 500));
-    _store = store;
-  }
-
-  static Future<String> uploadStoreImage(String path) async {
-    // Ganti dengan logika upload gambar ke server dan mendapatkan URL
-    await Future.delayed(const Duration(milliseconds: 500));
-    return "https://res.cloudinary.com/dotz74j1p/image/upload/v1715660683/no-image.jpg";
   }
 }

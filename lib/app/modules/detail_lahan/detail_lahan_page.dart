@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_alert_dialog.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/core/widgets/custom_page_header.dart';
 
 import 'detail_lahan_controller.dart';
@@ -13,151 +15,227 @@ class DetailLahanPage extends GetView<DetailLahanController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageHeader(
-            title: 'Detail Lahan',
-            height: MediaQuery.of(context).size.height * 0.17,
+      floatingActionButton:
+          GetBuilder<DetailLahanController>(builder: (controller) {
+        return Visibility(
+          visible: controller.plant == null,
+          child: FloatingActionButton.extended(
+            backgroundColor: AppColors.primary,
+            icon: const Icon(Icons.add_circle_outline_rounded),
+            label: const Text('Tambah Tanaman'),
+            onPressed: () {
+              controller.showAddPlantBottomSheet();
+            },
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-              Expanded(
-                  child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Card(
-                      elevation: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Data Lahan",
-                                  style: TStyle.head4,
-                                ),
-                                Spacer(),
-                                InkWell(
-                                  onTap: () {
-                                    controller.editLahan(
-                                        controller.lahan.id, controller.lahan);
-                                  },
-                                  customBorder: CircleBorder(),
-                                  child: Ink(
-                                    decoration: ShapeDecoration(
-                                      color: AppColors.primary,
-                                      shape: CircleBorder(),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 14.0,
-                                        color: Colors.white,
+        );
+      }),
+      body: Obx(() {
+        return Stack(
+          children: [
+            PageHeader(
+              title: 'Detail Lahan',
+              height: MediaQuery.of(context).size.height * 0.17,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.09),
+                Expanded(
+                    child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Card(
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Data Lahan",
+                                    style: TStyle.head4,
+                                  ),
+                                  Spacer(),
+                                  // InkWell(
+                                  //   onTap: () {
+                                  //     controller.editLahan(controller.field.id);
+                                  //   },
+                                  //   customBorder: CircleBorder(),
+                                  //   child: Ink(
+                                  //     decoration: ShapeDecoration(
+                                  //       color: AppColors.primary,
+                                  //       shape: CircleBorder(),
+                                  //     ),
+                                  //     child: Padding(
+                                  //       padding: EdgeInsets.all(8.0),
+                                  //       child: Icon(
+                                  //         Icons.edit,
+                                  //         size: 14.0,
+                                  //         color: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  const SizedBox(
+                                    width: 6.0,
+                                  ),
+                                  if (controller.plant == null)
+                                    InkWell(
+                                      onTap: () {
+                                        CustomAlertDialog.customAlertDialog(
+                                            yes: controller.isLoading.value
+                                                ? "Loading..."
+                                                : "Ya",
+                                            context: context,
+                                            title: "Konfirmasi",
+                                            description:
+                                                "Apakah anda yakin ingin menghapus lahan ini?",
+                                            onPressYes: () {
+                                              controller
+                                                  .deleteField()
+                                                  .then((value) {
+                                                Get.back();
+                                              });
+                                            },
+                                            onPressNo: () {
+                                              Get.back();
+                                            });
+                                      },
+                                      customBorder: CircleBorder(),
+                                      child: Ink(
+                                        decoration: ShapeDecoration(
+                                          color: Colors.red,
+                                          shape: CircleBorder(),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.delete_forever,
+                                            size: 14.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 12.0,
+                              ),
+                              buildFieldData(
+                                title: "Nama Lahan",
+                                description: controller.field.fieldName,
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              buildFieldData(
+                                title: "Luas Lahan (m²)",
+                                description: controller.field.size.toString(),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              buildFieldData(
+                                title: "Alamat",
+                                description: controller.field.address
+                                    .split(', ')
+                                    .map((word) => word.capitalize)
+                                    .join(', '),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+                      Card(
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Data Tanam",
+                                    style: TStyle.head4,
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 6.0,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    controller.deleteLahan(controller.lahan.id);
-                                  },
-                                  customBorder: CircleBorder(),
-                                  child: Ink(
-                                    decoration: ShapeDecoration(
-                                      color: Colors.red,
-                                      shape: CircleBorder(),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        size: 14.0,
-                                        color: Colors.white,
+                                  if (controller.plant != null)
+                                    InkWell(
+                                      onTap: () {
+                                        CustomAlertDialog.customAlertDialog(
+                                            yes: controller.isLoading.value
+                                                ? "Loading..."
+                                                : "Ya",
+                                            context: context,
+                                            title: "Konfirmasi",
+                                            description:
+                                                "Apakah anda yakin ingin menghapus tanaman ini?",
+                                            onPressYes: () {
+                                              controller
+                                                  .deletePlant()
+                                                  .then((value) {
+                                                Get.back();
+                                              });
+                                            },
+                                            onPressNo: () {
+                                              Get.back();
+                                            });
+                                      },
+                                      customBorder: CircleBorder(),
+                                      child: Ink(
+                                        decoration: ShapeDecoration(
+                                          color: Colors.red,
+                                          shape: CircleBorder(),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.delete_forever,
+                                            size: 14.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
+                                    )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 12.0,
+                              ),
+                              controller.plant == null
+                                  ? emptyCard()
+                                  : cardField(
+                                      title: controller.plant?.plantName ?? '-',
+                                      type: controller.plant?.plantType ?? '-',
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 12.0,
-                            ),
-                            buildFieldData(
-                              title: "Nama Lahan",
-                              description: controller.lahan.fieldName,
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            buildFieldData(
-                              title: "Luas Lahan (m²)",
-                              description:
-                                  controller.lahan.fieldArea.toString(),
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            buildFieldData(
-                              title: "Alamat",
-                              description: controller.lahan.fieldAddress
-                                  .split(', ')
-                                  .map((word) => word.capitalize)
-                                  .join(', '),
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                          ],
+                              const SizedBox(height: 10),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 25.0,
-                    ),
-                    Card(
-                      elevation: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Data Tanam",
-                              style: TStyle.head4,
-                            ),
-                            const SizedBox(
-                              height: 12.0,
-                            ),
-                            // emptyCard(),
-                            cardField(
-                              title: controller.lahan.plants!.plantName,
-                              type: controller.lahan.plants!.plantType,
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-            ],
-          ),
-        ],
-      ),
+                    ],
+                  ),
+                )),
+              ],
+            ),
+            if (controller.isLoading.value) LoadingWidgetBG(),
+          ],
+        );
+      }),
     );
   }
 
@@ -191,76 +269,82 @@ class DetailLahanPage extends GetView<DetailLahanController> {
     required String type,
   }) {
     return Card(
+      clipBehavior: Clip.hardEdge,
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "$title ($type)",
-              style: TStyle.head5,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_month_sharp,
-                  size: 20,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Tgl. Tanam : ${DateTime.now().toFormattedDatetime()}",
-                    style: TStyle.bodyText2,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+      child: InkWell(
+        onTap: () {
+          // controller.showDetailPlant(controller.plant!.id);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "$title ($type)",
+                style: TStyle.head5,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_month_sharp,
+                    size: 20,
+                    color: AppColors.primary,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_month_sharp,
-                  size: 20,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Tgl. Panen : -",
-                    style: TStyle.bodyText2,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Tgl. Tanam : ${DateTime.now().toFormattedDatetime()}",
+                      style: TStyle.bodyText2,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(
-                  Icons.space_dashboard_sharp,
-                  size: 20,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Jml. Panen : -",
-                    style: TStyle.bodyText2,
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_month_sharp,
+                    size: 20,
+                    color: AppColors.primary,
                   ),
-                ),
-              ],
-            ),
-            Divider(
-              thickness: 1,
-            ),
-          ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Tgl. Panen : -",
+                      style: TStyle.bodyText2,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.space_dashboard_sharp,
+                    size: 20,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Jml. Panen : -",
+                      style: TStyle.bodyText2,
+                    ),
+                  ),
+                ],
+              ),
+              Divider(
+                thickness: 1,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:plantix_app/app/data/models/product_model.dart';
 
 class CartItem extends Equatable {
-  List<Product>? product;
+  Product? product;
   int? quantity;
   double? price;
 
@@ -17,7 +17,7 @@ class CartItem extends Equatable {
   });
 
   CartItem copyWith({
-    ValueGetter<List<Product>?>? product,
+    ValueGetter<Product?>? product,
     ValueGetter<int?>? quantity,
     ValueGetter<double?>? price,
   }) {
@@ -30,7 +30,7 @@ class CartItem extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      'product': product?.map((x) => x.toJson()).toList(),
+      'product': product?.toMap(),
       'quantity': quantity,
       'price': price,
     };
@@ -38,9 +38,7 @@ class CartItem extends Equatable {
 
   factory CartItem.fromMap(Map<String, dynamic> map) {
     return CartItem(
-      product: map['product'] != null
-          ? List<Product>.from(map['product']?.map((x) => Product.fromJson(x)))
-          : null,
+      product: map['product'] != null ? Product.fromMap(map['product']) : null,
       quantity: map['quantity']?.toInt(),
       price: map['price']?.toDouble(),
     );

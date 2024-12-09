@@ -1,26 +1,40 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-class PlantingEvent {
-  final String title;
-  final String fieldName;
-  final DateTime date;
-  final List<Event> events;
+// class PlantingEvent {
+//   final String title;
+//   final String fieldName;
+//   final DateTime date;
+//   final List<Event> events;
 
-  PlantingEvent({
-    required this.title,
-    required this.fieldName,
-    required this.date,
-    required this.events,
-  });
-}
+//   PlantingEvent({
+//     required this.title,
+//     required this.fieldName,
+//     required this.date,
+//     required this.events,
+//   });
+// }
 
-// Tambahkan kelas Event
+// // Tambahkan kelas Event
+// class Event {
+//   final String eventTitle;
+//   final Color color;
+
+//   Event(
+//     this.eventTitle,
+//     this.color,
+//   );
+// }
+
 class Event {
-  final String eventTitle;
-  final Color color;
+  final String judul;
+  final DateTime tanggalMulai;
+  final DateTime tanggalPanen;
+  final String lokasi;
 
-  Event(
-    this.eventTitle,
-    this.color,
-  );
+  Event({
+    required this.judul,
+    required this.tanggalMulai,
+    required this.tanggalPanen,
+    required this.lokasi,
+  });
 }

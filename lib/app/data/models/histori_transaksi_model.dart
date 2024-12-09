@@ -7,7 +7,7 @@ class HistoriTransaksi extends Equatable {
   final DateTime tanggal;
   final String tipePayment;
   final String statusPembayaran;
-  final String urlBukti;
+  final String? urlBukti;
   final String status;
   final double total;
   final List<DetailTransaksi> detail;
@@ -17,7 +17,7 @@ class HistoriTransaksi extends Equatable {
     required this.tanggal,
     required this.tipePayment,
     required this.statusPembayaran,
-    required this.urlBukti,
+    this.urlBukti,
     required this.status,
     required this.total,
     required this.detail,
@@ -89,7 +89,7 @@ class HistoriTransaksi extends Equatable {
       tanggal,
       tipePayment,
       statusPembayaran,
-      urlBukti,
+      urlBukti ?? '',
       status,
       total,
       detail,

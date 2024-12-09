@@ -32,21 +32,27 @@ class SplashScreenController extends GetxController {
     // });
     authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) async {
-        if (redirecting()) return;
-        final session = data.session;
-        if (session != null) {
+        try {
+          // Cek jika sedang dalam proses redirect
+          if (redirecting()) return;
+
+          final session = data.session;
           redirecting.value = true;
-          await user.loadUserData();
-          Get.offAllNamed(HomeRoutes.home);
-        } else {
-          Get.offNamed(AuthRoutes.login);
-        }
-      },
-      onError: (error) {
-        if (error is AuthException) {
-          return snackbarError(message: error.message);
-        } else {
-          return snackbarError(message: 'Unexpected error occurred');
+
+          if (session != null) {
+            await user.loadUserData();
+            Get.offAllNamed(HomeRoutes.home);
+          } else {
+            Get.offAllNamed(AuthRoutes.login);
+          }
+        } catch (error) {
+          redirecting.value = false;
+          final message = error is AuthException
+              ? error.message
+              : 'Terjadi kesalahan yang tidak diharapkan';
+
+          Get.offAllNamed(AuthRoutes.login);
+          snackbarError(message: message);
         }
       },
     );
