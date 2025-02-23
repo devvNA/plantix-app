@@ -7,6 +7,8 @@ import 'package:plantix_app/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileRepository {
+  final userId = supabase.auth.currentSession!.user.id;
+
   Future<Either<Failure, String>> onUploadAvatar(String imageUrl) async {
     try {
       final userId = supabase.auth.currentUser!.id;
@@ -26,10 +28,10 @@ class ProfileRepository {
 
   Future<Either<Failure, UserModel>> getUser() async {
     try {
-      final userId = supabase.auth.currentSession!.user.id;
       final response =
           await supabase.from('users').select().eq('id', userId).single();
-      UserModel user = UserModel.fromJson(response);
+
+      final user = UserModel.fromJson(response);
       log("User: ${user.toJson()}");
       return right(user);
 

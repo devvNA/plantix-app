@@ -56,9 +56,11 @@ class LahanTanamController extends GetxController {
     final data = await FieldRepository().createField(
       fieldName: namaController.text,
       size: double.parse(luasLahanController.text),
-      // address: lokasiController.text,
       address:
-          "${lokasiController.text}, Kecamatan ${selectedDistrict.value}, ${selectedCity.value}, ${selectedProvince.value}",
+          "${lokasiController.text}, Kecamatan ${selectedDistrict.value}, ${selectedCity.value}, ${selectedProvince.value}."
+              .split(', ')
+              .map((word) => word.capitalize)
+              .join(', '),
     );
 
     data.fold(

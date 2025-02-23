@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
@@ -37,7 +38,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                   context: context,
                   label: "Nama Lengkap",
                   value: user.currentUser!.name,
-                  onPressed: () {},
                 ),
                 Divider(
                   thickness: 2,
@@ -46,7 +46,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                   context: context,
                   label: "Email",
                   value: user.currentUser!.email,
-                  onPressed: () {},
                 ),
                 Divider(
                   thickness: 2,
@@ -55,7 +54,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                   context: context,
                   label: "Alamat",
                   value: user.currentUser?.address ?? "",
-                  onPressed: () {},
                 ),
                 Divider(
                   thickness: 2,
@@ -64,7 +62,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                   context: context,
                   label: "No. Telp",
                   value: user.currentUser?.phoneNumber.toString() ?? "",
-                  onPressed: () {},
                 ),
                 Divider(
                   thickness: 2,
@@ -79,7 +76,6 @@ class EditProfilePage extends GetView<EditProfileController> {
     required BuildContext context,
     required String label,
     required String value,
-    required VoidCallback onPressed,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
@@ -144,6 +140,12 @@ class EditProfilePage extends GetView<EditProfileController> {
       builder: (context) => AlertDialog(
         title: Text('Edit $label'),
         content: CustomTextForm(
+          keyboardType: label == 'No. Telp' ? TextInputType.number : null,
+          inputFormatters: label == 'No. Telp'
+              ? [
+                  FilteringTextInputFormatter.digitsOnly,
+                ]
+              : null,
           hintText: label,
           controller: textController,
           maxLines: label == 'Alamat' ? 3 : 1,

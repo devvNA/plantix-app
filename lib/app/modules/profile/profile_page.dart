@@ -72,18 +72,21 @@ class ProfilePage extends GetView<ProfileController> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Material(
-                              clipBehavior: Clip.hardEdge,
-                              color: Colors.transparent,
-                              shape: CircleBorder(),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.black26,
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: Colors.white,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Material(
+                                clipBehavior: Clip.hardEdge,
+                                color: Colors.transparent,
+                                shape: CircleBorder(),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.black26,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () => Get.back(),
                                   ),
-                                  onPressed: () => Get.back(),
                                 ),
                               ),
                             ),

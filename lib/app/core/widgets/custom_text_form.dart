@@ -10,7 +10,6 @@ class CustomTextForm extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool? obscureText;
   final int? maxLines;
-  final EdgeInsetsGeometry? contentPadding;
   final Widget? suffixIcon;
   final bool? enabled;
   final Function(String)? onChanged;
@@ -22,6 +21,7 @@ class CustomTextForm extends StatelessWidget {
   final String? suffixText;
   final String? initialValue;
   final String? helperText;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextForm({
     super.key,
@@ -32,7 +32,6 @@ class CustomTextForm extends StatelessWidget {
     this.keyboardType,
     this.obscureText,
     this.maxLines,
-    this.contentPadding,
     this.suffixIcon,
     this.enabled,
     this.onChanged,
@@ -44,6 +43,7 @@ class CustomTextForm extends StatelessWidget {
     this.suffixText,
     this.initialValue,
     this.helperText,
+    this.inputFormatters,
   });
 
   @override
@@ -54,14 +54,13 @@ class CustomTextForm extends StatelessWidget {
       controller: controller,
       maxLines: maxLines ?? 1,
       obscureText: obscureText ?? false,
-      scrollPadding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
+      scrollPadding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height),
       cursorColor: AppColors.primary,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
-        contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 16),
         prefixIconColor: AppColors.primary,
         suffixIconColor: Colors.grey[400],
         fillColor: Colors.grey[200],
@@ -100,10 +99,12 @@ class CustomTextFormSimple extends StatelessWidget {
   final String? Function(String?)? validator;
   final String? suffixText;
   final void Function()? onTap;
+  final Function(String)? onChanged;
   final bool? readOnly;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final List<TextInputFormatter>? inputFormatters;
+  final String? initialValue;
 
   const CustomTextFormSimple({
     super.key,
@@ -119,14 +120,18 @@ class CustomTextFormSimple extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.inputFormatters,
+    this.initialValue,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       inputFormatters: inputFormatters,
       readOnly: readOnly ?? false,
       onTap: onTap,
+      onChanged: onChanged,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       maxLines: maxLines,

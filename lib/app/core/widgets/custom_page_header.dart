@@ -24,7 +24,7 @@ class PageHeader extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             AppColors.primary,
-            AppColors.secondary.withOpacity(0.8),
+            AppColors.secondary.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.only(

@@ -15,16 +15,55 @@ import 'package:plantix_app/app/modules/lahan_tanam/lahan_tanam_controller.dart'
 class DetailLahanController extends GetxController {
   FieldModel field = Get.arguments;
   PlantModel? plant;
+  final isLoading = false.obs;
   final isScrolled = false.obs;
+  final lahanTanamController = Get.find<LahanTanamController>();
   final plantNameController = TextEditingController();
   final plantTypeController = TextEditingController();
-  final isLoading = false.obs;
-  final lahanTanamController = Get.find<LahanTanamController>();
 
   @override
   void onInit() {
     super.onInit();
     getPlant();
+  }
+
+  // void addPlant() {
+  //   isLoading.value = true;
+  //   // Perbarui list lahan
+  //   final index = Get.find<LahanTanamController>()
+  //       .fieldList
+  //       .indexWhere((element) => element.id == field?.id);
+
+  //   if (index != -1) {
+  //     Get.find<LahanTanamController>().fieldList[index] = field!;
+  //     Get.find<LahanTanamController>().fieldList.refresh();
+
+  //     snackbarSuccess(
+  //       message: "Sukses",
+  //       body: "Tanaman berhasil ditambahkan",
+  //     );
+  //   }
+  //   isLoading.value = false;
+  // }
+
+  // Fungsi untuk mengedit lahan yang sudah ada
+  // void editLahan(int id) {
+  //   Get.find<LahanTanamController>().fieldList.add(field);
+  //   Get.find<LahanTanamController>().fieldList.refresh();
+  //   snackbarSuccess(
+  //     message: "Sukses",
+  //     body: "Lahan berhasil diperbarui",
+  //   );
+  // }
+
+  // // Fungsi untuk menghapus lahan
+  // void deleteLahan(int index) {
+  //   Get.find<LahanTanamController>().deleteLahan(index);
+  // }
+
+  @override
+  void onReady() {
+    super.onReady();
   }
 
   // Fungsi untuk memperbarui status scroll
@@ -48,7 +87,7 @@ class DetailLahanController extends GetxController {
 
   Future<void> addPlant() async {
     isLoading.value = true;
-    final result = await PlantRepository().addPlant(
+    final result = await PlantRepository().addPlantToField(
       fieldId: field.id,
       name: plantNameController.text,
       type: plantTypeController.text,
@@ -93,7 +132,7 @@ class DetailLahanController extends GetxController {
 
   Future<void> deletePlant() async {
     isLoading.value = true;
-    final result = await PlantRepository().deletePlant(plant!.id);
+    final result = await PlantRepository().deletePlant(plant!.id, field.id);
     if (result) {
       plant = null;
       snackbarSuccess(
@@ -105,51 +144,12 @@ class DetailLahanController extends GetxController {
     isLoading.value = false;
   }
 
-  // void addPlant() {
-  //   isLoading.value = true;
-  //   // Perbarui list lahan
-  //   final index = Get.find<LahanTanamController>()
-  //       .fieldList
-  //       .indexWhere((element) => element.id == field?.id);
-
-  //   if (index != -1) {
-  //     Get.find<LahanTanamController>().fieldList[index] = field!;
-  //     Get.find<LahanTanamController>().fieldList.refresh();
-
-  //     snackbarSuccess(
-  //       message: "Sukses",
-  //       body: "Tanaman berhasil ditambahkan",
-  //     );
-  //   }
-  //   isLoading.value = false;
-  // }
-
-  // Fungsi untuk mengedit lahan yang sudah ada
-  // void editLahan(int id) {
-  //   Get.find<LahanTanamController>().fieldList.add(field);
-  //   Get.find<LahanTanamController>().fieldList.refresh();
-  //   snackbarSuccess(
-  //     message: "Sukses",
-  //     body: "Lahan berhasil diperbarui",
-  //   );
-  // }
-
-  // // Fungsi untuk menghapus lahan
-  // void deleteLahan(int index) {
-  //   Get.find<LahanTanamController>().deleteLahan(index);
-  // }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
   @override
   void onClose() {
     super.onClose();
     lahanTanamController.onRefresh();
+
     plantNameController.dispose();
     plantTypeController.dispose();
-    update();
   }
 }

@@ -112,7 +112,7 @@ class CheckoutProduct extends StatelessWidget {
                       ),
                       const SizedBox(height: 5.0),
                       Text(
-                        DateTime.now().toFormattedDatetime(),
+                        DateTime.now().toFormattedDate(),
                         style: const TextStyle(
                           fontSize: 12.0,
                           color: Colors.black38,

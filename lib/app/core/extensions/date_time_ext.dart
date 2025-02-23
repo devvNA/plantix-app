@@ -58,16 +58,25 @@ extension DateTimeExt on DateTime {
     return '$hari, $day $bulan $tahun';
   }
 
+  String toFormattedTime24Hour() {
+    final String formattedHour = hour.toString().padLeft(2, '0');
+    final String formattedMinute = minute.toString().padLeft(2, '0');
+
+    return '$formattedHour:$formattedMinute WIB';
+  }
+
   String toFormattedDatetimeIndonesia() {
     final String bulan = _getNamaBulan(month);
     final int tahun = year;
-    return '$day $bulan $tahun';
-    // return '$bulan $day, $tahun $waktu';
+
+    final String waktu = toFormattedTime24Hour();
+    return '$day $bulan $tahun, $waktu';
   }
 
-  String toFormattedDatetime() {
+  String toFormattedDate() {
     final String bulan = _getNamaBulan(month);
     final int tahun = year;
+    // final String waktu = toFormattedTime();
     return '$day $bulan $tahun';
     // return '$bulan $day, $tahun $waktu';
   }
@@ -78,4 +87,15 @@ extension DateTimeExt on DateTime {
     final int minute = DateTime.now().minute;
     return '$hour:$minute $amPm';
   }
+
+  String toFormattedDateTimeComplete() {
+    final String formattedDay = day.toString().padLeft(2, '0');
+    final String formattedMonth = month.toString().padLeft(2, '0');
+    final String formattedHour = hour.toString().padLeft(2, '0');
+    final String formattedMinute = minute.toString().padLeft(2, '0');
+    // final String formattedSecond = second.toString().padLeft(2, '0');
+    return '$formattedDay/$formattedMonth/$year, $formattedHour:$formattedMinute WIB';
+  }
 }
+
+// DateFormat('dd/MM/yyyy, HH:mm:ss').format(DateTime.now())

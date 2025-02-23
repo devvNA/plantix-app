@@ -7,21 +7,21 @@ import 'calendar_routes.dart';
 import 'cart_routes.dart';
 import 'checkout_routes.dart';
 import 'detail_analisa_usaha_routes.dart';
+import 'detail_history_routes.dart';
 import 'detail_lahan_routes.dart';
 import 'detail_product_routes.dart';
+import 'edit_profile_routes.dart';
+import 'help_desk_routes.dart';
 import 'home_routes.dart';
 import 'kalkulasi_tanam_routes.dart';
 import 'lahan_tanam_routes.dart';
 import 'list_transaction_routes.dart';
+import 'my_products_routes.dart';
 import 'my_store_routes.dart';
 import 'notification_routes.dart';
 import 'profile_routes.dart';
 import 'sales_routes.dart';
 import 'splash_screen_routes.dart';
-import 'my_products_routes.dart';
-import 'edit_profile_routes.dart';
-import 'help_desk_routes.dart';
-import 'detail_history_routes.dart';
 
 class AppPages {
   AppPages._();
@@ -49,9 +49,9 @@ class AppPages {
     ...CheckoutRoutes.routes,
     ...HistoryTransactionRoutes.routes,
     ...BuatTokoRoutes.routes,
-		...MyProductsRoutes.routes,
-		...EditProfileRoutes.routes,
-		...HelpDeskRoutes.routes,
-		...DetailHistoryRoutes.routes,
+    ...MyProductsRoutes.routes,
+    ...EditProfileRoutes.routes,
+    ...HelpDeskRoutes.routes,
+    ...DetailHistoryRoutes.routes,
   ];
 }

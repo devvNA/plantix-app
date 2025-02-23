@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -25,8 +27,28 @@ class FieldRepository {
 
       final response =
           await supabase.from('fields').insert(query).select().single();
-
       final field = FieldModel.fromJson(response);
+
+      if (response != null) {
+        final date = DateTime.now();
+        // Insert data ke Tabel Analisa Hasil Usaha Tani
+        await supabase
+            .from('farm_production_analysis')
+            .insert({
+              'user_id': field.userId,
+              'field_id': field.id,
+              'field_name': field.fieldName,
+              'plant_type': null,
+              'planting_date': date.toIso8601String(),
+              'harvest_date': date.add(Duration(days: 100)).toIso8601String(),
+              'harvest_quantity': 0,
+              'net_income': 0,
+              'expenses': 0
+            })
+            .select()
+            .single();
+      }
+
       return right(field);
     } on PostgrestException catch (e) {
       log(e.message);
@@ -41,38 +63,12 @@ class FieldRepository {
     try {
       final userId = supabase.auth.currentSession!.user.id;
       final response =
-          await supabase.from('fields').select().eq('user_id', userId).select();
+          await supabase.from('fields').select().eq('user_id', userId);
 
       final fields = response.map((e) => FieldModel.fromJson(e)).toList();
 
       log(response.toString());
       return right(fields);
-    } on PostgrestException catch (e) {
-      log(e.message);
-      return left(Exception(e.message));
-    } catch (e) {
-      log(e.toString());
-      return left(Exception(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, FieldModel>> addPlantToField({
-    required int fieldId,
-    required String plantName,
-    required String plantType,
-  }) async {
-    try {
-      final query = {
-        'field_id': fieldId,
-        'plant_name': plantName,
-        'plant_type': plantType,
-      };
-
-      final data =
-          await supabase.from('plants').insert(query).select().single();
-
-      final field = FieldModel.fromJson(data);
-      return right(field);
     } on PostgrestException catch (e) {
       log(e.message);
       return left(Exception(e.message));

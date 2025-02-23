@@ -1,43 +1,88 @@
-class AnalisaUsahaTani {
-  String namaLahan;
-  String jenisTanaman;
-  String tanggalTanam;
-  String tanggalPanen;
-  double jumlahPanen;
-  double pendapatanBersih;
-  double pengeluaran;
+import 'package:equatable/equatable.dart';
 
-  AnalisaUsahaTani({
-    required this.namaLahan,
-    required this.jenisTanaman,
-    required this.tanggalTanam,
-    required this.tanggalPanen,
-    required this.jumlahPanen,
-    required this.pendapatanBersih,
-    required this.pengeluaran,
+class FarmingProductionAnalysisModel extends Equatable {
+  const FarmingProductionAnalysisModel({
+    required this.id,
+    required this.fieldId,
+    required this.fieldName,
+    required this.plantType,
+    required this.plantingDate,
+    required this.harvestDate,
+    required this.harvestQuantity,
+    required this.netIncome,
+    required this.expenses,
   });
 
-  factory AnalisaUsahaTani.fromMap(Map<String, dynamic> map) {
-    return AnalisaUsahaTani(
-      namaLahan: map['namaLahan'],
-      jenisTanaman: map['jenisTanaman'],
-      tanggalTanam: map['tanggalTanam'],
-      tanggalPanen: map['tanggalPanen'],
-      jumlahPanen: map['jumlahPanen'],
-      pendapatanBersih: map['pendapatanBersih'],
-      pengeluaran: map['pengeluaran'],
+  final int id;
+  final int fieldId;
+  final String fieldName;
+  final String plantType;
+  final DateTime? plantingDate;
+  final DateTime? harvestDate;
+  final int harvestQuantity;
+  final int netIncome;
+  final int expenses;
+
+  FarmingProductionAnalysisModel copyWith({
+    int? id,
+    int? fieldId,
+    String? fieldName,
+    String? plantType,
+    DateTime? plantingDate,
+    DateTime? harvestDate,
+    int? harvestQuantity,
+    int? netIncome,
+    int? expenses,
+  }) {
+    return FarmingProductionAnalysisModel(
+      id: id ?? this.id,
+      fieldId: fieldId ?? this.fieldId,
+      fieldName: fieldName ?? this.fieldName,
+      plantType: plantType ?? this.plantType,
+      plantingDate: plantingDate ?? this.plantingDate,
+      harvestDate: harvestDate ?? this.harvestDate,
+      harvestQuantity: harvestQuantity ?? this.harvestQuantity,
+      netIncome: netIncome ?? this.netIncome,
+      expenses: expenses ?? this.expenses,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'namaLahan': namaLahan,
-      'jenisTanaman': jenisTanaman,
-      'tanggalTanam': tanggalTanam,
-      'tanggalPanen': tanggalPanen,
-      'jumlahPanen': jumlahPanen,
-      'pendapatanBersih': pendapatanBersih,
-      'pengeluaran': pengeluaran,
-    };
+  factory FarmingProductionAnalysisModel.fromJson(Map<String, dynamic> json) {
+    return FarmingProductionAnalysisModel(
+      id: json["id"] ?? 0,
+      fieldId: json["field_id"] ?? 0,
+      fieldName: json["field_name"] ?? "",
+      plantType: json["plant_type"] ?? "",
+      plantingDate: DateTime.tryParse(json["planting_date"] ?? ""),
+      harvestDate: DateTime.tryParse(json["harvest_date"] ?? ""),
+      harvestQuantity: json["harvest_quantity"] ?? 0,
+      netIncome: json["net_income"] ?? 0,
+      expenses: json["expenses"] ?? 0,
+    );
   }
+
+  @override
+  String toString() {
+    return "$id, $fieldId, $fieldName, $plantType, $plantingDate, $harvestDate, $harvestQuantity, $netIncome, $expenses, ";
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        fieldId,
+        fieldName,
+        plantType,
+        plantingDate,
+        harvestDate,
+        harvestQuantity,
+        netIncome,
+        expenses,
+      ];
+}
+
+class Pengeluaran {
+  final String namaPengeluaran;
+  final int jumlah;
+
+  Pengeluaran(this.namaPengeluaran, this.jumlah);
 }

@@ -1,7 +1,7 @@
 class Kalkulasi {
   final double luasLahan;
   final String jenisTanaman;
-  final String tanggalTanam;
+  final DateTime tanggalTanam;
   final int jumlahBenih;
   final double kebutuhanPupuk;
   final double kebutuhanAir;

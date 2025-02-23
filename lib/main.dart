@@ -18,6 +18,7 @@ Future<void> main() async {
   await GetStorage.init(); //initialize storage
   Get.put<NetworkController>(NetworkController(),
       permanent: true); //Check internet connection
+
   await dotenv.load(); //load env
   await Supabase.initialize(
     url: 'https://ziuujbwicwlbfyagxpna.supabase.co',

@@ -17,6 +17,20 @@ class MyStoreController extends GetxController {
   final profileController = Get.find<ProfileController>();
   final productCount = 0.obs;
 
+  // Dummy data untuk dashboard
+  var totalSales = 1500000.obs;
+  var totalProducts = 50.obs;
+  var totalOrders = 120.obs;
+  var totalCancelled = 10.obs;
+
+  // Dummy data untuk grafik penjualan
+  var salesData = [
+    {'month': 'Jan', 'sales': 300000},
+    {'month': 'Feb', 'sales': 400000},
+    {'month': 'Mar', 'sales': 500000},
+    {'month': 'Apr', 'sales': 600000},
+  ].obs;
+
   @override
   void onInit() async {
     super.onInit();

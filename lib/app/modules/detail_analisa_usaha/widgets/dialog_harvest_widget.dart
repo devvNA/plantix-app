@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:plantix_app/app/core/helpers/thousand_separator_formatter.dart';
 import 'package:plantix_app/app/core/helpers/validator.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
@@ -23,10 +25,13 @@ class DialogHarvestWidget extends GetView<DetailAnalisaUsahaController> {
             key: _formKey,
             child: Column(
               children: [
-                CustomTextForm(
+                CustomTextFormSimple(
+                  controller: controller.jmlPanenController,
                   keyboardType: TextInputType.number,
-                  hintText: 'Jumlah',
-                  obscureText: false,
+                  label: 'Jumlah',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   validator: Validator.required,
                   suffixIcon: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -38,15 +43,18 @@ class DialogHarvestWidget extends GetView<DetailAnalisaUsahaController> {
                       ),
                     ),
                   ),
-                  onChanged: (value) {
-                    controller.jmlPanen.value = double.parse(value);
-                  },
                 ),
                 const SizedBox(
                   height: 8.0,
                 ),
-                CustomTextForm(
+                CustomTextFormSimple(
+                  controller: controller.hargaPanenController,
+                  label: 'Harga',
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    ThousandsSeparatorInputFormatter(),
+                  ],
                   prefixIcon: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 13.0, horizontal: 13),
@@ -57,12 +65,7 @@ class DialogHarvestWidget extends GetView<DetailAnalisaUsahaController> {
                       ),
                     ),
                   ),
-                  hintText: 'Harga',
-                  obscureText: false,
                   validator: Validator.required,
-                  onChanged: (value) {
-                    controller.hargaPanen.value = double.parse(value);
-                  },
                 ),
                 const SizedBox(
                   height: 12.0,
@@ -79,10 +82,7 @@ class DialogHarvestWidget extends GetView<DetailAnalisaUsahaController> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        controller.setPanen(
-                          controller.jmlPanen.value,
-                          controller.hargaPanen.value,
-                        );
+                        controller.setPanen();
                       }
                     },
                     child: const Text("Simpan"),

@@ -4,6 +4,7 @@ import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/core/widgets/custom_page_header.dart';
 
 import 'detail_analisa_usaha_controller.dart';
@@ -32,122 +33,149 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          PageHeader(
-            title: 'Detail Analisa Usaha',
-            height: MediaQuery.of(context).size.height * 0.17,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: controller.scrollController,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: cardField(
-                            title: controller.analisaUsana.namaLahan,
-                            type: controller.analisaUsana.jenisTanaman,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6.0),
-                      Card(
-                        elevation: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Pengeluaran",
-                                style: TStyle.head5,
+      body: GetBuilder<DetailAnalisaUsahaController>(builder: (controller) {
+        return Stack(
+          children: [
+            PageHeader(
+              title: 'Detail Analisa Usaha',
+              height: MediaQuery.of(context).size.height * 0.17,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.09),
+                Expanded(
+                  child: RefreshIndicator(
+                    color: AppColors.primary,
+                    onRefresh: () async {
+                      controller.onRefresh();
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: controller.scrollController,
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          Card(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: cardField(
+                                title: controller.analisaUsana!.fieldName,
+                                type: controller.analisaUsana!.plantType,
                               ),
-                              const SizedBox(height: 12),
-                              Obx(() => Column(
-                                    children: controller.pengeluaranList
-                                        .map((pengeluaran) => spendProperty(
-                                            title: "${pengeluaran.kategori} :",
-                                            value:
-                                                pengeluaran.jumlah.toString()))
-                                        .toList(),
-                                  )),
-                            ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 6.0),
+                          Card(
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Pengeluaran",
+                                    style: TStyle.head5,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Obx(() {
+                                    return controller.pengeluaranList.isEmpty
+                                        ? const Center(
+                                            child: Text(
+                                              "Belum ada data pengeluaran",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          )
+                                        : Column(
+                                            children: controller.pengeluaranList
+                                                .map((pengeluaran) => spendProperty(
+                                                    title:
+                                                        "${pengeluaran.spendName} :",
+                                                    value: pengeluaran.amount
+                                                        .toString(),
+                                                    spendId: pengeluaran.id))
+                                                .toList(),
+                                          );
+                                  })
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 6.0),
+                          Card(
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 12),
+                                  analyzeProperty(
+                                    title: "Total Biaya",
+                                    value: controller
+                                        .hitungTotalBiaya()
+                                        .toString()
+                                        .currencyFormatRp,
+                                  ),
+                                  analyzeProperty(
+                                    title: "Hasil Panen",
+                                    value: controller.jmlPanen != 0
+                                        ? "${controller.jmlPanen} Kg"
+                                        : "0 Kg",
+                                  ),
+                                  analyzeProperty(
+                                      title: "Harga Panen",
+                                      value: controller.hargaPanen != 0
+                                          ? controller
+                                              .hargaPanen!.currencyFormatRp
+                                          : "0".currencyFormatRp),
+                                  analyzeProperty(
+                                    title: "Pendapatan Kotor",
+                                    value: controller
+                                        .hitungPendapatanKotor()
+                                        .toString()
+                                        .currencyFormatRp,
+                                  ),
+                                  analyzeProperty(
+                                    title: "Pendapatan Bersih",
+                                    value: controller
+                                        .hitungPendapatanBersih()
+                                        .toString()
+                                        .currencyFormatRp,
+                                    color:
+                                        controller.hitungPendapatanBersih() < 0
+                                            ? Colors.red
+                                            : AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 6.0),
-                      Card(
-                        elevation: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Obx(() {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 12),
-                                analyzeProperty(
-                                  title: "Total Biaya",
-                                  value: controller
-                                      .hitungTotalBiaya()
-                                      .toString()
-                                      .currencyFormatRp,
-                                ),
-                                analyzeProperty(
-                                  title: "Hasil Panen",
-                                  value: controller.jmlPanen.value != 0
-                                      ? "${controller.jmlPanen.value} Kg"
-                                      : "0 Kg",
-                                ),
-                                analyzeProperty(
-                                    title: "Harga Panen",
-                                    value: controller.hargaPanen.value != 0
-                                        ? controller
-                                            .hargaPanen.value.currencyFormatRp
-                                        : "0".currencyFormatRp),
-                                analyzeProperty(
-                                  title: "Pendapatan Kotor",
-                                  value: controller
-                                      .hitungPendapatanKotor()
-                                      .toString()
-                                      .currencyFormatRp,
-                                ),
-                                analyzeProperty(
-                                  title: "Pendapatan Bersih",
-                                  value: controller
-                                      .hitungPendapatanBersih()
-                                      .toString()
-                                      .currencyFormatRp,
-                                  color: controller.hitungPendapatanBersih() < 0
-                                      ? Colors.red
-                                      : AppColors.primary,
-                                ),
-                              ],
-                            );
-                          }),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            ),
+            if (controller.isLoading.value) const LoadingWidgetBG(),
+          ],
+        );
+      }),
     );
   }
 
-  Widget spendProperty({required String title, required String value}) {
+  Widget spendProperty({
+    required String title,
+    required String value,
+    required int spendId,
+  }) {
     return Padding(
       padding: EdgeInsets.all(4),
       child: Row(
@@ -155,7 +183,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
           Container(
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -179,6 +207,16 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
               color: AppColors.primary,
             ),
           ),
+          IconButton(
+            constraints: BoxConstraints(),
+            splashRadius: 20,
+            onPressed: () => controller.deleteSpend(spendId),
+            icon: Icon(
+              Icons.delete,
+              color: AppColors.error,
+              size: 20,
+            ),
+          )
         ],
       ),
     );
@@ -193,7 +231,7 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
       margin: EdgeInsets.only(bottom: 8),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: (color ?? AppColors.primary).withOpacity(0.05),
+        color: (color ?? AppColors.primary).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -239,22 +277,20 @@ class DetailAnalisaUsahaPage extends GetView<DetailAnalisaUsahaController> {
         const SizedBox(height: 12),
         fieldProperty(
             title: 'Tgl. Tanam :',
-            value: DateTime.now().toFormattedDatetime(),
+            value: controller.analisaUsana!.plantingDate!.toFormattedDate(),
             icon: Icons.calendar_month_sharp),
         const SizedBox(height: 4),
         fieldProperty(
             title: 'Tgl. Panen :',
-            value: controller.analisaUsana.tanggalPanen,
+            value: controller.analisaUsana!.harvestDate!.toFormattedDate(),
             icon: Icons.calendar_month_sharp),
         const SizedBox(height: 4),
-        Obx(() {
-          return fieldProperty(
-            title: 'Jml. Panen :',
-            value: controller.jmlPanen.value.toString(),
-            icon: Icons.space_dashboard_sharp,
-            isPanen: true,
-          );
-        }),
+        fieldProperty(
+          title: 'Jml. Panen :',
+          value: "${controller.jmlPanen.toString()} Kg",
+          icon: Icons.space_dashboard_sharp,
+          isPanen: true,
+        ),
         const SizedBox(
           height: 6.0,
         ),

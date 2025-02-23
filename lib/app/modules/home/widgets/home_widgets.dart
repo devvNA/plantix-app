@@ -6,9 +6,10 @@ import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
+import 'package:plantix_app/app/modules/artikel/artikel_all/widgets/artikel_item_widget.dart';
 import 'package:plantix_app/app/modules/home/home_controller.dart';
-import 'package:plantix_app/app/modules/home/widgets/card_article_widget.dart';
 import 'package:plantix_app/app/routes/analisa_usaha_tani_routes.dart';
+import 'package:plantix_app/app/routes/artikel_routes.dart';
 import 'package:plantix_app/app/routes/calendar_routes.dart';
 import 'package:plantix_app/app/routes/kalkulasi_tanam_routes.dart';
 import 'package:plantix_app/app/routes/lahan_tanam_routes.dart';
@@ -53,7 +54,9 @@ class BuildHomePage extends GetView<HomeController> {
                         style: TStyle.head4,
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Get.toNamed(ArtikelRoutes.artikelAll);
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Text(
@@ -73,17 +76,22 @@ class BuildHomePage extends GetView<HomeController> {
                     child: Row(
                       children: List.generate(
                         5, // Jumlah item yang ingin ditampilkan
-                        (index) => Padding(
-                          padding: EdgeInsets.only(right: 12.0),
-                          child: ArtikelPertanianCard(
-                            judulArtikel: 'Hari Tani Nasional',
-                            penulis: 'admin01',
-                            tanggalPublikasi:
-                                DateTime.now().toFormattedDateWithDay(),
-                            gambarUrl:
-                                "https://mitrabertani.com/img/img_artikel/WEB_DESAIN_ARTIKEL_DWI.jpg",
-                          ),
-                        ),
+                        (index) => Builder(builder: (context) {
+                          return Padding(
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: ArticleItem(
+                              authorImage: "https://i.pravatar.cc/300",
+                              onTap: () {
+                                Get.toNamed(ArtikelRoutes.artikel);
+                              },
+                              title: 'Hari Tani Nasional',
+                              author: 'admin01',
+                              date: DateTime.now().toFormattedDateWithDay(),
+                              imageUrl:
+                                  "https://mitrabertani.com/img/img_artikel/WEB_DESAIN_ARTIKEL_DWI.jpg",
+                            ),
+                          );
+                        }),
                       ),
                     ),
                   ),
@@ -196,11 +204,11 @@ class BuildHomePage extends GetView<HomeController> {
                       shape: BoxShape.circle,
                       color: (Theme.of(context).brightness == Brightness.dark
                               ? AppColors.secondary
-                              : AppColors.secondary.withOpacity(
-                                  0.5,
+                              : AppColors.secondary.withValues(
+                                  alpha: 0.5,
                                 ))
-                          .withOpacity(
-                              controller.currentIndex.value == entry.key
+                          .withValues(
+                              alpha: controller.currentIndex.value == entry.key
                                   ? 0.9
                                   : 0.4),
                     ),
@@ -223,7 +231,7 @@ class BuildHomePage extends GetView<HomeController> {
           end: Alignment.bottomCenter,
           colors: [
             AppColors.primary,
-            AppColors.secondary.withOpacity(0.8),
+            AppColors.secondary.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -255,8 +263,9 @@ class BuildHomePage extends GetView<HomeController> {
             Padding(
               padding: const EdgeInsets.only(right: 12),
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   Get.toNamed(NotificationRoutes.notification);
+                  // BatteryMonitor().startMonitoring();
                   // log(supabase.auth.currentSession?.user.userMetadata
                   //         .toString() ??
                   //     '');

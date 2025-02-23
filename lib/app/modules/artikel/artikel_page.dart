@@ -71,7 +71,7 @@ class ArtikelPage extends GetView<ArtikelController> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -84,10 +84,10 @@ class ArtikelPage extends GetView<ArtikelController> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(30),
+                //   topRight: Radius.circular(30),
+                // ),
               ),
               padding: EdgeInsets.all(24),
               child: Column(
@@ -96,7 +96,7 @@ class ArtikelPage extends GetView<ArtikelController> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.amber[600],
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

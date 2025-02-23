@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:plantix_app/app/core/helpers/thousand_separator_formatter.dart';
 import 'package:plantix_app/app/core/helpers/validator.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_text_form.dart';
@@ -34,7 +36,7 @@ class AddSpendBottomSheet extends GetView<DetailAnalisaUsahaController> {
               key: _formKey,
               child: Column(
                 children: [
-                  CustomTextForm(
+                  CustomTextFormSimple(
                     keyboardType: TextInputType.number,
                     prefixIcon: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -47,15 +49,17 @@ class AddSpendBottomSheet extends GetView<DetailAnalisaUsahaController> {
                       ),
                     ),
                     controller: controller.spendController,
-                    hintText: 'Harga',
-                    obscureText: false,
+                    label: 'Harga',
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      ThousandsSeparatorInputFormatter(),
+                    ],
                     validator: Validator.required,
                   ),
                   const SizedBox(height: 12),
-                  CustomTextForm(
+                  CustomTextFormSimple(
                     controller: controller.descriptionController,
-                    hintText: 'Keterangan',
-                    obscureText: false,
+                    label: 'Keterangan',
                     validator: Validator.required,
                   ),
                   const SizedBox(height: 12),
@@ -82,10 +86,8 @@ class AddSpendBottomSheet extends GetView<DetailAnalisaUsahaController> {
   _submitData() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      controller.tambahPengeluaran(
-        controller.descriptionController.text,
-        double.parse(controller.spendController.text),
-      );
+      controller.createSpend();
+
       if (Get.isDialogOpen!) {
         controller.spendController.clear();
         controller.descriptionController.clear();

@@ -52,6 +52,7 @@ class DetailLahanPage extends GetView<DetailLahanController> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 10,
                             children: [
                               Row(
                                 children: [
@@ -123,32 +124,23 @@ class DetailLahanPage extends GetView<DetailLahanController> {
                                     ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 12.0,
-                              ),
+                              const SizedBox(height: 2.0),
                               buildFieldData(
                                 title: "Nama Lahan",
                                 description: controller.field.fieldName,
-                              ),
-                              const SizedBox(
-                                height: 10.0,
                               ),
                               buildFieldData(
                                 title: "Luas Lahan (m²)",
                                 description: controller.field.size.toString(),
                               ),
-                              const SizedBox(
-                                height: 10.0,
+                              buildFieldData(
+                                title: "Tanggal Dibuat",
+                                description: controller.field.createdAt!
+                                    .toFormattedDate(),
                               ),
                               buildFieldData(
                                 title: "Alamat",
-                                description: controller.field.address
-                                    .split(', ')
-                                    .map((word) => word.capitalize)
-                                    .join(', '),
-                              ),
-                              const SizedBox(
-                                height: 10.0,
+                                description: controller.field.address,
                               ),
                             ],
                           ),
@@ -272,79 +264,74 @@ class DetailLahanPage extends GetView<DetailLahanController> {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: () {
-          // controller.showDetailPlant(controller.plant!.id);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "$title ($type)",
-                style: TStyle.head5,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_month_sharp,
-                    size: 20,
-                    color: AppColors.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "$title ($type)",
+              style: TStyle.head5,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(
+                  Icons.calendar_month_sharp,
+                  size: 20,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Tgl. Tanam : ${controller.plant?.createdAt?.toFormattedDate()}",
+                    style: TStyle.bodyText2,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Tgl. Tanam : ${DateTime.now().toFormattedDatetime()}",
-                      style: TStyle.bodyText2,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(
+                  Icons.calendar_month_sharp,
+                  size: 20,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Tgl. Panen : ${controller.plant?.createdAt?.add(Duration(days: 100)).toFormattedDate()}",
+                    style: TStyle.bodyText2,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_month_sharp,
-                    size: 20,
-                    color: AppColors.primary,
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(
+                  Icons.space_dashboard_sharp,
+                  size: 20,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Jml. Panen : -",
+                    style: TStyle.bodyText2,
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Tgl. Panen : -",
-                      style: TStyle.bodyText2,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.space_dashboard_sharp,
-                    size: 20,
-                    color: AppColors.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Jml. Panen : -",
-                      style: TStyle.bodyText2,
-                    ),
-                  ),
-                ],
-              ),
-              Divider(
-                thickness: 1,
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            Divider(
+              thickness: 1,
+            ),
+          ],
         ),
       ),
     );

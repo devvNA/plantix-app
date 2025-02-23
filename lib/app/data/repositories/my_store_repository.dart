@@ -139,7 +139,9 @@ class MyStoreRepository {
       final data =
           await supabase.from('products').insert(query).select().single();
       final product = ProductsModel.fromJson(data);
+
       log(product.toJson().toString());
+
       return right(product);
     } on PostgrestException catch (e) {
       log(e.message);

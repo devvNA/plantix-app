@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/currency_ext.dart';
+import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_dropdown.dart';
@@ -78,6 +79,7 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
               keyboardType: TextInputType.number,
               validator: (value) =>
                   value?.isEmpty ?? true ? 'Harap masukkan jumlah benih' : null,
+              suffixText: 'Kg',
             ),
             SizedBox(height: 16),
             _buildHitungButton(),
@@ -93,12 +95,14 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
     required IconData icon,
     required TextInputType keyboardType,
     required String? Function(String?) validator,
+    String? suffixText,
   }) {
     return CustomTextFormSimple(
       label: label,
       controller: controller,
       keyboardType: keyboardType,
       validator: validator,
+      suffixText: suffixText,
     );
   }
 
@@ -236,7 +240,7 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Riwayat Kalkulasi:', style: TStyle.head3),
+              Text('Kesimpulan:', style: TStyle.head3),
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -260,8 +264,8 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 4),
-          Text('Tanggal Tanam: ${kalkulasi.tanggalTanam}'),
-          Text('Total Biaya: Rp ${kalkulasi.totalBiaya.toStringAsFixed(2)}'),
+          Text('Tanggal Tanam: ${kalkulasi.tanggalTanam.toFormattedDate()}'),
+          Text('Total Biaya: ${kalkulasi.totalBiaya.currencyFormatRp}'),
           Text('Estimasi Panen: ${kalkulasi.estimasiPanen} kg'),
         ],
       ),

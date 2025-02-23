@@ -16,30 +16,40 @@ class FieldModel extends Equatable {
   final String fieldName;
   final double size;
   final String address;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  FieldModel copyWith({
+    int? id,
+    String? userId,
+    String? fieldName,
+    double? size,
+    String? address,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return FieldModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      fieldName: fieldName ?? this.fieldName,
+      size: size ?? this.size,
+      address: address ?? this.address,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   factory FieldModel.fromJson(Map<String, dynamic> json) {
     return FieldModel(
       id: json["id"] ?? 0,
       userId: json["user_id"] ?? "",
       fieldName: json["field_name"] ?? "",
-      size: json["size"] ?? "",
+      size: json["size"] ?? 0.0,
       address: json["address"] ?? "",
-      createdAt: json["created_at"] ?? "",
-      updatedAt: json["updated_at"] ?? "",
+      createdAt: DateTime.tryParse(json["created_at"] ?? ""),
+      updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "user_id": userId,
-        "field_name": fieldName,
-        "size": size,
-        "address": address,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-      };
 
   @override
   String toString() {

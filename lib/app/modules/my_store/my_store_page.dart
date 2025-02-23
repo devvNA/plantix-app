@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/modules/my_store/my_store_controller.dart';
-import 'package:plantix_app/app/modules/my_store/new_ui.dart';
 import 'package:plantix_app/app/routes/buat_toko_routes.dart';
 import 'package:plantix_app/app/routes/my_products_routes.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MyStorePage extends GetView<MyStoreController> {
   const MyStorePage({super.key});
@@ -34,29 +33,86 @@ class MyStorePage extends GetView<MyStoreController> {
             SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
+                spacing: 16,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildStoreDetails(),
-                  const SizedBox(height: 20),
-                  _buildSaldoSection(),
-                  const SizedBox(height: 20),
-                  _buildSalesStatus(),
-                  const SizedBox(height: 20),
+                  Text(
+                    'Ringkasan Penjualan',
+                    style: TStyle.head3,
+                  ),
+                  Wrap(
+                    spacing: 8.0, // Spasi horizontal
+                    runSpacing: 8.0, // Spasi vertikal
+                    children: [
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 40) / 2,
+                        child: _buildSummaryCard('Total Penjualan',
+                            'Rp ${controller.totalSales.value}', Colors.green),
+                      ),
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 40) / 2,
+                        child: _buildSummaryCard('Total Produk',
+                            '${controller.totalProducts.value}', Colors.blue),
+                      ),
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 40) / 2,
+                        child: _buildSummaryCard('Total Pesanan',
+                            '${controller.totalOrders.value}', Colors.orange),
+                      ),
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 40) / 2,
+                        child: _buildSummaryCard('Dibatalkan',
+                            '${controller.totalCancelled.value}', Colors.red),
+                      ),
+                    ],
+                  ),
                   _buildProductListSection(),
-                  const SizedBox(height: 15.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DashboardPage()),
+                  Text(
+                    'Grafik Penjualan',
+                    style: TStyle.head3,
+                  ),
+                  Builder(
+                    builder: (context) {
+                      final List<Map> chartData = [
+                        {
+                          "year": 2018,
+                          "sales": 40,
+                        },
+                        {
+                          "year": 2019,
+                          "sales": 90,
+                        },
+                        {
+                          "year": 2020,
+                          "sales": 30,
+                        },
+                        {
+                          "year": 2021,
+                          "sales": 80,
+                        },
+                        {
+                          "year": 2022,
+                          "sales": 90,
+                        }
+                      ];
+
+                      return Container(
+                        color: Theme.of(context).cardColor,
+                        padding: const EdgeInsets.all(0.0),
+                        child: SfCartesianChart(
+                          series: <CartesianSeries>[
+                            // Renders line chart
+                            LineSeries<Map, int>(
+                              color: AppColors.primary,
+                              dataSource: chartData,
+                              xValueMapper: (Map data, _) => data["year"],
+                              yValueMapper: (Map data, _) => data["sales"],
+                            )
+                          ],
+                        ),
                       );
                     },
-                    child: const Text("Save"),
                   ),
                 ],
               ),
@@ -69,140 +125,94 @@ class MyStorePage extends GetView<MyStoreController> {
   }
 
   Widget _buildStoreDetails() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 45,
-              backgroundImage:
-                  controller.store?.storeImageUrl.isNotEmpty ?? false
-                      ? NetworkImage(controller.store?.storeImageUrl ?? "")
-                      : null,
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.store?.storeName ?? "",
-                    style: TStyle.head4.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    controller.store?.address ?? "",
-                    style: TStyle.bodyText2.copyWith(color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.primary.withValues(alpha: 0.8), AppColors.primary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withValues(alpha: 0.3),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildSaldoSection() {
-    return Card(
-      color: Color(0xFF2F7C57),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            const Icon(Icons.account_balance_wallet,
-                color: Colors.white, size: 30),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Saldo Produk Terjual",
-                  style: TStyle.bodyText1.copyWith(color: Colors.white70),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  controller.saldo.value.currencyFormatRp,
-                  style: TStyle.head4.copyWith(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSalesStatus() {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Status Penjualan", style: TStyle.head4),
-            const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatusCard(
-                    "Proses",
-                    controller.processingSales.toString(),
-                    Colors.orange,
-                    Icons.work),
-                _buildStatusCard(
-                    "Selesai",
-                    controller.completedSales.toString(),
-                    Colors.green,
-                    Icons.check_circle),
-                _buildStatusCard(
-                    "Dibatalkan",
-                    controller.canceledSales.toString(),
-                    Colors.red,
-                    Icons.cancel),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        spreadRadius: 2,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage: controller
+                                .store?.storeImageUrl.isNotEmpty ??
+                            false
+                        ? NetworkImage(controller.store?.storeImageUrl ?? "")
+                        : null,
+                    child: controller.store?.storeImageUrl.isEmpty ?? true
+                        ? const Icon(Icons.store, size: 40, color: Colors.grey)
+                        : null,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.store?.storeName ?? "Nama Toko",
+                        style: TStyle.head4.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: Colors.white70,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              controller.store?.address ?? "Alamat toko",
+                              style: TStyle.bodyText2.copyWith(
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatusCard(
-      String status, String count, Color color, IconData icon) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 22,
-          backgroundColor: color.withOpacity(0.1),
-          child: Icon(
-            icon,
-            color: color,
-            size: 24,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          count,
-          style: TStyle.head5.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          status,
-          style: TStyle.bodyText3.copyWith(
-            color: color,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
     );
   }
 
@@ -212,7 +222,7 @@ class MyStorePage extends GetView<MyStoreController> {
       children: [
         Text(
           "Daftar Produk (${controller.productCount})",
-          style: TStyle.head4.copyWith(fontWeight: FontWeight.bold),
+          style: TStyle.head3,
         ),
         const SizedBox(height: 12),
         Row(
@@ -236,6 +246,30 @@ class MyStorePage extends GetView<MyStoreController> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildSummaryCard(String title, String value, Color color) {
+    return Card(
+      elevation: 4,
+      color: color.withValues(alpha: 0.6),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: TStyle.head5,
+            ),
+            SizedBox(height: 8),
+            Text(
+              value,
+              style: TStyle.head3,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

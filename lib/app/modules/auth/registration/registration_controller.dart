@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/snackbar_ext.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/repositories/auth_repository.dart';
+import 'package:plantix_app/app/routes/home_routes.dart';
 import 'package:plantix_app/main.dart';
 
 class RegistrationController extends GetxController {
@@ -39,6 +40,7 @@ class RegistrationController extends GetxController {
           (data) async {
         await user.loadUserData().then(
           (value) {
+            Get.offAllNamed(HomeRoutes.home);
             return snackbarSuccess(
               message: "Sukses",
               body: "Registrasi berhasil. Selamat datang!",

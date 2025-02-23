@@ -38,14 +38,6 @@ class ProfileController extends GetxController {
     isLoading = false;
   }
 
-  // Future<void> getStoreId() async {
-  //   final store = await myStoreRepo.getMyStore();
-  //   store.fold((failure) => 0, (store) {
-  //     storeId.value = store.id;
-  //     log('store_id: ${storeId.value}');
-  //   });
-  // }
-
   @override
   void onReady() {
     super.onReady();

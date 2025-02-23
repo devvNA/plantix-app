@@ -50,7 +50,7 @@ class HistoryItem extends StatelessWidget {
                   height: 5.0,
                 ),
                 Text(
-                  historiData.tanggal.toFormattedDatetime(),
+                  historiData.tanggal.toFormattedDate(),
                   style: const TextStyle(fontSize: 11),
                 ),
                 const Spacer(),

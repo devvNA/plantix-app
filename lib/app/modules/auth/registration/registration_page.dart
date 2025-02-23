@@ -67,7 +67,6 @@ class RegistrationPage extends GetView<RegistrationController> {
                             ),
                             const SizedBox(height: 12),
                             CustomTextForm(
-                              obscureText: true,
                               controller: controller.nameController,
                               hintText: "Nama Lengkap",
                               prefixIcon: Icon(Icons.person),
