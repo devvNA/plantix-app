@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.plantix_app"
-    compileSdk = 34
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
     compileOptions {

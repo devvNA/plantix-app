@@ -16,8 +16,10 @@ final apiKey = dotenv.env['API_KEY'];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init(); //initialize storage
-  Get.put<NetworkController>(NetworkController(),
-      permanent: true); //Check internet connection
+  Get.put<NetworkController>(
+    NetworkController(),
+    permanent: true,
+  ); //Check internet connection
 
   await dotenv.load(); //load env
   await Supabase.initialize(

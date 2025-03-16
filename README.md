@@ -29,18 +29,13 @@ Plantix adalah aplikasi inovatif yang dirancang untuk membantu petani Indonesia 
 - **API Integration**: Menggunakan Dio untuk komunikasi dengan backend.
 - **Penyimpanan Lokal**: Memanfaatkan GetStorage untuk menyimpan data offline.
 
-## Keunggulan:
+## Screenshot
 
-1. **Antarmuka Pengguna Ramah**:
-   Dirancang dengan mempertimbangkan kebutuhan petani lokal.
-
-2. **Performa Tinggi**:
-   Menggunakan teknologi terkini untuk memastikan aplikasi berjalan lancar.
-
-3. **Keamanan Data**:
-   Menerapkan praktik keamanan terbaik untuk melindungi informasi pengguna.
-
-Plantix bukan hanya sebuah aplikasi, tetapi juga mitra digital bagi petani Indonesia dalam menghadapi tantangan pertanian modern. Dengan Plantix, kami berharap dapat memberdayakan petani lokal dan mendorong pertumbuhan sektor pertanian nasional.
+|           Screenshot 1            |           Screenshot 2            |           Screenshot 3            |           Screenshot 4            |
+| :-------------------------------: | :-------------------------------: | :-------------------------------: | :-------------------------------: |
+| <img src="ss/1.png" width="150"/> | <img src="ss/2.png" width="150"/> | <img src="ss/3.png" width="150"/> | <img src="ss/2.png" width="150"/> |
+|           Screenshot 5            |           Screenshot 6            |           Screenshot 7            |           Screenshot 8            |
+| <img src="ss/5.png" width="150"/> | <img src="ss/6.png" width="150"/> | <img src="ss/7.png" width="150"/> | <img src="ss/8.png" width="150"/> |
 
 ## Memulai
 
