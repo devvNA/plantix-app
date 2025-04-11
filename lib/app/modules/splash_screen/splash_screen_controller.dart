@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/services/db_services.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/routes/auth_routes.dart';
 import 'package:plantix_app/app/routes/home_routes.dart';
@@ -12,7 +11,6 @@ import 'package:plantix_app/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SplashScreenController extends GetxController {
-  final storage = LocalStorageService();
   late final StreamSubscription<AuthState> authStateSubscription;
   String? savedUser;
   final isLoading = false.obs;
@@ -30,34 +28,44 @@ class SplashScreenController extends GetxController {
     //     Get.offNamed(AuthRoutes.login);
     //   }
     // });
-    authStateSubscription = supabase.auth.onAuthStateChange.listen(
-      (data) async {
-        try {
-          // Cek jika sedang dalam proses redirect
-          if (redirecting()) return;
+    authStateSubscription = supabase.auth.onAuthStateChange.listen((
+      data,
+    ) async {
+      try {
+        // Cek jika sedang dalam proses redirect
+        if (redirecting()) return;
 
-          final session = data.session;
-          redirecting.value = true;
+        final session = data.session;
+        redirecting.value = true;
 
-          if (session != null) {
-            await user.loadUserData();
-            Get.offAllNamed(HomeRoutes.home);
-          } else {
-            Get.offAllNamed(AuthRoutes.login);
+        if (session != null) {
+          // Memuat data user terlebih dahulu
+          await user.loadUserData();
+
+          // Memuat data toko untuk mengecek keberadaan toko
+          if (user.hasStore) {
+            await myStore.loadStoreData();
           }
-        } catch (error) {
-          redirecting.value = false;
-          final message = error is AuthException
-              ? error.message
-              : 'Terjadi kesalahan yang tidak diharapkan';
 
+          // Mengecek status toko dari data user yang telah dimuat
+          log('Status toko user: ${user.hasStore}');
+
+          Get.offAllNamed(HomeRoutes.home);
+        } else {
           Get.offAllNamed(AuthRoutes.login);
-          snackbarError(message: message);
         }
-      },
-    );
+      } catch (error) {
+        redirecting.value = false;
+        final message =
+            error is AuthException
+                ? error.message
+                : 'Terjadi kesalahan yang tidak diharapkan';
 
-    storage.clearAll();
+        Get.offAllNamed(AuthRoutes.login);
+        snackbarError(message: message);
+      }
+    });
+
     super.onInit();
   }
 

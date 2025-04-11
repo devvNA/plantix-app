@@ -37,6 +37,7 @@ class AuthRepository {
         data: {
           "name": name,
           "avatar_url": avatarUrl,
+          "created_at": DateTime.now().isUtc,
         },
       );
       return right(response);

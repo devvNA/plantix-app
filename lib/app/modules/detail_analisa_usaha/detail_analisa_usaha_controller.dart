@@ -101,7 +101,10 @@ class DetailAnalisaUsahaController extends GetxController {
     Get.back();
     await updateHarvestAnalysis();
     update();
-    Get.context!.showSnackBar('Data panen berhasil diperbarui');
+    Get.context!.showSnackBar(
+      message: 'Data panen berhasil diperbarui',
+      isError: false,
+    );
   }
 
   // Fungsi untuk mengatur harga panen
@@ -184,7 +187,10 @@ class DetailAnalisaUsahaController extends GetxController {
       spendController.clear();
       descriptionController.clear();
       await onRefresh();
-      Get.context!.showSnackBar('Pengeluaran berhasil ditambahkan');
+      Get.context!.showSnackBar(
+        message: 'Pengeluaran berhasil ditambahkan',
+        isError: false,
+      );
     });
     isLoading.value = false;
   }
@@ -195,7 +201,10 @@ class DetailAnalisaUsahaController extends GetxController {
       pengeluaranList.value =
           pengeluaranList.where((e) => e.id != spendId).toList();
       await updateHarvestAnalysis();
-      Get.context!.showSnackBar('Pengeluaran berhasil dihapus');
+      Get.context!.showSnackBar(
+        message: 'Pengeluaran berhasil dihapus',
+        isError: false,
+      );
       update();
     }
   }

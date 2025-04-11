@@ -30,7 +30,7 @@ class AddProductController extends GetxController {
   final myStoreRepo = MyStoreRepository();
 
   // Ambil data jika Sudah Punya Produk
-  ProductsModel? product = Get.arguments;
+  ProductModel? product = Get.arguments;
   bool get isEditMode => product != null;
 
   @override
@@ -50,7 +50,8 @@ class AddProductController extends GetxController {
 
   Future<void> onSubmit() async {
     final price = ThousandsSeparatorInputFormatter.getUnformattedValue(
-        priceController.text);
+      priceController.text,
+    );
 
     if (formKey.currentState!.validate()) {
       isLoading.value = true;
@@ -58,7 +59,10 @@ class AddProductController extends GetxController {
         await onSubmitUpdateProduct(price);
       } else {
         if (images.isEmpty) {
-          Get.context!.showSnackBar('Gambar produk wajib diisi', isError: true);
+          Get.context!.showSnackBar(
+            message: 'Gambar produk wajib diisi',
+            isError: true,
+          );
           isLoading.value = false;
           return;
         }
@@ -81,11 +85,18 @@ class AddProductController extends GetxController {
     );
 
     result.fold(
-        (failure) => Get.context!.showSnackBar(failure.message, isError: true),
-        (data) {
-      Get.back();
-      snackbarSuccess(message: 'Sukses', body: 'Produk berhasil ditambahkan');
-    });
+      (failure) {
+        Get.back();
+        Get.context!.showSnackBar(
+          message: failure.message,
+          isError: true,
+        );
+      },
+      (data) {
+        Get.back();
+        snackbarSuccess(message: 'Sukses', body: 'Produk berhasil ditambahkan');
+      },
+    );
   }
 
   Future<void> onSubmitUpdateProduct(String price) async {
@@ -100,11 +111,18 @@ class AddProductController extends GetxController {
       imageUrl: imageUrls,
     );
     result.fold(
-        (failure) => Get.context!.showSnackBar(failure.message, isError: true),
-        (data) {
-      Get.back();
-      snackbarSuccess(message: 'Sukses', body: 'Produk berhasil diubah');
-    });
+      (failure) {
+        Get.back();
+        Get.context!.showSnackBar(
+          message: failure.message,
+          isError: true,
+        );
+      },
+      (data) {
+        Get.back();
+        snackbarSuccess(message: 'Sukses', body: 'Produk berhasil diubah');
+      },
+    );
   }
 
   Future<void> chooseImage() async {
@@ -127,7 +145,9 @@ class AddProductController extends GetxController {
             '${DateTime.now().toIso8601String()}_${imageUrls.length}.$fileExt';
         final filePath = 'product images/$fileName';
 
-        await supabase.storage.from('stores').uploadBinary(
+        await supabase.storage
+            .from('stores')
+            .uploadBinary(
               filePath,
               bytes,
               fileOptions: FileOptions(contentType: imageFile.mimeType),
@@ -140,10 +160,16 @@ class AddProductController extends GetxController {
         imageUrls.add(imageUrl);
       }
     } on StorageException catch (error) {
-      Get.context!.showSnackBar(error.message, isError: true);
+      Get.context!.showSnackBar(
+        message: error.message,
+        isError: true,
+      );
       return;
     } catch (error) {
-      Get.context!.showSnackBar(error.toString(), isError: true);
+      Get.context!.showSnackBar(
+        message: error.toString(),
+        isError: true,
+      );
       return;
     }
 

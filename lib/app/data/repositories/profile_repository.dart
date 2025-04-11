@@ -62,12 +62,13 @@ class ProfileRepository {
         if (storeName != null) 'store_name': storeName,
       };
 
-      final response = await supabase
-          .from('users')
-          .update(updates)
-          .eq('id', userId)
-          .select()
-          .single();
+      final response =
+          await supabase
+              .from('users')
+              .update(updates)
+              .eq('id', userId)
+              .select()
+              .single();
 
       UserModel updatedUser = UserModel.fromJson(response);
       return right(updatedUser);
@@ -82,8 +83,9 @@ class ProfileRepository {
 
   Future<Either<Failure, User?>> updateUserEmail(String newEmail) async {
     try {
-      final response =
-          await supabase.auth.updateUser(UserAttributes(email: newEmail));
+      final response = await supabase.auth.updateUser(
+        UserAttributes(email: newEmail),
+      );
       if (response.user != null) {
         updateUserData(email: newEmail);
         return right(response.user);
@@ -96,34 +98,5 @@ class ProfileRepository {
       log(e.toString());
       return left(Exception(e.toString()));
     }
-  }
-}
-
-class UserManager {
-  // Singleton instance
-  static final UserManager instance = UserManager._internal();
-
-  // Private constructor
-  UserManager._internal();
-
-  // Menyimpan data user saat ini
-  UserModel? _currentUser;
-  UserModel? get currentUser => _currentUser;
-
-  // Memuat data user dari repository
-  Future<void> loadUserData() async {
-    final response = await ProfileRepository().getUser();
-    response.fold(
-      (failure) {
-        log('Gagal memuat data user: ${failure.message}');
-        _currentUser = null;
-      },
-      (user) => _currentUser = user,
-    );
-  }
-
-  // Reset data user
-  void clearUser() {
-    _currentUser = null;
   }
 }

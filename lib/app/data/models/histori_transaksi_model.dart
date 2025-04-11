@@ -68,7 +68,8 @@ class HistoriTransaksi extends Equatable {
       status: map['status'] ?? '',
       total: map['total']?.toDouble() ?? 0.0,
       detail: List<DetailTransaksi>.from(
-          map['detail']?.map((x) => DetailTransaksi.fromMap(x))),
+        map['detail']?.map((x) => DetailTransaksi.fromMap(x)),
+      ),
     );
   }
 

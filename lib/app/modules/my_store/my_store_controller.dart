@@ -24,12 +24,13 @@ class MyStoreController extends GetxController {
   var totalCancelled = 10.obs;
 
   // Dummy data untuk grafik penjualan
-  var salesData = [
-    {'month': 'Jan', 'sales': 300000},
-    {'month': 'Feb', 'sales': 400000},
-    {'month': 'Mar', 'sales': 500000},
-    {'month': 'Apr', 'sales': 600000},
-  ].obs;
+  var salesData =
+      [
+        {'month': 'Jan', 'sales': 300000},
+        {'month': 'Feb', 'sales': 400000},
+        {'month': 'Mar', 'sales': 500000},
+        {'month': 'Apr', 'sales': 600000},
+      ].obs;
 
   @override
   void onInit() async {
@@ -39,11 +40,12 @@ class MyStoreController extends GetxController {
   }
 
   Future<void> getProductCount() async {
-    final result = await supabase
-        .from('products')
-        .select()
-        .eq('store_id', myStore.currentStore!.id)
-        .count();
+    final result =
+        await supabase
+            .from('products')
+            .select()
+            .eq('store_id', myStore.currentStore!.id)
+            .count();
     log('product_count: ${result.count}');
     productCount.value = result.count;
   }

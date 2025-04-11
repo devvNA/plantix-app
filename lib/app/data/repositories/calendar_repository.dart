@@ -14,8 +14,7 @@ class CalendarRepository {
       final response = await supabase
           .from('planting_schedules')
           .select()
-          .eq('user_id', userId)
-          .select();
+          .eq('user_id', userId);
 
       final events = response.map((e) => EventModel.fromJson(e)).toList();
 
@@ -48,11 +47,12 @@ class CalendarRepository {
         "event_date": eventDate,
       };
 
-      final response = await supabase
-          .from('planting_schedules')
-          .insert(query)
-          .select()
-          .single();
+      final response =
+          await supabase
+              .from('planting_schedules')
+              .insert(query)
+              .select()
+              .single();
 
       final event = EventModel.fromJson(response);
       return right(event);

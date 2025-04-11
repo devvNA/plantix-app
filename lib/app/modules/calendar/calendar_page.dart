@@ -227,8 +227,9 @@ class EventFormulir extends GetView<CalendarController> {
                   Get.back();
                 } else {
                   context.showSnackBar(
-                      'Harap lengkapi semua field dan pilih tanggal.',
-                      isError: true);
+                    message: 'Harap lengkapi semua field dan pilih tanggal.',
+                    isError: true,
+                  );
                 }
                 controller.tanggal = null;
               },

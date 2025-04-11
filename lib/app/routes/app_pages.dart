@@ -20,7 +20,7 @@ import 'my_products_routes.dart';
 import 'my_store_routes.dart';
 import 'notification_routes.dart';
 import 'profile_routes.dart';
-import 'sales_routes.dart';
+import 'shop_routes.dart';
 import 'splash_screen_routes.dart';
 
 class AppPages {
@@ -41,7 +41,7 @@ class AppPages {
     ...AnalisaUsahaTaniRoutes.routes,
     ...DetailAnalisaUsahaRoutes.routes,
     ...ArtikelRoutes.routes,
-    ...SalesRoutes.routes,
+    ...ShopRoutes.routes,
     ...AddProductRoutes.routes,
     ...CartRoutes.routes,
     ...MyStoreRoutes.routes,

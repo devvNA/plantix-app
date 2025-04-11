@@ -13,11 +13,12 @@ class PlantRepository {
 
   Future<Either<Failure, PlantModel>> getPlant({required int fieldId}) async {
     try {
-      final data = await supabase
-          .from('plants')
-          .select()
-          .eq('field_id', fieldId)
-          .single();
+      final data =
+          await supabase
+              .from('plants')
+              .select()
+              .eq('field_id', fieldId)
+              .single();
       final plant = PlantModel.fromJson(data);
       log(plant.toString());
       return right(plant);
@@ -47,10 +48,10 @@ class PlantRepository {
       final plant = PlantModel.fromJson(data);
 
       if (data != null) {
-        await supabase.from('farm_production_analysis').update({
-          'user_id': userId,
-          'plant_type': name,
-        }).eq('field_id', plant.fieldId);
+        await supabase
+            .from('farm_production_analysis')
+            .update({'user_id': userId, 'plant_type': name})
+            .eq('field_id', plant.fieldId);
       }
 
       log(plant.toString());
@@ -68,10 +69,10 @@ class PlantRepository {
     try {
       await supabase.from('plants').delete().eq('id', plantId);
 
-      await supabase.from('farm_production_analysis').update({
-        'user_id': userId,
-        'plant_type': null,
-      }).eq('field_id', fieldId);
+      await supabase
+          .from('farm_production_analysis')
+          .update({'user_id': userId, 'plant_type': null})
+          .eq('field_id', fieldId);
 
       return true;
     } on PostgrestException catch (e) {

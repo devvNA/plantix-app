@@ -18,35 +18,37 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          PageHeader(
-            title: "Kalkulasi Tanam",
-            height: MediaQuery.of(context).size.height * 0.17,
-          ),
-          Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-              Expanded(
-                child: Form(
-                  key: controller.formKey,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _buildInputCard(context),
-                        SizedBox(height: 12),
-                        _buildHasilKalkulasi(),
-                        SizedBox(height: 12),
-                        _buildRiwayatKalkulasi(),
-                      ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageHeader(
+              title: "Kalkulasi Tanam",
+              height: MediaQuery.of(context).size.height * 0.15,
+            ),
+            Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                Expanded(
+                  child: Form(
+                    key: controller.formKey,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildInputCard(context),
+                          SizedBox(height: 12),
+                          _buildHasilKalkulasi(),
+                          SizedBox(height: 12),
+                          _buildRiwayatKalkulasi(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -64,8 +66,11 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
               label: 'Luas Lahan (m²)',
               icon: Icons.landscape,
               keyboardType: TextInputType.number,
-              validator: (value) =>
-                  value?.isEmpty ?? true ? 'Harap masukkan luas lahan' : null,
+              validator:
+                  (value) =>
+                      value?.isEmpty ?? true
+                          ? 'Harap masukkan luas lahan'
+                          : null,
             ),
             SizedBox(height: 16),
             _buildJenisTanamanDropdown(),
@@ -77,8 +82,11 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
               label: 'Jumlah Benih',
               icon: Icons.grass,
               keyboardType: TextInputType.number,
-              validator: (value) =>
-                  value?.isEmpty ?? true ? 'Harap masukkan jumlah benih' : null,
+              validator:
+                  (value) =>
+                      value?.isEmpty ?? true
+                          ? 'Harap masukkan jumlah benih'
+                          : null,
               suffixText: 'Kg',
             ),
             SizedBox(height: 16),
@@ -111,12 +119,15 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
       return CustomDropDownSimple(
         label: 'Jenis Tanaman',
         value: controller.selectedJenisTanaman.value,
-        items: controller.jenisTanamanList
-            .map((jenis) => DropdownMenuItem(value: jenis, child: Text(jenis)))
-            .toList(),
+        items:
+            controller.jenisTanamanList
+                .map(
+                  (jenis) => DropdownMenuItem(value: jenis, child: Text(jenis)),
+                )
+                .toList(),
         onChanged: (value) => controller.selectedJenisTanaman.value = value!,
-        validator: (value) =>
-            value?.isEmpty ?? true ? 'Pilih jenis tanaman' : null,
+        validator:
+            (value) => value?.isEmpty ?? true ? 'Pilih jenis tanaman' : null,
       );
     });
   }
@@ -129,8 +140,9 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
       prefixIcon: Icon(Icons.date_range),
       readOnly: true,
       onTap: () => _selectDate(context),
-      validator: (value) =>
-          value?.isEmpty ?? true ? 'Harap pilih tanggal tanam' : null,
+      validator:
+          (value) =>
+              value?.isEmpty ?? true ? 'Harap pilih tanggal tanam' : null,
     );
   }
 
@@ -171,31 +183,38 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Hasil Kalkulasi:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(
+                'Hasil Kalkulasi:',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               SizedBox(height: 8),
               _buildHasilItem(
-                  'Kebutuhan Pupuk', '${controller.kebutuhanPupuk.value} kg'),
+                'Kebutuhan Pupuk',
+                '${controller.kebutuhanPupuk.value} kg',
+              ),
               _buildHasilItem(
-                  'Kebutuhan Air', '${controller.kebutuhanAir.value} liter'),
-              _buildHasilItem('Kebutuhan Pestisida',
-                  '${controller.kebutuhanPestisida.value} liter'),
+                'Kebutuhan Air',
+                '${controller.kebutuhanAir.value} liter',
+              ),
+              _buildHasilItem(
+                'Kebutuhan Pestisida',
+                '${controller.kebutuhanPestisida.value} liter',
+              ),
               SizedBox(height: 8),
               _buildHasilItem(
-                  'Biaya Benih',
-                  controller.biayaBenih.value
-                      .toStringAsFixed(2)
-                      .currencyFormatRp),
+                'Biaya Benih',
+                controller.biayaBenih.value.toStringAsFixed(2).currencyFormatRp,
+              ),
               _buildHasilItem(
-                  'Biaya Pupuk',
-                  controller.biayaPupuk.value
-                      .toStringAsFixed(2)
-                      .currencyFormatRp),
+                'Biaya Pupuk',
+                controller.biayaPupuk.value.toStringAsFixed(2).currencyFormatRp,
+              ),
               _buildHasilItem(
-                  'Biaya Pestisida',
-                  controller.biayaPestisida.value
-                      .toStringAsFixed(2)
-                      .currencyFormatRp),
+                'Biaya Pestisida',
+                controller.biayaPestisida.value
+                    .toStringAsFixed(2)
+                    .currencyFormatRp,
+              ),
               SizedBox(height: 8),
               Divider(),
               SizedBox(height: 8),
@@ -218,10 +237,7 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
   }
 
   Widget _buildHasilItem(String label, String value, {TextStyle? style}) {
-    return Text(
-      '$label: $value',
-      style: style,
-    );
+    return Text('$label: $value', style: style);
   }
 
   Widget _buildRiwayatKalkulasi() {
@@ -234,8 +250,11 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
         child: Obx(() {
           if (controller.riwayatKalkulasi.isEmpty) {
             return Center(
-                child: Text('Belum ada riwayat kalkulasi.',
-                    style: TextStyle(fontSize: 16)));
+              child: Text(
+                'Belum ada riwayat kalkulasi.',
+                style: TextStyle(fontSize: 16),
+              ),
+            );
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,8 +264,9 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: controller.riwayatKalkulasi.length,
-                itemBuilder: (context, index) =>
-                    _buildRiwayatItem(controller.riwayatKalkulasi[index]),
+                itemBuilder:
+                    (context, index) =>
+                        _buildRiwayatItem(controller.riwayatKalkulasi[index]),
               ),
             ],
           );
@@ -258,8 +278,10 @@ class KalkulasiTanamPage extends GetView<KalkulasiTanamController> {
   Widget _buildRiwayatItem(Kalkulasi kalkulasi) {
     return ListTile(
       leading: Icon(Icons.check_circle, color: Colors.green),
-      title: Text('${kalkulasi.jenisTanaman} - ${kalkulasi.luasLahan} m²',
-          style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(
+        '${kalkulasi.jenisTanaman} - ${kalkulasi.luasLahan} m²',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

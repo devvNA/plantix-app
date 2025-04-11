@@ -26,21 +26,23 @@ class ProfilePage extends GetView<ProfileController> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
-      body: GetBuilder<ProfileController>(builder: (_) {
-        return Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _buildProfileHeader(context),
-                const SizedBox(height: 20),
-                _buildProfileMenu(context),
-              ],
-            ),
-            if (controller.isLoading) LoadingWidgetBG(),
-          ],
-        );
-      }),
+      body: GetBuilder<ProfileController>(
+        builder: (_) {
+          return Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _buildProfileHeader(context),
+                  const SizedBox(height: 20),
+                  _buildProfileMenu(context),
+                ],
+              ),
+              if (controller.isLoading) LoadingWidgetBG(),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -49,70 +51,68 @@ class ProfilePage extends GetView<ProfileController> {
     //     "https://res.cloudinary.com/dotz74j1p/raw/upload/v1716044999/t3jxwmbgwelsvgsmby4c.png";
 
     return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(20),
-        color: AppColors.primary,
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () {
-                if (user.currentUser!.avatarUrl.isNotEmpty) {
-                  Get.dialog(
-                    Scaffold(
-                      backgroundColor: Colors.black87,
-                      body: Dialog(
-                        insetPadding: EdgeInsets.zero,
-                        child: Stack(
-                          children: [
-                            InteractiveViewer(
-                              child: Image.network(
-                                user.currentUser!.avatarUrl.isEmpty
-                                    ? ""
-                                    : user.currentUser?.avatarUrl ?? "",
-                                fit: BoxFit.cover,
-                              ),
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(20),
+      color: AppColors.primary,
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (user.currentUser!.avatarUrl.isNotEmpty) {
+                Get.dialog(
+                  Scaffold(
+                    backgroundColor: Colors.black87,
+                    body: Dialog(
+                      insetPadding: EdgeInsets.zero,
+                      child: Stack(
+                        children: [
+                          InteractiveViewer(
+                            child: Image.network(
+                              user.currentUser!.avatarUrl.isEmpty
+                                  ? ""
+                                  : user.currentUser?.avatarUrl ?? "",
+                              fit: BoxFit.cover,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Material(
-                                clipBehavior: Clip.hardEdge,
-                                color: Colors.transparent,
-                                shape: CircleBorder(),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.black26,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () => Get.back(),
-                                  ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
+                              clipBehavior: Clip.hardEdge,
+                              color: Colors.transparent,
+                              shape: CircleBorder(),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black26,
+                                child: IconButton(
+                                  icon: Icon(Icons.close, color: Colors.white),
+                                  onPressed: () => Get.back(),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                }
-              },
-              child: AvatarWidget(controller: controller),
+                  ),
+                );
+              }
+            },
+            child: AvatarWidget(controller: controller),
+          ),
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: () {},
+            child: Text(
+              user.currentUser?.name ?? '',
+              style: TStyle.head3.copyWith(color: Colors.white),
             ),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {},
-              child: Text(
-                user.currentUser?.name ?? '',
-                style: TStyle.head3.copyWith(color: Colors.white),
-              ),
-            ),
-            Text(
-              user.currentUser?.email ?? '',
-              style: TStyle.bodyText2.copyWith(color: Colors.white70),
-            ),
-          ],
-        ));
+          ),
+          Text(
+            user.currentUser?.email ?? '',
+            style: TStyle.bodyText2.copyWith(color: Colors.white70),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildProfileMenu(BuildContext context) {
@@ -125,22 +125,11 @@ class ProfilePage extends GetView<ProfileController> {
             Get.toNamed(EditProfileRoutes.editProfile);
           },
         ),
-        // Obx(() {
-        //   // return _buildMenuItem(
-        //   //   icon: Icons.store_mall_directory_sharp,
-        //   //   title: controller.hasStore.value ? 'Toko Saya' : 'Buka Toko',
-        //   //   onTap: () {
-        //   //     controller.hasStore.value
-        //   //         ? Get.toNamed(MyStoreRoutes.myStore)
-        //   //         : Get.toNamed(BuatTokoRoutes.buatToko);
-        //   //   },
-        //   // );
-        // }),
         _buildMenuItem(
           icon: Icons.store_mall_directory_sharp,
-          title: user.currentUser!.hasStore ? 'Toko Saya' : 'Buka Toko',
+          title: user.hasStore ? 'Toko Saya' : 'Buka Toko',
           onTap: () {
-            user.currentUser!.hasStore
+            user.hasStore
                 ? Get.toNamed(MyStoreRoutes.myStore)
                 : Get.toNamed(BuatTokoRoutes.buatToko);
           },
@@ -186,9 +175,7 @@ class ProfilePage extends GetView<ProfileController> {
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: AppColors.primary,
-                        side: const BorderSide(
-                          color: AppColors.primary,
-                        ),
+                        side: const BorderSide(color: AppColors.primary),
                       ),
                       child: const Text("Tidak"),
                       onPressed: () => Get.back(),
@@ -198,13 +185,11 @@ class ProfilePage extends GetView<ProfileController> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                       ),
-                      onPressed: () async => await supabase.auth.signOut().then(
-                        (_) {
-                          Get.back();
-                          user.clearUser();
-                          Get.offAllNamed(SplashScreenRoutes.splashScreen);
-                        },
-                      ),
+                      onPressed:
+                          () async => await supabase.auth.signOut().then((_) {
+                            Get.back();
+                            Get.offAllNamed(SplashScreenRoutes.splashScreen);
+                          }),
                       child: const Text("Ya"),
                     ),
                   ],
@@ -232,10 +217,7 @@ class ProfilePage extends GetView<ProfileController> {
 }
 
 class AvatarWidget extends StatelessWidget {
-  const AvatarWidget({
-    super.key,
-    required this.controller,
-  });
+  const AvatarWidget({super.key, required this.controller});
 
   final ProfileController controller;
 
@@ -263,11 +245,7 @@ class AvatarWidget extends StatelessWidget {
             ),
           );
         },
-        child: Icon(
-          color: Colors.grey[800],
-          Icons.edit,
-          size: 18.0,
-        ),
+        child: Icon(color: Colors.grey[800], Icons.edit, size: 18.0),
       ),
       child: CircleAvatar(
         onBackgroundImageError: (exception, stackTrace) {
@@ -275,16 +253,15 @@ class AvatarWidget extends StatelessWidget {
         },
         backgroundColor: Colors.grey[200],
         radius: 50,
-        backgroundImage: NetworkImage(user.currentUser!.avatarUrl.isEmpty
-            ? ""
-            : user.currentUser?.avatarUrl ?? ""),
-        child: user.currentUser!.avatarUrl.isEmpty
-            ? Icon(
-                size: 50,
-                Icons.person,
-                color: Colors.grey[700],
-              )
-            : null,
+        backgroundImage: NetworkImage(
+          user.currentUser!.avatarUrl.isEmpty
+              ? ""
+              : user.currentUser?.avatarUrl ?? "",
+        ),
+        child:
+            user.currentUser!.avatarUrl.isEmpty
+                ? Icon(size: 50, Icons.person, color: Colors.grey[700])
+                : null,
       ),
     );
   }

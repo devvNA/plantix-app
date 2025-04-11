@@ -36,18 +36,21 @@ class RegistrationController extends GetxController {
         avatarUrl: "",
       );
 
-      response.fold((error) => Get.context!.showSnackBar(error, isError: true),
-          (data) async {
-        await user.loadUserData().then(
-          (value) {
+      response.fold(
+        (error) {
+          Get.back();
+          Get.context!.showSnackBar(message: error, isError: true);
+        },
+        (data) async {
+          await user.loadUserData().then((value) {
             Get.offAllNamed(HomeRoutes.home);
             return snackbarSuccess(
               message: "Sukses",
               body: "Registrasi berhasil. Selamat datang!",
             );
-          },
-        );
-      });
+          });
+        },
+      );
     }
     isLoading(false);
   }

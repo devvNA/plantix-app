@@ -58,12 +58,12 @@ class FieldModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        fieldName,
-        size,
-        address,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    fieldName,
+    size,
+    address,
+    createdAt,
+    updatedAt,
+  ];
 }

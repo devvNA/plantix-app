@@ -8,7 +8,7 @@ import 'package:plantix_app/app/modules/my_store/my_store_controller.dart';
 import 'package:plantix_app/main.dart';
 
 class MyProductsController extends GetxController {
-  final listMyProducts = <ProductsModel>[].obs;
+  final listMyProducts = <ProductModel>[].obs;
   final isLoading = false.obs;
   final myStoreRepo = MyStoreRepository();
   final myStoreController = Get.find<MyStoreController>();
@@ -16,18 +16,24 @@ class MyProductsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
     getProductsByStoreId();
   }
 
   Future<void> getProductsByStoreId() async {
     isLoading.value = true;
     final result = await myStoreRepo.getProductsByStoreId(
-        storeId: myStore.currentStore!.id);
+      storeId: myStore.currentStore!.id,
+    );
     result.fold(
-        (failure) => Get.context!.showSnackBar(failure.message, isError: true),
-        (products) {
-      listMyProducts.addAll(products);
-    });
+      (failure) {
+        Get.back();
+        Get.context!.showSnackBar(message: failure.message, isError: true);
+      },
+      (products) {
+        listMyProducts.addAll(products);
+      },
+    );
     isLoading.value = false;
   }
 

@@ -68,13 +68,13 @@ class LocalStorageService {
 
   // Method untuk menyimpan data dengan expiry time
   Future<void> saveDataWithExpiry(
-      String key, dynamic value, Duration expiry) async {
+    String key,
+    dynamic value,
+    Duration expiry,
+  ) async {
     try {
       final expiryTime = DateTime.now().add(expiry).millisecondsSinceEpoch;
-      final dataToStore = {
-        'value': value,
-        'expiry': expiryTime,
-      };
+      final dataToStore = {'value': value, 'expiry': expiryTime};
       await _storage.write(key, dataToStore);
     } catch (e) {
       throw Exception('Gagal menyimpan data dengan expiry: $e');

@@ -10,11 +10,7 @@ class CartItem extends Equatable {
   int? quantity;
   double? price;
 
-  CartItem({
-    this.product,
-    this.quantity,
-    this.price,
-  });
+  CartItem({this.product, this.quantity, this.price});
 
   CartItem copyWith({
     ValueGetter<Product?>? product,
@@ -29,11 +25,7 @@ class CartItem extends Equatable {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'product': product?.toMap(),
-      'quantity': quantity,
-      'price': price,
-    };
+    return {'product': product?.toMap(), 'quantity': quantity, 'price': price};
   }
 
   factory CartItem.fromMap(Map<String, dynamic> map) {

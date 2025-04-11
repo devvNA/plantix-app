@@ -17,8 +17,17 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    myStore.loadStoreData();
     // getStoreId();
+    refreshStoreStatus();
+  }
+
+  /// Memperbarui status toko dengan mengambil data terbaru
+  Future<void> refreshStoreStatus() async {
+    await user.loadUserData();
+    if (user.hasStore) {
+      await myStore.loadStoreData();
+    }
+    update();
   }
 
   Future<void> updateProfilePicture() async {
@@ -29,23 +38,15 @@ class ProfileController extends GetxController {
     if (imageUrl != null) {
       final data = await profileRepository.onUploadAvatar(imageUrl);
       data.fold(
-          (failure) =>
-              Get.overlayContext!.showSnackBar(failure.message, isError: true),
-          (success) => Get.overlayContext!.showSnackBar(success));
-      // update();
+        (failure) => Get.overlayContext!.showSnackBar(
+          message: failure.message,
+          isError: true,
+        ),
+        (success) =>
+            Get.overlayContext!.showSnackBar(message: success, isError: false),
+      );
+      await refreshStoreStatus();
     }
-    update();
     isLoading = false;
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    update();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

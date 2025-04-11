@@ -1,0 +1,21 @@
+[
+    {
+        "id": 1,
+        "user_id": "4d8aef16-189d-4e9a-bbf9-7b626534f13d",
+        "store_id": 37,
+        "name": "Tomat",
+        "description": "Ini buah tomat",
+        "price": 10000,
+        "stock": 50,
+        "category": "Sayuran",
+        "image_url": [
+            ""
+        ],
+        "harvest_date": null,
+        "created_at": "2025-04-10 13:14:02",
+        "updated_at": "2025-04-10 13:14:12",
+        "rating": 4,
+        "quantity": 5,
+        "total_price": "50000"
+    }
+]

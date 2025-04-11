@@ -1,9 +1,7 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/models/field_model.dart';
 import 'package:plantix_app/app/data/models/region/city_model.dart';
@@ -64,17 +62,11 @@ class LahanTanamController extends GetxController {
     );
 
     data.fold(
-      (failure) => snackbarError(
-        message: "Gagal",
-        body: failure.message,
-      ),
+      (failure) => snackbarError(message: "Gagal", body: failure.message),
       (value) {
         Get.back();
         onRefresh();
-        snackbarSuccess(
-          message: "Sukses",
-          body: "Lahan berhasil ditambahkan",
-        );
+        snackbarSuccess(message: "Sukses", body: "Lahan berhasil ditambahkan");
       },
     );
     _clearInputFields();
@@ -86,10 +78,7 @@ class LahanTanamController extends GetxController {
     final data = await FieldRepository().getMyFields();
     data.fold(
       (failure) {
-        return snackbarError(
-          message: "Gagal",
-          body: failure.message,
-        );
+        return snackbarError(message: "Gagal", body: failure.message);
       },
       (value) {
         fieldList.addAll(value);
@@ -169,10 +158,7 @@ class LahanTanamController extends GetxController {
     // lahanList.removeWhere((element) => element.id == id);
     // lahanList.refresh();
     Get.back();
-    snackbarSuccess(
-      message: "Sukses",
-      body: "Lahan berhasil dihapus",
-    );
+    snackbarSuccess(message: "Sukses", body: "Lahan berhasil dihapus");
     isLoading.value = false;
   }
 
@@ -195,10 +181,7 @@ class LahanTanamController extends GetxController {
   }
 
   void showAddLandBottomSheet() {
-    Get.bottomSheet(
-      AddLandBottomSheet(),
-      elevation: 3,
-    );
+    Get.bottomSheet(AddLandBottomSheet(), elevation: 3);
     if (Get.isBottomSheetOpen!) {
       selectedProvinceId = null; // Reset provinsi yang dipilih
       selectedCityId = null; // Reset kota yang dipilih
@@ -220,10 +203,10 @@ class LahanTanamController extends GetxController {
   //         fieldArea: '150',
   //         fieldAddress:
   //             'JL DI Panjaitan No.128, Karangreja, Purwokerto Kidul, Kec. Purwokerto Sel., Kabupaten Banyumas, Jawa Tengah 53147'
-  //         // plants: PlantModel(
-  //         //   plantName: 'Jagung',
-  //         //   plantType: 'Manis',
-  //         // ),
+  // plants: PlantModel(
+  //   plantName: 'Jagung',
+  //   plantType: 'Manis',
+  // ),
   //         ),
   //   ];
   // }
@@ -231,9 +214,5 @@ class LahanTanamController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: AppColors.primary,
-      statusBarIconBrightness: Brightness.light,
-    ));
   }
 }

@@ -18,91 +18,97 @@ class AnalisaUsahaTaniPage extends GetView<AnalisaUsahaTaniController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        return Stack(
-          children: [
-            PageHeader(
-              title: 'Analisa Usaha',
-              height: MediaQuery.of(context).size.height * 0.17,
-            ),
-            if (controller.analisaUsahaList.isEmpty)
-              const Positioned(
-                top: 95,
-                left: 16,
-                right: 16,
-                child: Card(
-                  elevation: 4,
-                  margin: EdgeInsets.all(16),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Anda belum memiliki lahan',
-                          style: TStyle.bodyText1,
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(width: 8),
-                        Icon(
-                          Icons.error,
-                          size: 24.0,
-                          color: AppColors.error,
-                        ),
-                      ],
+        return SafeArea(
+          child: Stack(
+            children: [
+              PageHeader(
+                title: 'Analisa Usaha',
+                height: MediaQuery.of(context).size.height * 0.13,
+              ),
+              if (controller.analisaUsahaList.isEmpty)
+                const Positioned(
+                  top: 75,
+                  left: 16,
+                  right: 16,
+                  child: Card(
+                    elevation: 4,
+                    margin: EdgeInsets.all(16),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Anda belum memiliki lahan',
+                            style: TStyle.bodyText1,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.error, size: 24.0, color: AppColors.error),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-                Expanded(
-                  child: Obx(() {
-                    final data = controller.analisaUsahaList;
-                    return RefreshIndicator(
-                      color: AppColors.primary,
-                      onRefresh: controller.onRefresh,
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          children: data
-                              .asMap()
-                              .entries
-                              .map((entry) => cardField(
-                                  context: context,
-                                  index: entry.key,
-                                  data: data[entry.key]))
-                              .toList(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.09),
+                  Expanded(
+                    child: Obx(() {
+                      final data = controller.analisaUsahaList;
+                      return RefreshIndicator(
+                        color: AppColors.primary,
+                        onRefresh: controller.onRefresh,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children:
+                                data
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                      (entry) => cardField(
+                                        context: context,
+                                        index: entry.key,
+                                        data: data[entry.key],
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                ),
-              ],
-            ),
-            if (controller.isLoading.value) const LoadingWidgetBG(),
-          ],
+                      );
+                    }),
+                  ),
+                ],
+              ),
+              if (controller.isLoading.value) const LoadingWidgetBG(),
+            ],
+          ),
         );
       }),
     );
   }
 
-  Card cardField(
-      {required BuildContext context,
-      required int index,
-      required FarmingProductionAnalysisModel data}) {
+  Card cardField({
+    required BuildContext context,
+    required int index,
+    required FarmingProductionAnalysisModel data,
+  }) {
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: InkWell(
-        onTap: controller.analisaUsahaList[index].plantType == ""
-            ? null
-            : () {
-                Get.toNamed(DetailAnalisaUsahaRoutes.detailAnalisaUsaha,
-                    arguments: data);
-              },
+        onTap:
+            controller.analisaUsahaList[index].plantType == ""
+                ? null
+                : () {
+                  Get.toNamed(
+                    DetailAnalisaUsahaRoutes.detailAnalisaUsaha,
+                    arguments: data,
+                  );
+                },
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(
@@ -111,12 +117,7 @@ class AnalisaUsahaTaniPage extends GetView<AnalisaUsahaTaniController> {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Text(
-                      data.fieldName,
-                      style: TStyle.head5,
-                    ),
-                  ),
+                  Expanded(child: Text(data.fieldName, style: TStyle.head5)),
                   Chip(
                     padding: EdgeInsets.zero,
                     label: Text(
@@ -128,28 +129,33 @@ class AnalisaUsahaTaniPage extends GetView<AnalisaUsahaTaniController> {
                         color: Colors.white,
                       ),
                     ).paddingAll(4),
-                    backgroundColor: data.plantType == ""
-                        ? AppColors.error
-                        : AppColors.secondary,
-                  ).paddingZero
+                    backgroundColor:
+                        data.plantType == ""
+                            ? AppColors.error
+                            : AppColors.secondary,
+                  ).paddingZero,
                 ],
               ),
               const SizedBox(height: 4.0),
               buildInfoRow(
-                  Icon(Icons.calendar_month,
-                      size: 20, color: Colors.green[600]),
-                  "Tgl. Tanam : ",
-                  data.plantingDate!.toFormattedDate()),
+                Icon(Icons.calendar_month, size: 20, color: Colors.green[600]),
+                "Tgl. Tanam : ",
+                data.plantingDate!.toFormattedDate(),
+              ),
               buildInfoRow(
-                  Icon(Icons.calendar_month,
-                      size: 20, color: Colors.green[600]),
-                  "Tgl. Panen : ",
-                  data.harvestDate!.toFormattedDate()),
+                Icon(Icons.calendar_month, size: 20, color: Colors.green[600]),
+                "Tgl. Panen : ",
+                data.harvestDate!.toFormattedDate(),
+              ),
               buildInfoRow(
-                  Icon(Icons.shopping_basket_rounded,
-                      size: 20, color: Colors.green[600]),
-                  "Jumlah Panen : ",
-                  "${data.harvestQuantity.toString()} kg"),
+                Icon(
+                  Icons.shopping_basket_rounded,
+                  size: 20,
+                  color: Colors.green[600],
+                ),
+                "Jumlah Panen : ",
+                "${data.harvestQuantity.toString()} kg",
+              ),
               buildInfoRow(
                 Text(
                   "Rp",
@@ -162,15 +168,16 @@ class AnalisaUsahaTaniPage extends GetView<AnalisaUsahaTaniController> {
                 (data.netIncome).currencyFormatRp,
               ),
               buildInfoRow(
-                  Text(
-                    "Rp",
-                    style: TStyle.bodyText2.copyWith(
-                      color: Colors.green[600],
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  "Rp",
+                  style: TStyle.bodyText2.copyWith(
+                    color: Colors.green[600],
+                    fontWeight: FontWeight.bold,
                   ),
-                  "Pengeluaran  : ",
-                  (data.expenses).currencyFormatRp),
+                ),
+                "Pengeluaran  : ",
+                (data.expenses).currencyFormatRp,
+              ),
               Divider(thickness: 1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

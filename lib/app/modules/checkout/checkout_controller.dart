@@ -9,8 +9,9 @@ import 'package:plantix_app/main.dart';
 
 class CheckoutController extends GetxController {
   List<CartItem> cartList = Get.arguments;
-  final alamatController =
-      TextEditingController(text: user.currentUser?.address ?? "");
+  final alamatController = TextEditingController(
+    text: user.currentUser?.address ?? "",
+  );
   final isLoading = false.obs;
   final isButtonActive = false.obs;
 
@@ -102,13 +103,16 @@ class CheckoutController extends GetxController {
   }
 
   void checkData() {
-    final cartData = cartList
-        .map((item) => {
-              'Nama': item.product!.name,
-              'Harga': item.product!.price,
-              'Quantity': item.quantity
-            })
-        .toList();
+    final cartData =
+        cartList
+            .map(
+              (item) => {
+                'Nama': item.product!.name,
+                'Harga': item.product!.price,
+                'Quantity': item.quantity,
+              },
+            )
+            .toList();
     log(cartData.toString());
     log("Total Item: ${cartList.length}");
   }

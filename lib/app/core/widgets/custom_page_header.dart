@@ -7,11 +7,7 @@ class PageHeader extends StatelessWidget {
   final String title;
   final double? height;
 
-  const PageHeader({
-    super.key,
-    required this.title,
-    this.height,
-  });
+  const PageHeader({super.key, required this.title, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +36,12 @@ class PageHeader extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () => Get.back(),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+              child: Row(
+                children: [
+                  const Icon(Icons.arrow_back, color: Colors.white),
+                  const SizedBox(width: 12.0),
+                ],
               ),
-            ),
-            const SizedBox(
-              width: 12.0,
             ),
             Expanded(
               child: Text(

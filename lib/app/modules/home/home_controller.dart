@@ -3,10 +3,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/modules/auth/login/login_controller.dart';
 import 'package:plantix_app/app/modules/notification/notification_controller.dart';
-import 'package:plantix_app/app/modules/profile/profile_controller.dart';
-import 'package:plantix_app/app/modules/sales/sales_controller.dart';
 import 'package:plantix_app/main.dart';
 
 class HomeController extends GetxController {
@@ -20,15 +17,9 @@ class HomeController extends GetxController {
   // final user = UserManager().currentUser;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-
     getNotificationLength();
-
-    Get.lazyPut(() => LoginController());
-    Get.put<SalesController>(SalesController());
-    Get.put<ProfileController>(ProfileController());
-    // Get.find<LoginController>().getUser();
   }
 
   void changeIndex(int index) {
@@ -37,10 +28,11 @@ class HomeController extends GetxController {
 
   Future<void> refreshHome() async {
     isLoading.value = true;
-    user.clearUser();
     await user.loadUserData();
     isLoading.value = false;
   }
+
+  
 
   // Future<void> fetchWeatherInfo() async {
   //   // Simulasi fetch data cuaca

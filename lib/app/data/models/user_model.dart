@@ -8,8 +8,8 @@ class UserModel extends Equatable {
   final String phoneNumber;
   final String avatarUrl;
   final bool hasStore;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const UserModel({
     required this.id,
@@ -32,22 +32,22 @@ class UserModel extends Equatable {
       phoneNumber: json["phone_number"] ?? "",
       avatarUrl: json["avatar_url"] ?? "",
       hasStore: json["has_store"] ?? false,
-      createdAt: json["created_at"] ?? DateTime.now(),
-      updatedAt: json["updated_at"] ?? DateTime.now(),
+      createdAt: DateTime.tryParse(json["created_at"] ?? ""),
+      updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "email": email,
-        "name": name,
-        "address": address,
-        "phone_number": phoneNumber,
-        "avatar_url": avatarUrl,
-        "has_store": hasStore,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-      };
+    "id": id,
+    "email": email,
+    "name": name,
+    "address": address,
+    "phone_number": phoneNumber,
+    "avatar_url": avatarUrl,
+    "has_store": hasStore,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+  };
 
   @override
   String toString() {
@@ -56,14 +56,14 @@ class UserModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        email,
-        name,
-        address,
-        phoneNumber,
-        avatarUrl,
-        hasStore,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    email,
+    name,
+    address,
+    phoneNumber,
+    avatarUrl,
+    hasStore,
+    createdAt,
+    updatedAt,
+  ];
 }

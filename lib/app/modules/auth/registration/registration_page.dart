@@ -50,20 +50,23 @@ class RegistrationPage extends GetView<RegistrationController> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       child: Form(
                         key: controller.formField,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: 4.0),
                             const Text(
                               "Selamat datang di Plantix,",
-                              style: TStyle.head3,
+                              style: TStyle.head4,
                             ).paddingOnly(top: 14),
                             const SizedBox(height: 4),
                             const Text(
                               "Silakan melakukan pendaftaran.",
-                              style: TStyle.bodyText1,
+                              style: TStyle.bodyText2,
                             ),
                             const SizedBox(height: 12),
                             CustomTextForm(
@@ -123,7 +126,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -132,10 +135,10 @@ class RegistrationPage extends GetView<RegistrationController> {
                       ),
                     ),
                   ).animate().moveY(
-                        begin: 100,
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeInOut,
-                      );
+                    begin: 100,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
                 }),
               ),
             ),
@@ -149,8 +152,9 @@ class RegistrationPage extends GetView<RegistrationController> {
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller.emailController,
-      scrollPadding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
+      scrollPadding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height,
+      ),
       cursorColor: AppColors.primary,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -175,9 +179,7 @@ class RegistrationPage extends GetView<RegistrationController> {
         hintText: "Email",
         prefixIcon: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
-          child: Icon(
-            Icons.email_rounded,
-          ),
+          child: Icon(Icons.email_rounded),
         ),
       ),
       validator: Validator.email,
@@ -189,8 +191,9 @@ class RegistrationPage extends GetView<RegistrationController> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       obscureText: controller.notVisible.value,
       controller: controller.passwordController,
-      scrollPadding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
+      scrollPadding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height,
+      ),
       cursorColor: AppColors.primary,
       keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.next,
@@ -215,9 +218,7 @@ class RegistrationPage extends GetView<RegistrationController> {
         hintText: "Password",
         prefixIcon: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
-          child: Icon(
-            Icons.lock,
-          ),
+          child: Icon(Icons.lock),
         ),
         suffixIcon: IconButton(
           onPressed: () {
@@ -249,22 +250,21 @@ class RegistrationPage extends GetView<RegistrationController> {
       onPressed: () {
         controller.doRegistration();
       },
-      child: controller.isLoading.value
-          ? const SizedBox(
-              height: 22,
-              width: 22,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.5,
-                backgroundColor: Colors.white,
-                color: AppColors.primary,
+      child:
+          controller.isLoading.value
+              ? const SizedBox(
+                height: 22,
+                width: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  backgroundColor: Colors.white,
+                  color: AppColors.primary,
+                ),
+              )
+              : Text(
+                "Daftar".toUpperCase(),
+                style: TStyle.head4.copyWith(color: Colors.white),
               ),
-            )
-          : Text(
-              "Daftar".toUpperCase(),
-              style: TStyle.head4.copyWith(
-                color: Colors.white,
-              ),
-            ),
     );
   }
 }

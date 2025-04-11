@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:plantix_app/app/core/helpers/manager.dart';
 import 'package:plantix_app/app/core/helpers/network_controller.dart';
 import 'package:plantix_app/app/core/theme/app_theme.dart';
-import 'package:plantix_app/app/data/repositories/my_store_repository.dart';
-import 'package:plantix_app/app/data/repositories/profile_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/routes/app_pages.dart';
@@ -53,8 +52,6 @@ class MyApp extends StatelessWidget {
       },
       child: GetMaterialApp(
         popGesture: true,
-        // showPerformanceOverlay: true,
-        // showSemanticsDebugger: true,
         defaultTransition: Transition.cupertino,
         debugShowCheckedModeBanner: false,
         theme: myTheme,

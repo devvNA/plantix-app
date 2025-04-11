@@ -3,14 +3,18 @@ import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
-import 'package:plantix_app/app/data/models/product_model.dart';
+import 'package:plantix_app/app/data/models/shop_response_model.dart';
 
 class ProductMarketCards extends StatelessWidget {
   final VoidCallback onTap;
-  final Product product;
+  final ShopResponse product;
+  // final Product product;
 
-  const ProductMarketCards(
-      {super.key, required this.onTap, required this.product});
+  const ProductMarketCards({
+    super.key,
+    required this.onTap,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +32,14 @@ class ProductMarketCards extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Image.network(
                   filterQuality: FilterQuality.low,
-                  product.images?[0] ?? '',
+                  product.imageUrl[0],
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
+                  loadingBuilder: (
+                    BuildContext context,
+                    Widget child,
+                    ImageChunkEvent? loadingProgress,
+                  ) {
                     if (loadingProgress == null) return child;
                     return Center(
                       child: LoadingWidget(size: 20),
@@ -45,8 +52,11 @@ class ProductMarketCards extends StatelessWidget {
                       // ),
                     );
                   },
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
+                  errorBuilder: (
+                    BuildContext context,
+                    Object exception,
+                    StackTrace? stackTrace,
+                  ) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,16 +80,17 @@ class ProductMarketCards extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name ?? '',
+                    product.name,
                     style: TStyle.bodyText2,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4),
                   Text(
-                    (product.price ?? 0).currencyFormatRp,
-                    style:
-                        TStyle.bodyText2.copyWith(fontWeight: FontWeight.w600),
+                    product.price.toString().currencyFormatRp,
+                    style: TStyle.bodyText2.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -93,9 +104,7 @@ class ProductMarketCards extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Row(
                           children: [
@@ -107,7 +116,7 @@ class ProductMarketCards extends StatelessWidget {
                             const SizedBox(width: 2),
                             Expanded(
                               child: Text(
-                                product.storeName ?? '',
+                                product.storeName,
                                 style: TStyle.bodyText4.copyWith(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

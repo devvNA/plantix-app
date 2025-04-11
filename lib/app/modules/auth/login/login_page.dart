@@ -16,10 +16,12 @@ class LoginPage extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
 
     return Scaffold(
       body: Stack(
@@ -36,6 +38,7 @@ class LoginPage extends GetView<LoginController> {
               return Column(
                 children: [
                   const Spacer(),
+
                   // Widget bawah dengan radius circular
                   Container(
                     // height: MediaQuery.sizeOf(context).height * 0.45,
@@ -61,19 +64,44 @@ class LoginPage extends GetView<LoginController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            const SizedBox(height: 8.0),
                             const Text(
                               "Selamat datang di Plantix,",
-                              style: TStyle.head3,
+                              style: TStyle.head4,
                             ).paddingOnly(top: 14),
                             const SizedBox(height: 4),
                             const Text(
                               "Silakan masuk atau daftar di bawah ini.",
-                              style: TStyle.bodyText1,
+                              style: TStyle.bodyText2,
                             ),
                             const SizedBox(height: 16),
                             _emailForm(context),
                             const SizedBox(height: 16),
                             _passwordForm(context),
+                            const SizedBox(height: 5.0),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: AppColors.primary,
+                                  value: controller.rememberMe.value,
+                                  onChanged: (_) {
+                                    controller.rememberMe.toggle();
+                                    log(
+                                      "Remember Me : ${controller.rememberMe.value}",
+                                    );
+                                  },
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    controller.rememberMe.toggle();
+                                  },
+                                  child: const Text(
+                                    "Ingat saya",
+                                    style: TStyle.bodyText2,
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 16),
                             _loginButton(),
                             const SizedBox(height: 16),
@@ -95,18 +123,19 @@ class LoginPage extends GetView<LoginController> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
+                            const SizedBox(height: 16.0),
                           ],
                         ),
                       ),
                     ),
                   ).animate().moveY(
-                        begin: 100,
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeInOut,
-                      ),
+                    begin: 100,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  ),
                 ],
               );
             }),
@@ -119,14 +148,15 @@ class LoginPage extends GetView<LoginController> {
   TextFormField _emailForm(context) {
     return TextFormField(
       controller: controller.emailController,
-      scrollPadding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
+      scrollPadding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height,
+      ),
       cursorColor: AppColors.primary,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-        prefixIconColor: AppColors.primary,
+        prefixIconColor: Colors.grey,
         suffixIconColor: Colors.grey[400],
         fillColor: Colors.grey[200],
         filled: true,
@@ -145,9 +175,7 @@ class LoginPage extends GetView<LoginController> {
         hintText: "Email",
         prefixIcon: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
-          child: Icon(
-            Icons.email_rounded,
-          ),
+          child: Icon(Icons.email_rounded),
         ),
       ),
       validator: Validator.email,
@@ -158,14 +186,15 @@ class LoginPage extends GetView<LoginController> {
     return TextFormField(
       obscureText: controller.notVisible.value,
       controller: controller.passwordController,
-      scrollPadding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height),
+      scrollPadding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height,
+      ),
       cursorColor: AppColors.primary,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-        prefixIconColor: AppColors.primary,
+        prefixIconColor: Colors.grey,
         suffixIconColor: Colors.grey[400],
         fillColor: Colors.grey[200],
         filled: true,
@@ -184,9 +213,7 @@ class LoginPage extends GetView<LoginController> {
         hintText: "Password",
         prefixIcon: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
-          child: Icon(
-            Icons.lock,
-          ),
+          child: Icon(Icons.lock),
         ),
         suffixIcon: IconButton(
           onPressed: () {
@@ -215,29 +242,29 @@ class LoginPage extends GetView<LoginController> {
         maximumSize: const Size(double.infinity, 42),
         minimumSize: const Size(double.infinity, 42),
       ),
-      onPressed: controller.isLoading.value
-          ? null
-          : () {
-              if (controller.formField.currentState!.validate()) {
-                controller.doLogin();
-              }
-            },
-      child: controller.isLoading.value
-          ? const SizedBox(
-              height: 22,
-              width: 22,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.5,
-                backgroundColor: Colors.white,
-                color: AppColors.primary,
+      onPressed:
+          controller.isLoading.value
+              ? null
+              : () {
+                if (controller.formField.currentState!.validate()) {
+                  controller.doLogin();
+                }
+              },
+      child:
+          controller.isLoading.value
+              ? const SizedBox(
+                height: 22,
+                width: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  backgroundColor: Colors.white,
+                  color: AppColors.primary,
+                ),
+              )
+              : Text(
+                "Masuk".toUpperCase(),
+                style: TStyle.head4.copyWith(color: Colors.white),
               ),
-            )
-          : Text(
-              "Masuk".toUpperCase(),
-              style: TStyle.head4.copyWith(
-                color: Colors.white,
-              ),
-            ),
     );
   }
 }

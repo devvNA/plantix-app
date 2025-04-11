@@ -4,19 +4,17 @@ import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
-import 'package:plantix_app/app/data/models/keranjang_model.dart';
+import 'package:plantix_app/app/data/models/cart_model.dart';
 import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 
 class StoreCartCard extends StatelessWidget {
   final String storeName;
-  final List<CartItem> storeItems;
-  final CartController controller;
+  final List<CartModel> storeItems;
 
   const StoreCartCard({
     super.key,
     required this.storeName,
     required this.storeItems,
-    required this.controller,
   });
 
   @override
@@ -30,20 +28,24 @@ class StoreCartCard extends StatelessWidget {
           _buildStoreHeader(),
           _buildProductList(),
           const SizedBox(height: 8),
-          // _buildStoreTotal(),
+          _buildStoreTotal(),
         ],
       ),
     );
   }
 
   Widget _buildStoreHeader() {
+    final controller = Get.find<CartController>();
+
     return Row(
       children: [
-        Obx(() => Checkbox(
-              activeColor: AppColors.primary,
-              value: controller.isStoreSelected(storeName),
-              onChanged: (value) => controller.toggleStoreSelection(storeName),
-            )),
+        Obx(
+          () => Checkbox(
+            activeColor: AppColors.primary,
+            value: controller.isStoreSelected(storeName),
+            onChanged: (value) => controller.toggleStoreSelection(storeName),
+          ),
+        ),
         const Icon(Icons.store, size: 20),
         const SizedBox(width: 8),
         Text(storeName, style: TStyle.head5),
@@ -58,15 +60,17 @@ class StoreCartCard extends StatelessWidget {
       itemCount: storeItems.length,
       itemBuilder: (context, idx) {
         final item = storeItems[idx];
-        return ProductCartItem(
-          item: item,
-          controller: controller,
-        );
+        return ProductCartItem(item: item);
       },
     );
   }
 
   Widget _buildStoreTotal() {
+    // Hitung total belanja untuk toko ini
+    double storeTotal = storeItems.fold(0.0, (sum, item) {
+      return sum + (item.price * (item.quantity ?? 1));
+    });
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -74,7 +78,7 @@ class StoreCartCard extends StatelessWidget {
         children: [
           Text('Total Belanja:', style: TStyle.bodyText2),
           Text(
-            controller.calculateStoreTotal(storeItems).currencyFormatRp,
+            storeTotal.toDouble().currencyFormatRp,
             style: TStyle.head5.copyWith(color: AppColors.primary),
           ),
         ],
@@ -85,14 +89,10 @@ class StoreCartCard extends StatelessWidget {
 
 // Widget untuk Item Produk
 class ProductCartItem extends StatelessWidget {
-  final CartItem item;
-  final CartController controller;
+  final CartModel item;
+  final controller = Get.find<CartController>();
 
-  const ProductCartItem({
-    super.key,
-    required this.item,
-    required this.controller,
-  });
+  ProductCartItem({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +107,7 @@ class ProductCartItem extends StatelessWidget {
               _buildCheckbox(),
               _buildProductImage(),
               const SizedBox(width: 12),
-              Expanded(
-                child: _buildProductDetails(),
-              ),
+              Expanded(child: _buildProductDetails()),
             ],
           ),
         ),
@@ -118,28 +116,30 @@ class ProductCartItem extends StatelessWidget {
   }
 
   Widget _buildCheckbox() {
-    return Obx(() => Checkbox(
-          activeColor: AppColors.primary,
-          value: controller.isItemSelected(item.product!.id),
-          onChanged: (value) =>
-              controller.toggleItemSelection(item.product!.id),
-        ));
+    return Obx(
+      () => Checkbox(
+        activeColor: AppColors.primary,
+        value: controller.isItemSelected(item.productId),
+        onChanged: (value) => controller.toggleItemSelection(item.productId),
+      ),
+    );
   }
 
   Widget _buildProductImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        item.product!.images?[0] ?? '',
+        item.imageUrl.isNotEmpty ? item.imageUrl[0] : '',
         width: 80,
         height: 80,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(
-          width: 80,
-          height: 80,
-          color: Colors.grey[200],
-          child: const Icon(Icons.image),
-        ),
+        errorBuilder:
+            (context, error, stackTrace) => Container(
+              width: 80,
+              height: 80,
+              color: Colors.grey[200],
+              child: const Icon(Icons.image),
+            ),
       ),
     );
   }
@@ -149,16 +149,14 @@ class ProductCartItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item.product!.name ?? '',
-          style: TStyle.bodyText2.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          item.productName,
+          style: TStyle.bodyText2.copyWith(fontWeight: FontWeight.w500),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 4),
         Text(
-          (item.product!.price ?? 0).currencyFormatRp,
+          item.price.currencyFormatRp,
           style: TStyle.bodyText2.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w600,
@@ -169,7 +167,9 @@ class ProductCartItem extends StatelessWidget {
           children: [
             IconButton(
               splashRadius: 16,
-              onPressed: () => controller.decrementQuantity(item.product!.id),
+              onPressed: () {
+                controller.decrementQuantity(item.productId);
+              },
               icon: const Icon(Icons.remove_circle_outline),
               iconSize: 20,
               padding: EdgeInsets.zero,
@@ -177,27 +177,25 @@ class ProductCartItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                '${item.quantity}',
-                style: TStyle.bodyText2,
-              ),
+              child: Text('${item.quantity}', style: TStyle.bodyText2),
             ),
             IconButton(
               splashRadius: 16,
-              onPressed: () => controller.incrementQuantity(item.product!.id),
+              onPressed: () {
+                controller.incrementQuantity(item.productId);
+              },
               icon: const Icon(Icons.add_circle_outline),
               iconSize: 20,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
-            Spacer(),
+            const Spacer(),
             IconButton(
               splashRadius: 16,
-              onPressed: () => controller.deleteProduct(item),
-              icon: const Icon(
-                Icons.delete_forever,
-                color: AppColors.error,
-              ),
+              onPressed: () {
+                controller.deleteProduct(item);
+              },
+              icon: const Icon(Icons.delete_forever, color: AppColors.error),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),

@@ -7,11 +7,14 @@ import 'package:plantix_app/app/data/models/product_model.dart';
 
 class ProductSellItems extends StatelessWidget {
   final VoidCallback onTap;
-  final ProductsModel product;
+  final ProductModel product;
   // final Product product;
 
-  const ProductSellItems(
-      {super.key, required this.onTap, required this.product});
+  const ProductSellItems({
+    super.key,
+    required this.onTap,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +35,11 @@ class ProductSellItems extends StatelessWidget {
                   product.imageUrl[0],
                   width: double.infinity,
                   fit: BoxFit.contain,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
+                  loadingBuilder: (
+                    BuildContext context,
+                    Widget child,
+                    ImageChunkEvent? loadingProgress,
+                  ) {
                     if (loadingProgress == null) return child;
                     return Center(
                       child: LoadingWidget(size: 20),
@@ -46,8 +52,11 @@ class ProductSellItems extends StatelessWidget {
                       // ),
                     );
                   },
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
+                  errorBuilder: (
+                    BuildContext context,
+                    Object exception,
+                    StackTrace? stackTrace,
+                  ) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -81,8 +90,9 @@ class ProductSellItems extends StatelessWidget {
                     children: [
                       Text(
                         product.price.currencyFormatRp,
-                        style: TStyle.bodyText2
-                            .copyWith(fontWeight: FontWeight.w600),
+                        style: TStyle.bodyText2.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -120,16 +130,18 @@ class ProductSellItems extends StatelessWidget {
                             Text(
                               "65",
                               style: TStyle.bodyText4.copyWith(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500),
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w500,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(width: 2),
                             Text(
                               "Terjual",
-                              style: TStyle.bodyText4
-                                  .copyWith(color: Colors.grey[600]),
+                              style: TStyle.bodyText4.copyWith(
+                                color: Colors.grey[600],
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
