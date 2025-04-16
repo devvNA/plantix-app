@@ -28,7 +28,7 @@ class MyProductsController extends GetxController {
     result.fold(
       (failure) {
         Get.back();
-        Get.context!.showSnackBar(message: failure.message, isError: true);
+        Get.context!.showCustomSnackBar(message: failure.message, isError: true);
       },
       (products) {
         listMyProducts.addAll(products);

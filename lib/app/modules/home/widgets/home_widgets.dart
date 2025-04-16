@@ -427,7 +427,7 @@ Widget buildMenuGrid(BuildContext context) {
       'color': AppColors.secondary,
     },
     {
-      'title': 'Analisa Usahatani',
+      'title': 'Analisa Usaha Tani',
       'route': AnalisaUsahaTaniRoutes.analisaUsahaTani,
       'icon': Icons.analytics_outlined,
       'color': Colors.orange,

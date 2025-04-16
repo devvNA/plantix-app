@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -12,18 +13,20 @@ class CartRepository {
   /// Mengambil daftar item di keranjang pengguna
   Future<Either<Failure, List<CartModel>>> getCartByID() async {
     try {
-      final response = await supabase.rpc(
+      List<dynamic> response = await supabase.rpc(
+        get: true,
         'get_cart_by_user_id',
         params: {'user_id_param': userId},
       );
 
       log(response.toString());
-      final products =
-          (response as List).map((e) => CartModel.fromJson(e)).toList();
+
+      final products = (response).map((e) => CartModel.fromJson(e)).toList();
       return right(products);
+    } on PostgrestException catch (e) {
+      return left(handleError(e));
     } catch (e) {
-      log(e.toString());
-      return left(_handleError(e));
+      return left(handleError(e));
     }
   }
 
@@ -58,9 +61,10 @@ class CartRepository {
       }
 
       return right(true);
+    } on PostgrestException catch (e) {
+      return left(handleError(e));
     } catch (e) {
-      log(e.toString());
-      return left(_handleError(e));
+      return left(handleError(e));
     }
   }
 
@@ -77,8 +81,10 @@ class CartRepository {
           .eq('user_id', userId);
 
       return right(true);
+    } on PostgrestException catch (e) {
+      return left(handleError(e));
     } catch (e) {
-      return left(_handleError(e));
+      return left(handleError(e));
     }
   }
 
@@ -92,17 +98,10 @@ class CartRepository {
           .eq('user_id', userId);
 
       return right(true);
+    } on PostgrestException catch (e) {
+      return left(handleError(e));
     } catch (e) {
-      return left(_handleError(e));
+      return left(handleError(e));
     }
-  }
-
-  /// Menangani error dari Supabase dan error umum
-  Failure _handleError(dynamic e) {
-    if (e is PostgrestException) {
-      log(e.message);
-      return Exception(e.message);
-    }
-    return Exception(e.toString());
   }
 }

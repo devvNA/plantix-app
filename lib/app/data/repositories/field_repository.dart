@@ -78,39 +78,6 @@ class FieldRepository {
     }
   }
 
-  // Future<Either<Failure, FieldModel>> updateStore({
-  //   required String storeName,
-  //   required String address,
-  //   String? storeImageUrl,
-  // }) async {
-  //   try {
-  //     final userId = supabase.auth.currentSession!.user.id;
-  //     final updates = {
-  //       'store_name': storeName,
-  //       'address': address,
-  //       'store_image_url': storeImageUrl,
-  //       'updated_at': DateTime.now().toIso8601String(),
-  //     };
-
-  //     final data = await supabase
-  //         .from('my_store')
-  //         .update(updates)
-  //         .eq("user_id", userId)
-  //         .select()
-  //         .single();
-
-  //     final store = FieldModel.fromJson(data);
-  //     await userHasStore();
-  //     return right(store);
-  //   } on PostgrestException catch (e) {
-  //     log(e.message);
-  //     return left(Exception(e.message));
-  //   } catch (e) {
-  //     log(e.toString());
-  //     return left(Exception(e.toString()));
-  //   }
-  // }
-
   Future<bool> deleteField(int id) async {
     try {
       await supabase.from('fields').delete().eq('id', id);

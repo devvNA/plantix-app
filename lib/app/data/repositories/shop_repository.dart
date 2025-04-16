@@ -13,7 +13,7 @@ class ShopRepository {
   ) async {
     try {
       List<dynamic> response = await supabase.rpc(
-        'get_product_except_store',
+        'get_all_product_except_store',
         params: {'id_store': currentStoreId},
       );
 

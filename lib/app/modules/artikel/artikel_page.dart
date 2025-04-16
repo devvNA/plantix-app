@@ -130,10 +130,7 @@ class ArtikelPage extends GetView<ArtikelController> {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 3,
-                            ),
+                            border: Border.all(color: Colors.white, width: 3),
                           ),
                           child: CircleAvatar(
                             radius: 24,
@@ -195,26 +192,28 @@ class ArtikelPage extends GetView<ArtikelController> {
           ),
         ],
       ),
-      floatingActionButton: Obx(() => AnimatedScale(
-            scale: controller.isVisible.value ? 1 : 0,
-            duration: Duration(milliseconds: 200),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: FloatingActionButton.extended(
-                onPressed: () {},
-                icon: Icon(Icons.share_rounded),
-                label: Text(
-                  'Bagikan',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
+      floatingActionButton: Obx(
+        () => AnimatedScale(
+          scale: controller.isVisible.value ? 1 : 0,
+          duration: Duration(milliseconds: 200),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: FloatingActionButton.extended(
+              onPressed: () {},
+              icon: Icon(Icons.share_rounded),
+              label: Text(
+                'Bagikan',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
                 ),
-                backgroundColor: AppColors.primary,
-                elevation: 4,
               ),
+              backgroundColor: AppColors.primary,
+              elevation: 4,
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

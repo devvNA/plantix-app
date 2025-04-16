@@ -10,7 +10,8 @@ class Kalkulasi {
   final double biayaPupuk;
   final double biayaPestisida;
   final double totalBiaya;
-  final double estimasiPanen; // Tambahan: Estimasi Panen
+  final double estimasiPanen; // Estimasi hasil panen dalam kg
+  final int durasi; // Durasi tanam sampai panen dalam hari
 
   Kalkulasi({
     required this.luasLahan,
@@ -24,6 +25,7 @@ class Kalkulasi {
     required this.biayaPupuk,
     required this.biayaPestisida,
     required this.totalBiaya,
-    required this.estimasiPanen, // Tambahan: Estimasi Panen
+    required this.estimasiPanen,
+    required this.durasi,
   });
 }

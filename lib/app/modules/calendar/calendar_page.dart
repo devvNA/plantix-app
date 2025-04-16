@@ -28,34 +28,34 @@ class CalendarPage extends GetView<CalendarController> {
             onPressed: () {
               controller.onRefresh();
             },
-            icon: const Icon(
-              Icons.refresh,
-              size: 24.0,
-            ),
+            icon: const Icon(Icons.refresh, size: 24.0),
           ),
         ],
       ),
-      body: GetBuilder<CalendarController>(builder: (_) {
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
+      body: GetBuilder<CalendarController>(
+        builder: (_) {
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(12),
+                        bottomRight: Radius.circular(12),
+                      ),
                     ),
-                  ),
-                  child: Obx(() => Padding(
+                    child: Obx(
+                      () => Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TableCalendar(
                           firstDay: DateTime.utc(2010, 10, 16),
                           lastDay: DateTime.utc(2030, 3, 14),
                           focusedDay: controller.focusedDay.value,
-                          selectedDayPredicate: (day) =>
-                              isSameDay(controller.selectedDay.value, day),
+                          selectedDayPredicate:
+                              (day) =>
+                                  isSameDay(controller.selectedDay.value, day),
                           eventLoader: controller.getEventsForDay,
                           calendarStyle: CalendarStyle(
                             selectedDecoration: BoxDecoration(
@@ -80,15 +80,17 @@ class CalendarPage extends GetView<CalendarController> {
                             controller.focusedDay.value = focusedDay;
                           },
                         ),
-                      )),
-                ),
-                SizedBox(height: 16),
-                Expanded(
-                  child: Obx(() {
-                    final selectedEvents = controller
-                        .getEventsForDay(controller.selectedDay.value);
-                    return selectedEvents.isEmpty
-                        ? Center(
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Expanded(
+                    child: Obx(() {
+                      final selectedEvents = controller.getEventsForDay(
+                        controller.selectedDay.value,
+                      );
+                      return selectedEvents.isEmpty
+                          ? Center(
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
@@ -98,27 +100,30 @@ class CalendarPage extends GetView<CalendarController> {
                                     height: 100,
                                   ),
                                   const SizedBox(height: 24.0),
-                                  Text('Tidak ada jadwal untuk hari ini',
-                                      style: TextStyle(color: Colors.grey)),
+                                  Text(
+                                    'Tidak ada jadwal untuk hari ini',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ],
                               ),
                             ),
                           )
-                        : ListView.builder(
+                          : ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             itemCount: selectedEvents.length,
                             itemBuilder: (context, index) {
                               return EventCard(event: selectedEvents[index]);
                             },
                           );
-                  }),
-                ),
-              ],
-            ),
-            if (controller.isLoading.value) const LoadingWidgetBG(),
-          ],
-        );
-      }),
+                    }),
+                  ),
+                ],
+              ),
+              if (controller.isLoading.value) const LoadingWidgetBG(),
+            ],
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           controller.fieldList.clear();
@@ -140,10 +145,11 @@ class CalendarPage extends GetView<CalendarController> {
   void _tambahEventTanam(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Tambah Jadwal Tanam'),
-        content: EventFormulir(),
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Tambah Jadwal Tanam'),
+            content: EventFormulir(),
+          ),
     );
   }
 }
@@ -155,89 +161,92 @@ class EventFormulir extends GetView<CalendarController> {
   Widget build(BuildContext context) {
     return Form(
       key: controller.formKey,
-      child: GetBuilder<CalendarController>(builder: (_) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomDropDownSimple(
-              label: "Nama Lahan",
-              items: controller.fieldList.map((field) {
-                return DropdownMenuItem<String>(
-                  onTap: () {
-                    controller.namaLahanController.text = field.fieldName;
-                  },
-                  value: field.fieldName,
-                  child: Text(
-                    field.fieldName,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                );
-              }).toList(),
-              controller: controller.namaLahanController,
-              onChanged: (value) {
-                controller.namaLahanController.text = value ?? "";
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Lahan tidak boleh kosong';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 12.0),
-            CustomTextFormSimple(
-              label: "Catatan",
-              controller: controller.notesController,
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tanggal :',
-                  style: TStyle.bodyText2,
-                ),
-                Expanded(
-                  child: TextButton(
-                    onPressed: () => _selectDate(context),
-                    child: Text(
-                      controller.tanggal != null
-                          ? DateFormat('dd-MM-yyyy').format(controller.tanggal!)
-                          : "Pilih Tanggal",
-                      style:
-                          TStyle.bodyText2.copyWith(color: AppColors.primary),
+      child: GetBuilder<CalendarController>(
+        builder: (_) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomDropDownSimple(
+                label: "Nama Lahan",
+                items:
+                    controller.fieldList.map((field) {
+                      return DropdownMenuItem<String>(
+                        onTap: () {
+                          controller.namaLahanController.text = field.fieldName;
+                        },
+                        value: field.fieldName,
+                        child: Text(
+                          field.fieldName,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                controller: controller.namaLahanController,
+                onChanged: (value) {
+                  controller.namaLahanController.text = value ?? "";
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Lahan tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 12.0),
+              CustomTextFormSimple(
+                label: "Catatan",
+                controller: controller.notesController,
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Tanggal :', style: TStyle.bodyText2),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => _selectDate(context),
+                      child: Text(
+                        controller.tanggal != null
+                            ? DateFormat(
+                              'dd-MM-yyyy',
+                            ).format(controller.tanggal!)
+                            : "Pilih Tanggal",
+                        style: TStyle.bodyText2.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                ],
               ),
-              onPressed: () {
-                if (controller.formKey.currentState!.validate() &&
-                    controller.tanggal != null) {
-                  controller.createEvent();
-                  Get.back();
-                } else {
-                  context.showSnackBar(
-                    message: 'Harap lengkapi semua field dan pilih tanggal.',
-                    isError: true,
-                  );
-                }
-                controller.tanggal = null;
-              },
-              child: const Text("Simpan"),
-            ),
-          ],
-        );
-      }),
+              SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  if (controller.formKey.currentState!.validate() &&
+                      controller.tanggal != null) {
+                    controller.createEvent();
+                    Get.back();
+                  } else {
+                    context.showCustomSnackBar(
+                      message: 'Harap lengkapi semua field dan pilih tanggal.',
+                      isError: true,
+                    );
+                  }
+                  controller.tanggal = null;
+                },
+                child: const Text("Simpan"),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -256,9 +265,7 @@ class EventFormulir extends GetView<CalendarController> {
               onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.primary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: AppColors.primary),
             ),
           ),
           child: child!,

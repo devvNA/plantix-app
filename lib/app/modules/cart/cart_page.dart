@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 import 'package:plantix_app/app/modules/cart/widgets/cart_item_widget.dart';
+import 'package:plantix_app/app/routes/checkout_routes.dart';
 
 class CartPage extends GetView<CartController> {
   const CartPage({super.key});
@@ -14,30 +16,15 @@ class CartPage extends GetView<CartController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Keranjang Belanja'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              // controller.checkData();
-              controller.getCart();
-            },
-            icon: const Icon(Icons.list_alt_rounded, size: 24.0),
-          ),
-        ],
-      ),
-      // body:
-      //     controller.cartProductList.isNotEmpty
-      //         ? _buildCartList()
-      //         : _buildEmptyCart(),
+      appBar: AppBar(title: const Text('Keranjang Belanja'), centerTitle: true),
       body: Obx(
         () =>
-            controller.cartProductList.isNotEmpty
+            controller.isLoading.value
+                ? const Center(child: LoadingWidget())
+                : controller.cartProductList.isNotEmpty
                 ? _buildCartList()
                 : _buildEmptyCart(),
       ),
-      // bottomNavigationBar: Placeholder(),
       bottomNavigationBar: GetBuilder<CartController>(
         builder:
             (controller) =>
@@ -87,17 +74,26 @@ class CartPage extends GetView<CartController> {
 
   Widget _buildCartList() {
     final groupedItems = controller.getGroupedCartItems();
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: groupedItems.length,
-      itemBuilder: (context, index) {
-        final storeName = groupedItems.keys.elementAt(index);
-        final storeItems = groupedItems[storeName];
-        return StoreCartCard(
-          storeName: storeName,
-          storeItems: storeItems ?? [],
-        );
+    return RefreshIndicator(
+      color: AppColors.primary,
+      onRefresh: () async {
+        await controller.onRefresh();
       },
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        padding: const EdgeInsets.all(16),
+        itemCount: groupedItems.length,
+        itemBuilder: (context, index) {
+          final storeName = groupedItems.keys.elementAt(index);
+          final storeItems = groupedItems[storeName];
+          return StoreCartCard(
+            storeName: storeName,
+            storeItems: storeItems ?? [],
+          );
+        },
+      ),
     );
   }
 
@@ -153,7 +149,7 @@ class CartPage extends GetView<CartController> {
                           final selectedItems =
                               controller.checkoutSelectedItems();
                           Get.toNamed(
-                            '/checkout', // Ganti dengan route yang benar
+                            CheckoutRoutes.checkout,
                             arguments: selectedItems,
                           );
                         }

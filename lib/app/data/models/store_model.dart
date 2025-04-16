@@ -15,9 +15,29 @@ class MyStoreModel extends Equatable {
   final String userId;
   final String storeName;
   final String address;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final String storeImageUrl;
+
+  MyStoreModel copyWith({
+    int? id,
+    String? userId,
+    String? storeName,
+    String? address,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? storeImageUrl,
+  }) {
+    return MyStoreModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      storeName: storeName ?? this.storeName,
+      address: address ?? this.address,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      storeImageUrl: storeImageUrl ?? this.storeImageUrl,
+    );
+  }
 
   factory MyStoreModel.fromJson(Map<String, dynamic> json) {
     return MyStoreModel(
@@ -25,35 +45,30 @@ class MyStoreModel extends Equatable {
       userId: json["user_id"] ?? "",
       storeName: json["store_name"] ?? "",
       address: json["address"] ?? "",
-      createdAt: json["created_at"] ?? "",
-      updatedAt: json["updated_at"] ?? "",
+      createdAt: DateTime.tryParse(json["created_at"] ?? ""),
+      updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
       storeImageUrl: json["store_image_url"] ?? "",
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "user_id": userId,
-        "store_name": storeName,
-        "address": address,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "store_image_url": storeImageUrl,
-      };
-
-  @override
-  String toString() {
-    return "$id, $userId, $storeName, $address, $createdAt, $updatedAt, $storeImageUrl, ";
-  }
+    "id": id,
+    "user_id": userId,
+    "store_name": storeName,
+    "address": address,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "store_image_url": storeImageUrl,
+  };
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        storeName,
-        address,
-        createdAt,
-        updatedAt,
-        storeImageUrl,
-      ];
+    id,
+    userId,
+    storeName,
+    address,
+    createdAt,
+    updatedAt,
+    storeImageUrl,
+  ];
 }

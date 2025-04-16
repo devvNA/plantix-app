@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
-import 'package:plantix_app/app/core/widgets/custom_loading.dart';
 import 'package:plantix_app/app/data/models/shop_response_model.dart';
 
 class ProductMarketCards extends StatelessWidget {
   final VoidCallback onTap;
   final ShopResponse product;
-  // final Product product;
 
   const ProductMarketCards({
     super.key,
@@ -21,7 +19,7 @@ class ProductMarketCards extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        elevation: 3,
+        elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +27,9 @@ class ProductMarketCards extends StatelessWidget {
             Expanded(
               flex: 2,
               child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(8),
+                ),
                 child: Image.network(
                   filterQuality: FilterQuality.low,
                   product.imageUrl[0],
@@ -42,14 +42,16 @@ class ProductMarketCards extends StatelessWidget {
                   ) {
                     if (loadingProgress == null) return child;
                     return Center(
-                      child: LoadingWidget(size: 20),
-                      // CircularProgressIndicator(
-                      //   color: AppColors.primary,
-                      //   value: loadingProgress.expectedTotalBytes != null
-                      //       ? loadingProgress.cumulativeBytesLoaded /
-                      //           loadingProgress.expectedTotalBytes!
-                      //       : null,
-                      // ),
+                      child:
+                      // LoadingWidget(size: 20),
+                      CircularProgressIndicator(
+                        color: AppColors.primary,
+                        value:
+                            loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                      ),
                     );
                   },
                   errorBuilder: (

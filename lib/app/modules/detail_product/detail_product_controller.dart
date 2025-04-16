@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'dart:developer';
 
 import 'package:get/get.dart';
@@ -7,6 +9,7 @@ import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/data/models/shop_response_model.dart';
 import 'package:plantix_app/app/data/repositories/cart_repository.dart'
     show CartRepository;
+import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 // import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 
 class DetailProductController extends GetxController {
@@ -17,7 +20,6 @@ class DetailProductController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
   }
 
@@ -29,6 +31,7 @@ class DetailProductController extends GetxController {
     result.fold((failure) => log(failure.message), (success) {
       log(success.toString());
       Get.back();
+      Get.find<CartController>().onRefresh();
       snackbarSuccess(
         message: "Sukses",
         body: "Produk berhasil ditambahkan ke keranjang",

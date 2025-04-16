@@ -20,26 +20,17 @@ class CustomAlertDialog {
         return AlertDialog(
           title: Text(title),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(description),
-              ],
-            ),
+            child: ListBody(children: <Widget>[Text(description)]),
           ),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: AppColors.primary,
-                side: const BorderSide(
-                  color: AppColors.primary,
-                ),
+                side: const BorderSide(color: AppColors.primary),
               ),
               onPressed: onPressNo,
-              child: Text(
-                no ?? "Tidak",
-                style: const TextStyle(fontSize: 12),
-              ),
+              child: Text(no ?? "Tidak", style: const TextStyle(fontSize: 12)),
             ),
             TextButton(
               style: TextButton.styleFrom(
@@ -47,10 +38,7 @@ class CustomAlertDialog {
                 foregroundColor: Colors.white,
               ),
               onPressed: onPressYes,
-              child: Text(
-                yes ?? "Ya",
-                style: const TextStyle(fontSize: 12),
-              ),
+              child: Text(yes ?? "Ya", style: const TextStyle(fontSize: 12)),
             ),
           ],
         );

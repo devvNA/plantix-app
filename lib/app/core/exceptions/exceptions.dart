@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Kelas abstrak `Failure` digunakan untuk menangani kegagalan pada proses.
 abstract class Failure extends Equatable {
@@ -28,4 +31,13 @@ class ConnectionFailure extends Failure {
 /// Kelas `ParsingFailure` digunakan untuk menangani kesalahan parsing.
 class ParsingFailure extends Failure {
   const ParsingFailure(super.message);
+}
+
+/// Menangani error dari Supabase dan error umum
+Failure handleError(dynamic e) {
+  if (e is PostgrestException) {
+    log(e.message);
+    return Exception(e.message);
+  }
+  return Exception(e.toString());
 }

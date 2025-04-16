@@ -78,12 +78,13 @@ class CustomTextForm extends StatelessWidget {
           borderSide: const BorderSide(color: AppColors.primary),
         ),
         hintText: hintText,
-        prefixIcon: prefixIcon != null
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
-                child: prefixIcon,
-              )
-            : null,
+        prefixIcon:
+            prefixIcon != null
+                ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
+                  child: prefixIcon,
+                )
+                : null,
       ),
       validator: validator,
     );

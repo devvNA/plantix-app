@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 
 extension ContextExtension on BuildContext {
-  void showSnackBar({
+  void showCustomSnackBar({
     String? message,
     bool isError = false,
     Duration duration = const Duration(milliseconds: 1500),

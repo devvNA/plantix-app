@@ -101,7 +101,7 @@ class DetailAnalisaUsahaController extends GetxController {
     Get.back();
     await updateHarvestAnalysis();
     update();
-    Get.context!.showSnackBar(
+    Get.context!.showCustomSnackBar(
       message: 'Data panen berhasil diperbarui',
       isError: false,
     );
@@ -187,7 +187,7 @@ class DetailAnalisaUsahaController extends GetxController {
       spendController.clear();
       descriptionController.clear();
       await onRefresh();
-      Get.context!.showSnackBar(
+      Get.context!.showCustomSnackBar(
         message: 'Pengeluaran berhasil ditambahkan',
         isError: false,
       );
@@ -201,7 +201,7 @@ class DetailAnalisaUsahaController extends GetxController {
       pengeluaranList.value =
           pengeluaranList.where((e) => e.id != spendId).toList();
       await updateHarvestAnalysis();
-      Get.context!.showSnackBar(
+      Get.context!.showCustomSnackBar(
         message: 'Pengeluaran berhasil dihapus',
         isError: false,
       );

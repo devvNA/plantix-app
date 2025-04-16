@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
+import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 import 'package:plantix_app/app/modules/shop/shop_controller.dart';
 import 'package:plantix_app/app/modules/shop/widgets/search_products.dart';
 import 'package:plantix_app/app/routes/cart_routes.dart';
@@ -12,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ShopController>();
-    // final cartController = Get.find<CartController>();
+    Get.lazyPut(() => CartController());
 
     return AppBar(
       titleTextStyle: const TextStyle(
@@ -37,10 +38,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Get.toNamed(CartRoutes.cart);
           },
           icon: Badge(
-            label: Text("50", style: TextStyle(color: Colors.white)),
-            // label: Obx(() {
-            //   return Text("50", style: TextStyle(color: Colors.white));
-            // }),
+            label: Obx(() {
+              return Text(
+                Get.find<CartController>().cartProductList.length.toString(),
+                style: TextStyle(color: Colors.white),
+              );
+            }),
             child: Icon(Icons.shopping_cart, color: Colors.white),
           ),
         ),

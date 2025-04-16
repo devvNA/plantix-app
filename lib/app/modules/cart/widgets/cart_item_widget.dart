@@ -7,7 +7,7 @@ import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/data/models/cart_model.dart';
 import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 
-class StoreCartCard extends StatelessWidget {
+class StoreCartCard extends GetView<CartController> {
   final String storeName;
   final List<CartModel> storeItems;
 
@@ -60,7 +60,14 @@ class StoreCartCard extends StatelessWidget {
       itemCount: storeItems.length,
       itemBuilder: (context, idx) {
         final item = storeItems[idx];
-        return ProductCartItem(item: item);
+        return Dismissible(
+          direction: DismissDirection.endToStart,
+          key: Key(item.productId.toString()),
+          onDismissed: (direction) {
+            controller.deleteProduct(item);
+          },
+          child: ProductCartItem(item: item),
+        );
       },
     );
   }
@@ -68,7 +75,7 @@ class StoreCartCard extends StatelessWidget {
   Widget _buildStoreTotal() {
     // Hitung total belanja untuk toko ini
     double storeTotal = storeItems.fold(0.0, (sum, item) {
-      return sum + (item.price * (item.quantity ?? 1));
+      return sum + (item.price * (item.quantity));
     });
 
     return Padding(

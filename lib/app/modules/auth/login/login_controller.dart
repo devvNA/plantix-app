@@ -86,10 +86,7 @@ class LoginController extends GetxController {
       response.fold(
         (error) {
           Get.back();
-          Get.context!.showSnackBar(
-            message: error,
-            isError: true,
-          );
+          Get.context!.showCustomSnackBar(message: error, isError: true);
         },
         (data) async {
           await user.loadUserData();
@@ -108,16 +105,6 @@ class LoginController extends GetxController {
       snackbarError(message: "Terjadi kesalahan saat login");
     } finally {
       isLoading(false);
-    }
-  }
-
-  Future<void> getUser() async {
-    try {
-      // final userId = supabase.auth.currentSession!.user.id;
-      // final data =
-      //     await supabase.from('users').select().eq('id', userId).single();
-    } catch (e) {
-      log(e.toString());
     }
   }
 

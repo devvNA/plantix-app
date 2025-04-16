@@ -20,12 +20,10 @@ class MyStoreRepository {
         'store_name': storeName,
         'address': address,
         'store_image_url': storeImageUrl,
-        'created_at': DateTime.now().toIso8601String(),
-        'updated_at': DateTime.now().toIso8601String(),
       };
 
       final data =
-          await supabase.from('my_store').insert(updates).select().single();
+          await supabase.from('my_stores').insert(updates).select().single();
 
       final store = MyStoreModel.fromJson(data);
       await userHasStore();
@@ -55,7 +53,7 @@ class MyStoreRepository {
 
       final data =
           await supabase
-              .from('my_store')
+              .from('my_stores')
               .update(updates)
               .eq("user_id", userId)
               .select()
@@ -101,7 +99,7 @@ class MyStoreRepository {
       final userId = supabase.auth.currentSession!.user.id;
       final data =
           await supabase
-              .from('my_store')
+              .from('my_stores')
               .select()
               .eq('user_id', userId)
               .single();

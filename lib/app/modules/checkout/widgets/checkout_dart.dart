@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:plantix_app/app/core/extensions/currency_ext.dart';
 import 'package:plantix_app/app/core/extensions/date_time_ext.dart';
+import 'package:plantix_app/app/core/theme/app_color.dart';
+import 'package:plantix_app/app/core/theme/typography.dart';
 
 class CheckoutProduct extends StatelessWidget {
   final String? imgUrl;
@@ -9,7 +11,8 @@ class CheckoutProduct extends StatelessWidget {
   final String? description;
   final String? category;
   final int? quantity;
-  final double? totalPayment;
+  final int? totalPayment;
+  final DateTime? addedAt;
 
   const CheckoutProduct({
     super.key,
@@ -19,138 +22,147 @@ class CheckoutProduct extends StatelessWidget {
     this.category = "",
     this.quantity,
     this.totalPayment,
+    this.addedAt,
   });
 
   @override
   Widget build(BuildContext context) {
-    // final time = DateFormat('dd/MM/yyyy, HH:mm:ss').format(DateTime.now());
-
     return Card(
-      borderOnForeground: true,
-      elevation: 2.5,
-      clipBehavior: Clip.hardEdge,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      elevation: 2,
+      clipBehavior: Clip.antiAlias,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [_buildProductHeader(context), _buildProductDetails()],
+      ),
+    );
+  }
+
+  Widget _buildProductHeader(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      color: Colors.grey[50],
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Product image with border and shadow
           Container(
-            color: Colors.grey[50],
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    width: 100,
-                    height: 100,
-                    imgUrl!,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.error, color: Colors.red),
-                            const SizedBox(
-                              height: 4.0,
-                            ),
-                            const Text(
-                              "Gagal memuat gambar",
-                              style: TextStyle(
-                                fontSize: 8.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  width: 12.0,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title!,
-                        style: const TextStyle(
-                            fontSize: 14.0, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 6.0,
-                      ),
-                      Text(
-                        description!,
-                        style: const TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black54),
-                      ),
-                      const SizedBox(
-                        height: 6.0,
-                      ),
-                      Text(
-                        category!,
-                        style: const TextStyle(
-                          fontSize: 11.0,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Text(
-                        DateTime.now().toFormattedDate(),
-                        style: const TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.black38,
-                        ),
-                      ),
-                    ],
-                  ),
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Divider(
-              color: Colors.grey,
-              thickness: 1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: _buildProductImage(),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          const SizedBox(width: 12),
+
+          // Product information
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Product title
                 Text(
-                  "Total Order ($quantity item) : ",
-                  // "Total Order (${keranjang.quantity} item) : ",
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  title!,
+                  style: TStyle.bodyText1.copyWith(fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  "${totalPayment?.currencyFormatRp}",
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+                const SizedBox(height: 6),
+
+                // Price info
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        description!.replaceAll("Harga satuan:\n", ""),
+                        style: TStyle.bodyText3.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        "$quantity item",
+                        style: TStyle.bodyText3.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
+                const SizedBox(height: 8),
+
+                // Category
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.category_outlined,
+                      size: 14,
+                      color: AppColors.secondary,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      category!,
+                      style: TStyle.bodyText3.copyWith(
+                        color: AppColors.secondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 4),
+
+                // Date added
+                if (addedAt != null)
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        size: 14,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        addedAt?.toFormattedDate() ?? "",
+                        style: TStyle.bodyText3.copyWith(color: Colors.grey),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -158,8 +170,83 @@ class CheckoutProduct extends StatelessWidget {
       ),
     );
   }
-}
 
-extension on int? {
-  get currencyFormatRp => null;
+  Widget _buildProductDetails() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Total",
+            style: TStyle.bodyText2.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          Text(
+            totalPayment?.currencyFormatRp ?? "",
+            style: TStyle.bodyText1.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.secondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductImage() {
+    return Image.network(
+      imgUrl!,
+      fit: BoxFit.cover,
+      loadingBuilder: (
+        BuildContext context,
+        Widget child,
+        ImageChunkEvent? loadingProgress,
+      ) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+            value:
+                loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+            strokeWidth: 2,
+            color: AppColors.primary,
+          ),
+        );
+      },
+      errorBuilder: (
+        BuildContext context,
+        Object exception,
+        StackTrace? stackTrace,
+      ) {
+        return Container(
+          color: Colors.grey.shade100,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 24),
+                const SizedBox(height: 4),
+                Text(
+                  "Gagal memuat",
+                  style: TStyle.bodyText3.copyWith(
+                    fontSize: 10,
+                    color: Colors.red.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
+import 'package:plantix_app/app/core/widgets/shimmer_widget.dart';
 import 'package:plantix_app/app/data/models/shop_response_model.dart';
 import 'package:plantix_app/app/modules/shop/widgets/custom_appbar.dart';
 import 'package:plantix_app/app/modules/shop/widgets/products_card.dart';
@@ -21,10 +22,25 @@ class ShopPage extends GetView<ShopController> {
       appBar: CustomAppBar(title: 'Toko'),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: LoadingWidget());
+          return GridView.builder(
+            padding: const EdgeInsets.all(18.0),
+            physics: BouncingScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 0.75,
+              crossAxisCount: 2,
+              mainAxisSpacing: 6,
+              crossAxisSpacing: 6,
+            ),
+            itemCount: 6,
+            itemBuilder: (BuildContext context, int index) {
+              return ShimmerSkeleton(width: 100, height: 100, borderRadius: 10);
+            },
+          );
+        } else if (controller.listProductsSearch.isEmpty) {
+          return const Center(child: Text('Tidak ada produk tersedia'));
         }
         return Padding(
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -77,9 +93,10 @@ class ShopPage extends GetView<ShopController> {
             await controller.refreshProducts();
           },
           child: GridView.builder(
+            physics: BouncingScrollPhysics(),
             padding: EdgeInsets.zero,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 1.0,
+              childAspectRatio: 0.75,
               crossAxisCount: 2,
               mainAxisSpacing: 6,
               crossAxisSpacing: 6,

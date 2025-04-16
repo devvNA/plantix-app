@@ -38,12 +38,14 @@ class ProfileController extends GetxController {
     if (imageUrl != null) {
       final data = await profileRepository.onUploadAvatar(imageUrl);
       data.fold(
-        (failure) => Get.overlayContext!.showSnackBar(
+        (failure) => Get.overlayContext!.showCustomSnackBar(
           message: failure.message,
           isError: true,
         ),
-        (success) =>
-            Get.overlayContext!.showSnackBar(message: success, isError: false),
+        (success) => Get.overlayContext!.showCustomSnackBar(
+          message: success,
+          isError: false,
+        ),
       );
       await refreshStoreStatus();
     }

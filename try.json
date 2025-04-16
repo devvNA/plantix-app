@@ -1,21 +1,29 @@
 [
-    {
-        "id": 1,
-        "user_id": "4d8aef16-189d-4e9a-bbf9-7b626534f13d",
-        "store_id": 37,
-        "name": "Tomat",
-        "description": "Ini buah tomat",
-        "price": 10000,
-        "stock": 50,
-        "category": "Sayuran",
-        "image_url": [
-            ""
-        ],
-        "harvest_date": null,
-        "created_at": "2025-04-10 13:14:02",
-        "updated_at": "2025-04-10 13:14:12",
-        "rating": 4,
-        "quantity": 5,
-        "total_price": "50000"
-    }
+  {
+    "id": 1,
+    "user_id": "4d8aef16-189d-4e9a-bbf9-7b626534f13d",
+    "store_name": "Devit Store",
+    "address": "JL Flamboyan 007/001, Karanggintung",
+    "created_at": "2025-04-15 20:32:37.688456+00",
+    "updated_at": "2025-04-15 20:32:37.688708+00",
+    "store_image_url": "https://ziuujbwicwlbfyagxpna.supabase.co/storage/v1/object/sign/stores/profiles/2025-04-15T20:31:47.805922.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzdG9yZXMvcHJvZmlsZXMvMjAyNS0wNC0xNVQyMDozMTo0Ny44MDU5MjIud2VicCIsImlhdCI6MTc0NDcyMzkxMSwiZXhwIjoxOTAyNDAzOTExfQ.o0Y69KeMjl5WI6DU4X4-JsceeonAN0P5Uq9gD7HYncs"
+  },
+  {
+    "id": 2,
+    "user_id": "4d8aef16-189d-4e9a-bbf9-7b626534f13d",
+    "store_name": "Devit Store",
+    "address": "JL Flamboyan 007/001, Karanggintung",
+    "created_at": "2025-04-15 13:33:42.805811+00",
+    "updated_at": "2025-04-15 13:33:42.805811+00",
+    "store_image_url": "https://ziuujbwicwlbfyagxpna.supabase.co/storage/v1/object/sign/stores/profiles/2025-04-15T20:31:47.805922.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzdG9yZXMvcHJvZmlsZXMvMjAyNS0wNC0xNVQyMDozMTo0Ny44MDU5MjIud2VicCIsImlhdCI6MTc0NDcyMzkxMSwiZXhwIjoxOTAyNDAzOTExfQ.o0Y69KeMjl5WI6DU4X4-JsceeonAN0P5Uq9gD7HYncs"
+  },
+  {
+    "id": 3,
+    "user_id": "4d8aef16-189d-4e9a-bbf9-7b626534f13d",
+    "store_name": "Devit Store",
+    "address": "JL Flamboyan 007/001, Karanggintung",
+    "created_at": "2025-04-15 13:34:13.692148+00",
+    "updated_at": "2025-04-15 13:34:13.692148+00",
+    "store_image_url": "https://ziuujbwicwlbfyagxpna.supabase.co/storage/v1/object/sign/stores/profiles/2025-04-15T20:34:04.038505.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzdG9yZXMvcHJvZmlsZXMvMjAyNS0wNC0xNVQyMDozNDowNC4wMzg1MDUud2VicCIsImlhdCI6MTc0NDcyNDA0OCwiZXhwIjoxOTAyNDA0MDQ4fQ.kH9ZirDaw4iZuRL5TGAZlSRWoXgGLMAL1_nFV0oDxPQ"
+  }
 ]

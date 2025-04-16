@@ -3,16 +3,21 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:plantix_app/app/data/models/store_model.dart';
 import 'package:plantix_app/app/modules/profile/profile_controller.dart';
 import 'package:plantix_app/main.dart';
 
+/// Controller untuk mengelola halaman Toko Saya
 class MyStoreController extends GetxController {
   final isLoading = false.obs;
   final saldo = 75000.0.obs;
   final processingSales = 10;
   final completedSales = 20;
   final canceledSales = 30;
-  final store = myStore.currentStore;
+
+  /// Data toko yang sedang aktif
+  final Rx<MyStoreModel?> storeData = Rx<MyStoreModel?>(null);
+  MyStoreModel? get store => storeData.value;
 
   final profileController = Get.find<ProfileController>();
   final productCount = 0.obs;
@@ -33,35 +38,71 @@ class MyStoreController extends GetxController {
       ].obs;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    getStore();
-    getProductCount();
+
+    // Listener untuk perubahan pada StoreManager
+    listenToStoreChanges();
+
+    // Menambahkan listener untuk mendeteksi perubahan pada worker
+    ever(storeData, (_) {
+      // Ketika data toko berubah, update juga jumlah produk
+      if (store != null) {
+        getProductCount();
+      }
+    });
   }
 
-  Future<void> getProductCount() async {
-    final result =
-        await supabase
-            .from('products')
-            .select()
-            .eq('store_id', myStore.currentStore!.id)
-            .count();
-    log('product_count: ${result.count}');
-    productCount.value = result.count;
+  /// Mendengarkan perubahan pada StoreManager
+  void listenToStoreChanges() {
+    // Menambahkan listener ke stream toko pada StoreManager
+    myStore.storeStream.listen((updatedStore) {
+      if (updatedStore != null &&
+          (storeData.value == null ||
+              storeData.value!.id != updatedStore.id ||
+              storeData.value!.updatedAt != updatedStore.updatedAt)) {
+        log('Store data updated in StoreManager: ${updatedStore.storeName}');
+        storeData.value = updatedStore;
+      }
+    });
   }
 
-  Future getStore() async {
+  /// Memuat ulang data toko dari repository
+  Future<void> refreshStoreData() async {
     isLoading(true);
     await myStore.loadStoreData();
+    storeData.value = myStore.currentStore;
     isLoading(false);
   }
 
-  @override
-  void onClose() async {
-    super.onClose();
+  /// Mendapatkan jumlah produk dari toko
+  Future<void> getProductCount() async {
+    if (store == null) return;
 
-    profileController.isLoading = true;
-    profileController.update();
-    profileController.isLoading = false;
+    try {
+      final result =
+          await supabase
+              .from('products')
+              .select()
+              .eq('store_id', store!.id)
+              .count();
+      log('product_count: ${result.count}');
+      productCount.value = result.count;
+    } catch (e) {
+      log('Error fetching product count: $e');
+      productCount.value = 0;
+    }
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    // Memastikan data terupdate ketika halaman muncul kembali
+    refreshStoreData();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
   }
 }

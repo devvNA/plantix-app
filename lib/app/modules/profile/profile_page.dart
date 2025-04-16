@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantix_app/app/core/theme/app_color.dart';
 import 'package:plantix_app/app/core/theme/typography.dart';
 import 'package:plantix_app/app/core/widgets/custom_bottom_sheet.dart';
 import 'package:plantix_app/app/core/widgets/custom_loading.dart';
+import 'package:plantix_app/app/core/widgets/custom_snackbar.dart';
 import 'package:plantix_app/app/routes/buat_toko_routes.dart';
 import 'package:plantix_app/app/routes/edit_profile_routes.dart';
 import 'package:plantix_app/app/routes/help_desk_routes.dart';
@@ -185,11 +188,22 @@ class ProfilePage extends GetView<ProfileController> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                       ),
-                      onPressed:
-                          () async => await supabase.auth.signOut().then((_) {
-                            Get.back();
-                            Get.offAllNamed(SplashScreenRoutes.splashScreen);
-                          }),
+                      onPressed: () async {
+                        try {
+                          // Bersihkan data user dan toko terlebih dahulu
+                          user.clearUserData();
+                          myStore.clearStoreData();
+
+                          // Kemudian lakukan logout
+                          await supabase.auth.signOut();
+
+                          Get.back();
+                          Get.offAllNamed(SplashScreenRoutes.splashScreen);
+                        } catch (e) {
+                          log('Error saat logout: $e');
+                          snackbarError(message: 'Gagal melakukan logout');
+                        }
+                      },
                       child: const Text("Ya"),
                     ),
                   ],

@@ -15,9 +15,15 @@ class AuthRepository {
         password: password,
       );
       return right(response);
-    } on AuthException catch (error) {
-      log(error.message);
-      return left(error.message);
+    } on AuthException catch (e) {
+      String message = '';
+      log(e.code.toString());
+
+      if (e.code == 'invalid_credentials') {
+        message = 'Email atau password salah';
+      }
+
+      return left(message);
     } catch (e) {
       log(e.toString());
       return left(e.toString());
@@ -34,11 +40,7 @@ class AuthRepository {
       final response = await supabase.auth.signUp(
         email: email,
         password: password,
-        data: {
-          "name": name,
-          "avatar_url": avatarUrl,
-          "created_at": DateTime.now().isUtc,
-        },
+        data: {"name": name, "avatar_url": avatarUrl},
       );
       return right(response);
     } on AuthException catch (error) {
@@ -49,33 +51,4 @@ class AuthRepository {
       return left(e.toString());
     }
   }
-
-  //   Future<Either<Failure, String>> register({
-  //   required String email,
-  //   required String password,
-  //   required String namaOutlet,
-  //   required String alamatOutlet,
-  //   // String? serialNumber,
-  // }) async {
-  //   try {
-  //     final request = Request();
-
-  //     final response = await request.post(
-  //       registerUser,
-  //       data: {
-  //         "email": email,
-  //         "password": password,
-  //         "nama_outlet": namaOutlet,
-  //         "alamat": alamatOutlet,
-  //         // "serial_number": serialNumber,
-  //       },
-  //     );
-  //     if (response.statusCode == 201) {
-  //       return Right(response.data['user'].toString());
-  //     }
-  //     return const Left(ParsingFailure("Kesalahan Parsing"));
-  //   } on DioException catch (e) {
-  //     return Left(Exception(e.response!.data["errors"]["email"][0].toString()));
-  //   }
-  // }
 }

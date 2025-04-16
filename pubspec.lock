@@ -225,14 +225,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+4"
-  fixnum:
-    dependency: transitive
-    description:
-      name: fixnum
-      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   fl_chart:
     dependency: "direct main"
     description:
@@ -736,6 +728,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   simple_gesture_detector:
     dependency: transitive
     description:
@@ -757,14 +757,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.1"
-  sprintf:
-    dependency: transitive
-    description:
-      name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -817,18 +809,18 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: "59e2b0dea7dd0238cd8deeeb87e8117f09e2dd4d2bea91048b70e74c65a3cb18"
+      sha256: ae6411d1e33c7418085d7937ca12f8fd1816d53a8a9f08bc3ed2756cf9539b9b
       url: "https://pub.dev"
     source: hosted
-    version: "29.1.37+1"
+    version: "29.1.38"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: a9b203c3b4ad5c3bfed3e82c3f43f6861c4f2e8a12dca43b8abb8f128ffe42b5
+      sha256: "98580db6186b46aae965d3f480f7830b0ee6f58c4e1bbbb3fb3de6a121f61836"
       url: "https://pub.dev"
     source: hosted
-    version: "29.1.37"
+    version: "29.1.38"
   table_calendar:
     dependency: "direct main"
     description:
@@ -925,14 +917,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
-  uuid:
-    dependency: "direct main"
-    description:
-      name: uuid
-      sha256: a5be9ef6618a7ac1e964353ef476418026db906c4facdedaa299b7a2e71690ff
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.1"
   vector_graphics:
     dependency: transitive
     description:

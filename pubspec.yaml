@@ -40,7 +40,7 @@ dependencies:
   intl: ^0.20.2
   google_fonts: ^6.2.1
   connectivity_plus: ^5.0.2
-  dio: ^5.7.0
+  dio: ^5.8.0+1
   get_storage: ^2.1.1
   pretty_dio_logger: ^1.4.0
   dartz: ^0.10.1
@@ -57,7 +57,8 @@ dependencies:
   url_launcher: ^6.3.1
   whatsapp_unilink: ^2.1.0
   syncfusion_flutter_charts: ^29.1.37
-  uuid: ^4.5.1
+  shimmer: ^3.0.0
+
 
 dev_dependencies:
   flutter_test:

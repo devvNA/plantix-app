@@ -59,7 +59,7 @@ class AddProductController extends GetxController {
         await onSubmitUpdateProduct(price);
       } else {
         if (images.isEmpty) {
-          Get.context!.showSnackBar(
+          Get.context!.showCustomSnackBar(
             message: 'Gambar produk wajib diisi',
             isError: true,
           );
@@ -73,7 +73,7 @@ class AddProductController extends GetxController {
   }
 
   Future onSubmitCreateProduct(String price) async {
-    await onUploadMultipleImageProducts();
+    await _onUploadMultipleImageProducts();
     final result = await myStoreRepo.addProductToStore(
       storeId: myStore.currentStore!.id,
       name: nameController.text,
@@ -87,7 +87,7 @@ class AddProductController extends GetxController {
     result.fold(
       (failure) {
         Get.back();
-        Get.context!.showSnackBar(
+        Get.context!.showCustomSnackBar(
           message: failure.message,
           isError: true,
         );
@@ -100,7 +100,7 @@ class AddProductController extends GetxController {
   }
 
   Future<void> onSubmitUpdateProduct(String price) async {
-    await onUploadMultipleImageProducts();
+    await _onUploadMultipleImageProducts();
     final result = await myStoreRepo.updateProduct(
       productId: product!.id,
       name: nameController.text,
@@ -113,7 +113,7 @@ class AddProductController extends GetxController {
     result.fold(
       (failure) {
         Get.back();
-        Get.context!.showSnackBar(
+        Get.context!.showCustomSnackBar(
           message: failure.message,
           isError: true,
         );
@@ -136,7 +136,7 @@ class AddProductController extends GetxController {
     images.value = result.map((xFile) => XFile(xFile.path)).toList();
   }
 
-  Future<void> onUploadMultipleImageProducts() async {
+  Future<void> _onUploadMultipleImageProducts() async {
     try {
       for (var imageFile in images) {
         final bytes = await imageFile.readAsBytes();
@@ -160,16 +160,10 @@ class AddProductController extends GetxController {
         imageUrls.add(imageUrl);
       }
     } on StorageException catch (error) {
-      Get.context!.showSnackBar(
-        message: error.message,
-        isError: true,
-      );
+      Get.context!.showCustomSnackBar(message: error.message, isError: true);
       return;
     } catch (error) {
-      Get.context!.showSnackBar(
-        message: error.toString(),
-        isError: true,
-      );
+      Get.context!.showCustomSnackBar(message: error.toString(), isError: true);
       return;
     }
 

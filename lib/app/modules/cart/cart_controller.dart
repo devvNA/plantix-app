@@ -21,6 +21,7 @@ class CartController extends GetxController {
   final selectedStores = <String>{}.obs;
   final selectedProducts = <int>{}.obs;
 
+  // Stream Cart
   // Fungsi untuk mendapatkan jumlah item yang dipilih
   int get selectedProductCount => selectedProducts.length;
 
@@ -35,9 +36,17 @@ class CartController extends GetxController {
     final result = await CartRepository().getCartByID();
     result.fold(
       (failure) => snackbarError(message: "Kesalahan", body: failure.message),
-      (cart) => cartProductList.addAll(cart),
+      (cart) {
+        cartProductList.addAll(cart);
+        update();
+      },
     );
     isLoading.value = false;
+  }
+
+  Future<void> onRefresh() async {
+    cartProductList.clear();
+    getCart();
   }
 
   void loadCartFromStorage() {
@@ -52,7 +61,7 @@ class CartController extends GetxController {
       );
 
       if (index != -1) {
-        final updatedQuantity = (cartProductList[index].quantity ?? 0) + 1;
+        final updatedQuantity = (cartProductList[index].quantity) + 1;
         cartProductList[index].quantity = updatedQuantity;
 
         // Update juga di database
@@ -88,8 +97,8 @@ class CartController extends GetxController {
         (item) => item.productId == itemId,
       );
 
-      if (index != -1 && (cartProductList[index].quantity ?? 0) > 1) {
-        final updatedQuantity = (cartProductList[index].quantity ?? 0) - 1;
+      if (index != -1 && (cartProductList[index].quantity) > 1) {
+        final updatedQuantity = (cartProductList[index].quantity) - 1;
         cartProductList[index].quantity = updatedQuantity;
 
         // Update juga di database
@@ -120,7 +129,7 @@ class CartController extends GetxController {
 
   double calculateTotalPrice() {
     return cartProductList.fold(0.0, (sum, item) {
-      num itemPrice = (item.price) * (item.quantity ?? 1);
+      num itemPrice = (item.price) * (item.quantity);
       return sum + itemPrice;
     });
   }
@@ -143,15 +152,25 @@ class CartController extends GetxController {
               selectedProducts.remove(data.productId);
             }
 
+            if (selectedStores.contains(data.storeName)) {
+              selectedStores.remove(data.storeName);
+            }
+
             cartProductList.removeAt(index);
             cartProductList.refresh();
+            update();
 
-            snackbarSuccess(
+            // Get.context!.showSnackBar(
+            //   message: "Produk berhasil dihapus",
+            // );
+
+            snackbarWarning(
               message: "Sukses",
               body: "Produk berhasil dihapus",
-              duration: 800,
+              duration: 1000,
               bottom: cartProductList.isEmpty ? 90 : 220,
             );
+            selectedProducts.clear();
           }
         },
       );
@@ -165,6 +184,7 @@ class CartController extends GetxController {
     cartProductList.removeWhere(
       (item) => selectedProducts.contains(item.productId),
     );
+    selectedStores.clear();
     cartProductList.refresh();
     await storage.saveList('cart', cartProductList);
     totalPrice.value = calculateTotalPrice();
@@ -221,7 +241,7 @@ class CartController extends GetxController {
 
   // Fungsi untuk toggle pilihan toko
   void toggleStoreSelection(String storeName) {
-    log(storeName);
+    log(selectedStores.toString());
     if (selectedStores.contains(storeName)) {
       // Hapus pilihan toko dan semua item dari toko tersebut
       selectedStores.remove(storeName);
@@ -286,32 +306,21 @@ class CartController extends GetxController {
     return cartProductList
         .where((item) => selectedProducts.contains(item.productId))
         .fold(0.0, (sum, item) {
-          return sum + ((item.price) * (item.quantity ?? 1));
+          return sum + ((item.price) * (item.quantity));
         });
   }
 
   // Fungsi untuk checkout item yang dipilih
   List<CartModel> checkoutSelectedItems() {
-    // if (selectedProducts.isEmpty) {
-    //   CustomSnackBar.showCustomErrorSnackBar(
-    //     title: 'Error',
-    //     message: 'Pilih minimal satu produk untuk checkout',
-    //   );
-    //   return [];
-    // }
-
     // Implementasi checkout akan ditambahkan di sini
     // Misalnya navigasi ke halaman checkout dengan membawa data item yang dipilih
     final selectedItems =
         cartProductList
             .where((item) => selectedProducts.contains(item.productId))
             .toList();
-
-    // Get.toNamed('/checkout', arguments: selectedProducts);
     log(selectedProducts.toString());
     log(selectedItems.toString());
-    // deleteSelectedItems();
-    // cartProductList.clear();
+
     clearSelection();
     return selectedItems;
   }
@@ -320,5 +329,10 @@ class CartController extends GetxController {
   void clearSelection() {
     selectedStores.clear();
     selectedProducts.clear();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
   }
 }

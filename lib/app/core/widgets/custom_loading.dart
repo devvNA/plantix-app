@@ -9,7 +9,7 @@ class LoadingWidget extends StatelessWidget {
 
   const LoadingWidget({
     super.key,
-    this.size = 24.0,
+    this.size = 25.0,
     this.leftDotColor = AppColors.primary,
     this.rightDotColor = const Color(0xFF1A1A3F),
   });
@@ -25,9 +25,7 @@ class LoadingWidget extends StatelessWidget {
 }
 
 class LoadingWidgetBG extends StatelessWidget {
-  const LoadingWidgetBG({
-    super.key,
-  });
+  const LoadingWidgetBG({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +34,7 @@ class LoadingWidgetBG extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         color: Colors.black12,
         alignment: Alignment.center,
-        child: LoadingWidget(
-          size: 32,
-        ),
+        child: LoadingWidget(size: 28),
       ),
     );
   }

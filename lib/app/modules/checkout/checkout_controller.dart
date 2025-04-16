@@ -4,25 +4,22 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantix_app/app/data/models/keranjang_model.dart';
+import 'package:plantix_app/app/core/extensions/snackbar_ext.dart';
+import 'package:plantix_app/app/data/models/cart_model.dart';
+import 'package:plantix_app/app/data/repositories/order_repository.dart';
+import 'package:plantix_app/app/modules/cart/cart_controller.dart';
 import 'package:plantix_app/main.dart';
 
 class CheckoutController extends GetxController {
-  List<CartItem> cartList = Get.arguments;
+  List<CartModel> cartList = Get.arguments;
   final alamatController = TextEditingController(
-    text: user.currentUser?.address ?? "",
+    text: user.currentUser?.address ?? "masukkan alamat pengiriman",
   );
   final isLoading = false.obs;
   final isButtonActive = false.obs;
+  final orderRepository = OrderRepository();
 
   String? paymentMethod;
-  List<DropdownMenuItem<String>> get paymentDropDownItems {
-    List<DropdownMenuItem<String>> paymentItems = [
-      const DropdownMenuItem(value: "COD", child: Text("COD")),
-      const DropdownMenuItem(value: "Transfer", child: Text("Transfer")),
-    ];
-    return paymentItems;
-  }
 
   @override
   void onInit() {
@@ -33,87 +30,52 @@ class CheckoutController extends GetxController {
     paymentMethod = paymentChoice;
     isButtonActive.value = paymentChoice.isNotEmpty;
     update();
-    log(paymentChoice);
+    log(paymentMethod!);
   }
 
-  double totalOrderItem(int index) {
-    return cartList[index].product!.price! * cartList[index].quantity!;
+  int totalOrderItem(int index) {
+    return cartList[index].price * cartList[index].quantity;
   }
 
-  double totalPayment() {
-    double totalPembayaran = 0;
+  int totalPayment() {
+    int totalPembayaran = 0;
     for (var cart in cartList) {
-      totalPembayaran += cart.product!.price! * cart.quantity!;
+      totalPembayaran += cart.price * cart.quantity;
     }
     return totalPembayaran;
   }
 
   String getCategory(int index) {
-    return cartList[index].product!.category ?? "";
+    return cartList[index].category;
   }
 
   String getImgUrl(int index) {
-    return cartList[index].product!.images?[0] ?? "";
+    return cartList[index].imageUrl[0];
   }
 
-  Future<void> purchaseOrder() async {
+  Future<void> createOrder() async {
     isLoading.value = true;
-    // final response = await PemesananUseCase(
-    //         repository: PemesananRepositoryImpl(
-    //             remoteDataSource: PemesananRemoteDataSourceImpl()))
-    //     .postPemesanan(
-    //   idUser: outlet!.id,
-    //   tanggal: DateTime.now().toFormattedDateWithDay(),
-    //   tipePayment: selectedPayment!,
-    //   total: totalPayment(),
-    // );
-    // Get.put(HistoryController());
+    update();
 
-    // response.fold(
-    //   (failure) {
-    //     Get.back();
-    //     log("Error: ${failure.message}");
-    //     CustomSnackBar.showCustomErrorSnackBar(
-    //       title: "Gagal",
-    //       message: failure.message,
-    //     );
-    //   },
-    //   (message) {
-    //     messageServer = message;
-    //     log(message);
-    //     // CustomSnackBar.showCustomSuccessSnackBar(
-    //     //   title: "Berhasil",
-    //     //   message: message,
-    //     // );
-    //   },
-    // );
-    redirectHistory();
+    final result = await orderRepository.createOrder(
+      cartList: cartList,
+      totalPrice: totalPayment(),
+      shippingAddress: alamatController.text,
+      paymentMethod: paymentMethod ?? 'COD',
+    );
+
+    result.fold(
+      (failure) {
+        Get.context!.showCustomSnackBar(
+          message: failure.message,
+          isError: true,
+        );
+      },
+      (success) {
+        Get.find<CartController>().onRefresh();
+      },
+    );
+
     isLoading.value = false;
-  }
-
-  redirectHistory() {
-    Get.back();
-    // Get.find<CartController>().onRefreshKeranjang();
-    Get.back();
-    Get.back();
-
-    // Get.find<HistoryTransactionController>().onRefreshHistoriPemesanan();
-
-    // Get.back();
-  }
-
-  void checkData() {
-    final cartData =
-        cartList
-            .map(
-              (item) => {
-                'Nama': item.product!.name,
-                'Harga': item.product!.price,
-                'Quantity': item.quantity,
-              },
-            )
-            .toList();
-    log(cartData.toString());
-    log("Total Item: ${cartList.length}");
   }
 }
